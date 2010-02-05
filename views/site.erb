@@ -1,0 +1,119 @@
+<html>
+<head>
+  <title>
+    Welcome to the XMLresover service
+  </title>
+</head>
+
+<body>
+<h2>A Guide to the XMLresolver Service on <%= @env['SERVER_NAME'] %></h2>
+
+<h3>Introduction</h3>
+
+<p>
+  Consider a set of XML documents.  We would like a collection of all of the schema
+  and DTDs associated with those documents.  Such a function is provided by
+  the xmlresolver service.
+</p>
+
+<p>
+  The following resources and REST methods are available:
+</p>
+
+<p>
+ <ul>
+    <li>
+     <b><a href="/ieids/">GET /ieids/</a></b> lists the available document collections.
+    </li>
+    <li>
+     <b>PUT /ieids/&lt;id&gt;</b> creates a new collection. An <b>&lt;id&gt;</b> is
+     usually, but not necessarily, an IEID. A status of <b>201 Created</b> is returned on success.
+    </li>
+    <li>		
+     <b>POST /ieids/&lt;id&gt;/</b> accepts an XML file, and adds the schemas (and later, DTDs)
+     necessary to resolve it to the collection. 
+    </li>
+    <li>
+     <b>GET /ieids/&lt;id&gt;/</b> returns a tar file of all of the schemas (and real soon now, DTDs) associated
+     with the XML files <b>POST</b>ed to the collection.
+    </li>
+ </ul>
+
+</p>
+
+<h3>Details on <b>PUT</b></h3>
+
+<p>
+The first step to using this service is to create a container resource that is named by a collection id.  We use
+the PUT method on a URL of the form <%= @base_url %>/ieids/&lt;collection-id&gt;.  The collection id  must not 
+be in use.
+</p>
+
+
+<p>
+We can use curl to create a new resource as follows:
+</p>
+
+<pre>
+
+  curl --upload-file /dev/null -X PUT <%= @base_url %>/ieids/E20010101_TESTIN</a>
+
+</pre>
+
+<p>
+Note the lack of a trailing slash. Some versions of curl may require an empty file to be specified.
+</p>
+
+
+<h3>Details on <b>POST</b></h3>
+
+<p>
+We use the enctype=multipart/form-data for posts, with the xml file
+submitted with the <b>name</b> parameter <b>xmlfile</b>, as a typical
+browser would submit for the following:
+</p>
+
+<pre>
+ &lt;form action="<%= @base_url %>/ieids/E20010101_TESTIN" enctype="multipart/form-data" method="post"&gt;
+ &lt;p&gt;
+ Please specify a file:&lt;br&gt;
+ &lt;input type="file" name="xmlfile" size="72"&gt;
+ &lt;/p&gt;
+ &lt;div&gt;
+ &lt;input type="submit" value="Send"&gt;
+ &lt;/div&gt;
+ &lt;/form&gt;
+</pre>
+
+<p>
+The following curl program can be used to perform the above action:
+</p>
+
+<pre>
+  curl -F xmlfile=@myfile.xml <%= @base_url %>/ieids/E20010101_TESTIN/
+</pre>
+
+<p>
+Note the trailing slash.   An XML document is returned describing the outcome of the XML resolution for
+the POSTed file.
+</p>
+
+<p>
+There is a <a href="/test">test form</a> which will allow you to select an existing collection and perform the above action.
+</p>
+
+
+<h3>Additional Information</h3>
+
+<p>
+See the <a href="/rdoc/">rdoc</a> information for the DAITSS 2 libraries used.
+</p>
+
+<h3>To Do</h3>
+
+<p>
+Add <b>DELETE</b> and <b>HEAD</b> methods where appropriate.  Support DTDs. Expose the schemas downloaded for QA testing.
+</p>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+#!/usr/bin/perl -w
+
+use Getopt::Long;
+use strict;
+
+my($proxy, $jarfile, $default_jarfile, $default_proxy, $file, @files);
+
+
+$default_jarfile  = "xmlvalidator.jar";
+$default_proxy    = "sake.fcla.edu:3128";
+
+GetOptions("proxy=s" => \$proxy,
+	   "jarfile=s"  => \$jarfile) or Usage();
+
+my ($proxy_host, $proxy_port);
+
+$proxy    ||= $default_proxy;
+$jarfile  ||= $default_jarfile;
+
+if ($proxy =~ /(.*):(.*)/)  {
+    $proxy_host = $1;
+    $proxy_port = $2;
+} else {
+    print STDERR "Invalid proxy format";
+    Usage();
+}
+
+if (! -f $jarfile) {
+  print STDERR "Jar file $jarfile does not exist.\n";
+  Usage();
+}
+
+@files = @ARGV;
+
+foreach $file (@files) {
+
+  if (! -f $file) {
+    print STDERR "File $file does not exist.\n";
+    next;
+  }
+
+  print "java -Dhttp.proxyHost=$proxy_host -Dhttp.proxyPort=$proxy_port -Dfile=$file -jar $jarfile\n";
+  print `java -Dhttp.proxyHost="$proxy_host" -Dhttp.proxyPort="$proxy_port" -Dfile="$file" -jar "$jarfile"`;
+      
+}
+
+
+sub Usage {
+  my ($me);
+
+  $me = $0;   $me =~ s|^.*/||;
+
+  print STDERR <<EOF;
+Usage: $me [ --proxy <proxy: hostname:port - defaults to $default_proxy> ] [ --jarfile <jar file: defaults to $default_jarfile> ] file [.. files .. ]
+EOF
+
+  exit;
+}

@@ -1,0 +1,19 @@
+<html>
+<head>
+ <title>Test submission page for collection <%= @collection_id %></title>
+</head>
+<body>
+<h3>Test page for submitting an XML file to the <%= @collection_id %> collection</h3>
+
+<form action="/ieids/<%= @collection_id %>/" enctype="multipart/form-data" method="post">
+<p>
+  Please specify an xml file:<br>
+  <input type="file" name="xmlfile" size="72">
+</p>
+<div>
+<input type="submit" value="Send">
+</div>
+</form>
+
+</body>
+</html>

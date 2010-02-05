@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+require 'xmlresolver/xmlresolver'
+require 'xmlresolver/resolvercollection'
+
+rc = ResolverCollection.new("/tmp/xmlrez/", "E20001201_FEBABE", "sake")
+
+ARGV.each do |filename|
+  puts filename
+  rc.save_resolution_data(File.read(filename), File.basename(filename))
+end
+
+puts rc.xml_report()
+
+File.open("/tmp/test.tar", "w") { |io| rc.tar(io) }

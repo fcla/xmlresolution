@@ -1,0 +1,34 @@
+<html>
+
+<head>
+ <title>Test submission page for submitting to a collection</title>
+</head>
+
+<body>
+
+<h3>Test Page for Submitting an XML File to a collection</h3>
+
+<% if collections.empty? %>
+
+    <p>
+      There are no available collections - you'll have to create one
+     first.  Since the <a href="/">introduction</a> to this web service,
+     and use the <b>PUT</b> method to create one.
+    </p>
+
+<% else %>
+
+    <p>
+      First, select a collection:
+    </p>
+    <ul>
+
+     <% collections.sort.each do |id| %>
+       <li><a href="/test-form/<%= id %>/"><%= id %></a><br/></li>
+     <% end %>
+    </ul>
+
+<% end %>
+
+</body>
+</html>
