@@ -27,10 +27,14 @@ after "deploy:update", "deploy:layout", "deploy:rdoc"
     end
 
     task :layout, :roles => :app do
-      dirs = []
-      dirs.push File.join(current_path, 'data', 'collections'),
-      		File.join(current_path, 'data', 'schemas'),
-      		File.join(current_path, 'public')
+
+      [ File.join(current_path, 'data', 'collections'),
+ 	File.join(current_path, 'data', 'schemas'), 
+      	File.join(current_path, 'public') ].each  { |dir| run "mkdir -p #{dir}" }
+
+      [ File.join(current_path, 'data'),
+      	File.join(current_path, 'public') ].each  { |dir| run "chmod -R g+rwX #{dir}" }
+
     end
 
     task :rdoc, :roles => :app do
