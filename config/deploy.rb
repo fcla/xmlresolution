@@ -12,7 +12,7 @@
  role :web, domain
  role :db,  domain, :primary => true
 
-after "deploy:update", "deploy:layout", "deploy:rdoc", "deploy:echo_revision"
+after "deploy:update", "deploy:layout", "deploy:rdoc", "deploy:echo_revision", "deploy:restart"
 
  namespace :deploy do
     task :start do
