@@ -12,7 +12,7 @@
  role :web, domain
  role :db,  domain, :primary => true
 
- after "deploy:update", "deploy:layout", "deploy:rdoc"
+after "deploy:update", "deploy:layout", "deploy:rdoc"
 
  namespace :deploy do
 
@@ -28,17 +28,13 @@
 
     task :layout, :roles => :app do
       dirs = []
-      dirs.push File.join(current_path, 'data', 'collections'), 
-                File.join(current_path, 'data', 'schemas'),
-                File.join(current_path, 'public')
-      dirs.each |d| do
-  	run "mkdir -p #{d}"
-  	run "chmod -R g+rwX #{d}"
-      end
+      dirs.push File.join(current_path, 'data', 'collections'),
+      		File.join(current_path, 'data', 'schemas'),
+      		File.join(current_path, 'public')
     end
 
     task :rdoc, :roles => :app do
-      run "cd #{current_path}; rake rdoc"
-      run "chmod -R g+rwX #{File.join(current_path, public, rdoc)}"
+       run "cd #{current_path}; rake rdoc"
+       run "chmod -R g+rwX #{File.join(current_path, 'public', 'rdoc')}"
     end
  end
