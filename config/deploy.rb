@@ -27,12 +27,18 @@
     end
 
     task :layout, :roles => :app do
-      run "mkdir -p #{File.join(current_path, 'data', 'collections')}"
-      run "mkdir -p #{File.join(current_path, 'data', 'schemas')}"
-      run "mkdir -p #{File.join(current_path, 'public')}"
+      dirs = []
+      dirs.push File.join(current_path, 'data', 'collections'), 
+                File.join(current_path, 'data', 'schemas'),
+                File.join(current_path, 'public')
+      dirs.each |d| do
+  	run "mkdir -p #{d}"
+  	run "chmod -R g+rwX #{d}"
+      end
     end
 
     task :rdoc, :roles => :app do
-      run "cd #{current_path}; rake rdoc 2>&1"
+      run "cd #{current_path}; rake rdoc"
+      run "chmod -R g+rwX #{File.join(current_path, public, rdoc)}"
     end
  end
