@@ -12,7 +12,7 @@
  role :web, domain
  role :db,  domain, :primary => true
 
- after "deploy:update", "deploy:layout"
+ after "deploy:update", "deploy:layout", "deploy:rdoc"
 
  namespace :deploy do
 
@@ -29,5 +29,10 @@
     task :layout, :roles => :app do
       run "mkdir -p #{File.join(current_path, 'data', 'collections')}"
       run "mkdir -p #{File.join(current_path, 'data', 'schemas')}"
+      run "mkdir -p #{File.join(current_path, 'public')}"
+    end
+
+    task :rdoc, :roles => :app do
+      run "cd #{current_path}; rake rdoc 2>&1"
     end
  end
