@@ -149,15 +149,3 @@ post '/dump' do
      raise
 end
 
-put  '/dump' do
-     raise
-end
-
-
-get '/env' do
-  text = "<pre>\n"
-  ENV.keys.sort.each do |k|
-     text += "#{k} => #{ENV[k]}\n"
-  end
-  text += '</pre>'
-end

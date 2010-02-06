@@ -3,7 +3,7 @@
  set :repository,        "ssh://retsina.fcla.edu//var/git/#{application}.git"
  set :local_repository,  "file:///var/git/#{application}.git"
  set :use_sudo,          false
- set :deploy_to,         "/home/fischer/test-deploy/#{application}"
+ set :deploy_to,         "/opt/web-services/#{application}"
  set :scm,               "git"
 #set :gateway,		 "gnvssh.fcla.edu:2020"   # what *is* my password?
 #set :gateway,		 "fcla"                   # a host/port alias from .ssh/config
@@ -12,10 +12,9 @@
  role :web, domain
  role :db,  domain, :primary => true
 
-after "deploy:update", "deploy:layout", "deploy:rdoc"
+after "deploy:update", "deploy:layout", "deploy:rdoc", "deploy:echo_revision"
 
  namespace :deploy do
-
     task :start do
     end
 
@@ -41,4 +40,9 @@ after "deploy:update", "deploy:layout", "deploy:rdoc"
        run "cd #{current_path}; rake rdoc"
        run "chmod -R g+rwX #{File.join(current_path, 'public', 'rdoc')}"
     end
+
+    task :echo_revision, :roles => :app do
+       run "echo 'REVISION: ' `cat #{File.join(current_path, 'REVISION')}`"
+    end
+
  end
