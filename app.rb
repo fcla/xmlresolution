@@ -10,7 +10,7 @@ helpers do
   end
   
   def data_root
-    '/opt/web-services/xmlresolution/data'  # TODO: set up configuration files
+   File.expand_path(File.join(File.dirname(__FILE__), 'data'))
   end
 
   def proxy
