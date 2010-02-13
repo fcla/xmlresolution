@@ -27,6 +27,7 @@
   #   -rw-r--r--  0 daitss daitss   3667 Jun 23 02:19 bar/passwd
   #   -rw-r--r--  0 daitss daitss   1682 Sep 20 13:23 bar/group
   #
+  # The format was modeled on bsdtar 2.6.2 (mac os x)
 
 
 class TarWriter
