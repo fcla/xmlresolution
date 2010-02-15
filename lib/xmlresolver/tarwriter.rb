@@ -7,8 +7,9 @@
   # write out tar'd files, one by one.  No directories are allowed,
   # only plain files. The existing file permissions and mtimes of the
   # tar'd files are used in the tar files; however, we can set our own
-  # file names internally in the tar, and we always use the permissions
-  # specified in the initialization of the TarWriter object.
+  # file names internally in the tar, and we always use the
+  # permissions specified in the initialization of the TarWriter
+  # object.
   # 
   # Usage:
   #
@@ -27,7 +28,7 @@
   #   -rw-r--r--  0 daitss daitss   3667 Jun 23 02:19 bar/passwd
   #   -rw-r--r--  0 daitss daitss   1682 Sep 20 13:23 bar/group
   #
-  # The format was modeled on bsdtar 2.6.2 (mac os x)
+  # The tar format was modeled on the output of bsdtar 2.6.2 (Mac OS X)
 
 
 class TarWriter
@@ -39,7 +40,7 @@ class TarWriter
   # bsdtar 2.6.2 (mac os x) - use recent version of gnutar instead....
 
 
-  # A hash having keys :uid, :gif, :username, :groupname, used to set permissions for all
+  # A hash having keys :uid, :gid, :username, :groupname, used to set ownership for all
   # files included in the tar file we produce.
 
   attr_reader :ownership

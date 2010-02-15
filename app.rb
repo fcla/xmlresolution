@@ -1,21 +1,42 @@
-require 'xmlresolver/resolvercollection'
 require 'tempfile'
 require 'uri'
+require 'fileutils'
+require 'xmlresolver/resolvercollection.rb'
+require 'xmlresolver/tarwriter.rb'
+require 'xmlresolver/xmlresolver.rb'
+require 'yaml'
 
-# TODO: remove old collections on the fly (say, after a week...) and support HEAD, DELETE
+require 'debugger'
+
+# TODO: remove old collections on the fly (say, after a week...) and support HEAD, DELETE, 400's, etags, and schema files
 
 helpers do
+
+  def app_root
+    File.expand_path(File.dirname(__FILE__))
+  end
+
+  # so far, anything that requires a configuration variable knows how 
+  # to default from a nil value; TODO log a warning
+
+  def configuration name
+    filename = File.join app_root, 'config.yaml'
+    YAML::load_file(filename)[name]
+  rescue => e
+    STDERR.puts "Warning: expected a configuration file #{filename}. Returning nil for the #{name} configuration variable."
+    return nil
+  end
+
   def hostname
     Socket::gethostname.downcase
   end
   
   def data_root
-   File.expand_path(File.join(File.dirname(__FILE__), 'data'))
+    File.join app_root, 'data'
   end
 
   def proxy
-    # 'satya.sacred.net'   # TODO: set up configuration files
-    'sake.fcla.edu'
+    configuration 'proxy'
   end
 
   def collection_name_ok? collection_id
@@ -46,79 +67,23 @@ helpers do
   end
 
   def add_xml_file_data collection_id, tempfile, filename=nil 
-    tempfile.open                                             # reopens in read mode
-    rc = ResolverCollection.new(data_root, collection_id, proxy)   #
-    rc.save_resolution_data(tempfile.read, filename)          # returns an xml document describing the outcome
+    tempfile.open                                                  # reopens in read mode
+    rc = ResolverCollection.new(data_root, collection_id, proxy)   
+    rc.save_resolution_data(tempfile.read, filename)               # returns an xml document describing the outcome
   end
 
 end # of helpers
 
 
-# The top level page gives an introduction to using this service.
-
-get '/' do
-  @base_url = 'http://' + @env['SERVER_NAME'] + (@env['SERVER_PORT'].to_s == '80' ? '' : ':' + @env['SERVER_PORT'].to_s)
-  erb :site
-end
-
-# List all of the collections we've created:
-
-get '/ieids/' do
-  erb :ieids
-end
-
-# Client forgot trailing slash for above: be helpful
+# Clients that forgot trailing slashes:
 
 get '/ieids' do
   redirect '/ieids/', 301
 end
 
-# Get the collection of xml files we've associated with a collection id as a tar file
-
-get '/ieids/:collection_id/' do |collection_id|
-  halt [ 404, "No such collection #{collection_id}\n" ] unless collection_exists? collection_id
-  content_type "application/x-tar"
-  attachment   "#{collection_id}.tar"
-  tar_file_as_string collection_id
-end
-
-#  Client forgot trailing slash for above: be helpful
-
 get '/ieids/:collection_id' do |collection_id|
   redirect "/ieids/#{collection_id}/", 301
 end
-
-
-# Create a new collection:
-
-put '/ieids/:collection_id' do |collection_id|
-  halt [ 403, "Collection #{collection_id} already exists\n" ]  if collection_exists? collection_id
-  halt [ 400, "Collection #{collection_id} is badly named\n" ]  unless collection_name_ok? collection_id
-  create_collection collection_id
-  status 201
-  "collection #{collection_id} created\n"
-end
-
-# POST an xmlfile to a resource collection.
-#
-# We expect Content-Type of enctype=multipart/form-data, which is used in your basic file upload form.
-# It expects behavior produced as the form input having type="file" name="xmlfile".  Additionally, if
-# the content disposition supplies a filename, we'll use that.
-
-post '/ieids/:collection_id/' do |collection_id|
-
-  halt [ 400, "Missing required parameter 'xmlfile'\n" ] unless params['xmlfile']
-
-  tempfile = params['xmlfile'][:tempfile]
-  filename = params['xmlfile'][:filename] or 'unnamed.xml'
-
-  content_type "application/xml"
-  status 200
-  add_xml_file_data(collection_id, tempfile, filename)   # TODO:  percolate errors up to here...
-
-end
-
-# Some helpful functions when in development mode:
 
 get '/rdoc' do 
   redirect '/rdoc/index.html', 301
@@ -132,20 +97,71 @@ get '/test' do
   redirect '/test/', 301
 end
 
+# The top level page gives an introduction to using this service.
+
+get '/' do
+  port = @env['SERVER_PORT'].to_s
+  base_url = 'http://' + @env['SERVER_NAME'] + (port == '80' ? '' : ":#{port}")
+  erb :site, :locals => { :base_url => base_url }
+end
+
+# List all of the collections we've got
+
+get '/ieids/' do
+  erb :ieids
+end
+
+# Get the collection of xml files we've associated with a collection id as a tar file
+
+get '/ieids/:collection_id/' do |collection_id|
+  halt [ 404, "No such collection #{collection_id}\n" ] unless collection_exists? collection_id
+  content_type "application/x-tar"
+  attachment   "#{collection_id}.tar"
+  tar_file_as_string collection_id
+end
+
+# Create a new collection:
+
+put '/ieids/:collection_id' do |collection_id|
+  halt [ 403, "Collection #{collection_id} already exists\n" ]  if collection_exists? collection_id
+  halt [ 400, "Collection #{collection_id} is badly named\n" ]  unless collection_name_ok? collection_id
+  create_collection collection_id
+  status 201
+  "collection #{collection_id} created\n"
+end
+
+
+# POST an xmlfile to a resource collection.
+#
+# We expect Content-Type of enctype=multipart/form-data, which is used in your basic file upload form.
+# It expects behavior produced as the form input having type="file" name="xmlfile".  Additionally, if
+# the content disposition supplies a filename, we'll use that.
+
+post '/ieids/:collection_id/' do |collection_id|
+
+  halt [ 400, "Missing required parameter 'xmlfile'\n" ] unless params['xmlfile']
+
+  tempfile = params['xmlfile'][:tempfile]
+  filename = params['xmlfile'][:filename] or 'unnamed.xml'    # TODO:  need to raise an exception here: filename is now required
+
+  content_type "application/xml"
+  status 200
+  add_xml_file_data(collection_id, tempfile, filename)   # TODO:  percolate errors up to here
+end
+
 get '/test/' do
    erb :test
 end
 
 get '/test-form/:collection_id/' do |collection_id|
-  @collection_id = collection_id
-  erb :'test-form'
+  erb :'test-form', :locals => { :collection_id => collection_id }
 end
 
 get '/dump' do
-     raise
+  raise
 end
 
 post '/dump' do
-     raise
+  raise
 end
 

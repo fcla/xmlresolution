@@ -6,7 +6,7 @@ require 'time'  # brings in parse method, iso8601
 
 include LibXML
 
-# TODO: extend to DTDs.
+# TODO: extend to DTDs.  Produce 400 for XML Files that fail entirely (e.g. non-xml)
 
 # Author: Randy Fischer (rf@ufl.edu) for DAITSS
 
@@ -52,7 +52,7 @@ include LibXML
 # Secondly, there are common schemas, such as
 # http://dublincore.org/schemas/xmls/simpledc20021212.xsd, that squid
 # cannot cache since there is no Last-Modified, Etag, or
-# chaching/expiration information associated with it. These kinds of
+# caching/expiration information associated with it. These kinds of
 # issues slow us down somewhat.
 
 class XmlResolver
@@ -99,7 +99,7 @@ class XmlResolver
     @schema_information = get_schemas xml_text
   end
 
-  # Returns a list of namespaces that were encountered, but never had a location associated with thme
+  # Returns a list of namespaces that were encountered, but never had a location associated with them.
 
   def unresolved_namespaces
     @namespaces_found.collect { |namespace, located| namespace if not located }.compact.sort
@@ -135,8 +135,8 @@ class XmlResolver
     raise "#{location} can't be retrieved, there were too many redirects."          if limit < 1
 
     # TODO: We plan to run this under Sinatra, but Net::HTTP::Proxy isn't thread safe.  Fix me.
-
-    # Note: if @proxy_addr & @proxy_port are nil, this is equivalent to saying 
+    #
+    # Note: if @proxy_addr & @proxy_port are nil, this is equivalent to Net::HTTP
 
     Net::HTTP::Proxy(@proxy_addr, @proxy_port).start(uri.host, uri.port) do |http|
       response  = http.get(uri.path)
@@ -160,7 +160,7 @@ class XmlResolver
 
   def find_schema_references text, schema_location=nil
 
-    # TODO: on error, this outputs to STDERR.  That won't do!
+    # TODO: on error, this outputs to STDERR.  That won't do!  We'd better dup STDERR to /dev/null around this
 
     doc = XML::Parser.string(text).parse
 
@@ -246,7 +246,6 @@ class XmlResolver
         locations_checked.push location
         locations_checked.each { |already_seen| next_to_check.delete already_seen }
       end
-
     end
 
     unless next_to_check.empty?

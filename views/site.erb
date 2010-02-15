@@ -45,7 +45,7 @@
 
 <p>
 The first step to using this service is to create a container resource that is named by a collection id.  We use
-the PUT method on a URL of the form <%= @base_url %>/ieids/&lt;collection-id&gt;.  The collection id  must not 
+the PUT method on a URL of the form <%= base_url %>/ieids/&lt;collection-id&gt;.  The collection id  must not 
 be in use.
 </p>
 
@@ -55,9 +55,7 @@ We can use curl to create a new resource as follows:
 </p>
 
 <pre>
-
-  curl --upload-file /dev/null -X PUT <%= @base_url %>/ieids/E20010101_TESTIN</a>
-
+    curl --upload-file /dev/null -X PUT <%= base_url %>/ieids/E20010101_TESTIN</a>
 </pre>
 
 <p>
@@ -74,15 +72,15 @@ browser would submit for the following:
 </p>
 
 <pre>
- &lt;form action="<%= @base_url %>/ieids/E20010101_TESTIN" enctype="multipart/form-data" method="post"&gt;
- &lt;p&gt;
- Please specify a file:&lt;br&gt;
- &lt;input type="file" name="xmlfile" size="72"&gt;
- &lt;/p&gt;
- &lt;div&gt;
- &lt;input type="submit" value="Send"&gt;
- &lt;/div&gt;
- &lt;/form&gt;
+    &lt;form action="<%= base_url %>/ieids/E20010101_TESTIN" enctype="multipart/form-data" method="post"&gt;
+    &lt;p&gt;
+    Please specify a file:&lt;br&gt;
+    &lt;input type="file" name="xmlfile" size="72"&gt;
+    &lt;/p&gt;
+    &lt;div&gt;
+    &lt;input type="submit" value="Send"&gt;
+    &lt;/div&gt;
+    &lt;/form&gt;
 </pre>
 
 <p>
@@ -90,11 +88,31 @@ The following curl program can be used to perform the above action:
 </p>
 
 <pre>
-  curl -F xmlfile=@myfile.xml <%= @base_url %>/ieids/E20010101_TESTIN/
+    curl -F xmlfile=@myfile.xml <%= base_url %>/ieids/E20010101_TESTIN/
 </pre>
 
+The above curl command generates a request document along the lines of
+
+<pre>
+    POST /ieids/E20010101_TESTIN/ HTTP/1.1
+    User-Agent: curl/7.19.4 (universal-apple-darwin10.0) libcurl/7.19.4 OpenSSL/0.9.8l zlib/1.2.3
+    Host: <%= @env['SERVER_NAME'] %>
+    Accept: */*
+    Content-Length: 1882
+    Expect: 100-continue
+    Content-Type: multipart/form-data; boundary=----------------------------600fd6d7fb48
+
+    ------------------------------600fd6d7fb48
+    Content-Disposition: form-data; name="xmlfile"; filename="myfile.xml"
+    Content-Type: application/octet-stream
+
+    ... xmlfile text here ....
+    ------------------------------600fd6d7fb48--
+</pre>
+
+
 <p>
-Note the trailing slash.   An XML document is returned describing the outcome of the XML resolution for
+Note the trailing slash in the URL.   An XML document is returned describing the outcome of the XML resolution for
 the POSTed file.
 </p>
 

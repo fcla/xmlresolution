@@ -76,7 +76,7 @@ class ResolverCollection
   end
 
 
-  # report the collection names - a list of IEIDs, nominally
+  # report the collection names - a list of IEIDs, normally
 
   def self.collections root_directory
     list = []
@@ -99,8 +99,8 @@ class ResolverCollection
   private
 
   # Given the list of records produced by
-  # XmlResolution#schema_information, find those successfully4
-  # resolved schemas and store them info files named after their MD5
+  # XmlResolution#schema_information, find those successfully
+  # resolved schemas and store them into files named after their MD5
   # digests. Also, for each schema, yield that digest information
   # along with the associated location and its namespace.
 
@@ -165,7 +165,7 @@ class ResolverCollection
     list.map{ |elt| URI.escape(elt) }.join(' ')
   end
 
-  # Perform the inverse of the escape method
+  # Perform the inverse of the escape method.
 
   def unescape(string)
     data = string.split(/\s+/)
@@ -205,8 +205,6 @@ class ResolverCollection
     # the SCHEMA lines include the checksum of the downloaded schema file needed to resolve the document; it
     # is followed by the retrieved location, namespace, the relative location of the schema document, and the
     # timestamp of the schema document.
-
-    # TODO: I really should have used YAML in the first place
     
     info = { 
       'error'               => nil,  
