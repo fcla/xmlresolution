@@ -1,7 +1,7 @@
  set :application,       "xmlresolution"
  set :domain,            "xmlresolution.dev.fcla.edu"
  set :repository,        "ssh://retsina.fcla.edu//var/git/#{application}.git"
- set :local_repository,  "file:///var/git/#{application}.git"
+#set :local_repository,  "file:///var/git/#{application}.git"
  set :use_sudo,          false
  set :deploy_to,         "/opt/web-services/#{application}"
  set :scm,               "git"
