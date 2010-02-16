@@ -1,11 +1,6 @@
 
-require 'fileutils'
+require 'ruby-debug'
 
-debug_sentinel = File.expand_path(File.join(File.dirname(__FILE__), '..', 'tmp', 'debug.txt'))
+# Debugger.wait_connection = true
+# Debugger.start_remote
 
-if File.exists?  debug_sentinel
-  require 'ruby-debug'
-  Debugger.wait_connection = true
-  Debugger.start_remote
-  FileUtils.rm_f debug_sentinel
-end

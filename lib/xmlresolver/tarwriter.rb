@@ -65,8 +65,8 @@ class TarWriter
   # Format INT as octal string, optionally prefix with leading zeros to fill out to PAD length.
   # INT may be a string or fixnum.
 
-  def to_octal int, pad = nil
-    pad ? sprintf("%0#{pad}o", int) : sprintf('%o', int)
+  def to_octal int, pad_length = nil
+    pad_length ? sprintf("%0#{pad_length}o", int) : sprintf('%o', int)
   end
 
   # Determine the checksum of a header BUFF.  The location of the
@@ -77,7 +77,7 @@ class TarWriter
     sum =  0
     (0   .. 147).each { |i| sum += buff[i] }
     (156 .. 511).each { |i| sum += buff[i] }
-    sum + 32 * 8   
+    sum + 32 * 8
   end
 
   # Build a boilerplate header based on what we know won't change: for us, that's
@@ -144,7 +144,9 @@ class TarWriter
 
     # mtime of file - epoch time format, in octal, followed by a space
 
-    buff[136..147] = fstat.mtime.to_i.to_s(8) + ' '
+    octal_mtime = fstat.mtime.to_i.to_s(8)
+
+    buff[136..147] =  octal_mtime +  (' ' * (12 - octal_mtime.length))
 
     # size of file - we only use the short file size encoding - 11 octal characters, left padded with zeros, followed by a space
 

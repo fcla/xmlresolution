@@ -46,13 +46,6 @@ task :restart do
 end
 
 
-desc "Restart in debug mode" 
-task :debug do
-  mkdir TMPDIR unless File.directory? TMPDIR
-  File.open(File.join(TMPDIR, 'debug.txt'), 'w') { |f| f.write "" }
-  File.open(File.join(TMPDIR, 'restart.txt'), 'w') { |f| f.write "" }
-end
-
 
 # TODO: do subsequent tasks kick off if a preceding one fails?
 

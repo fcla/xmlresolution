@@ -6,9 +6,13 @@ require 'xmlresolver/tarwriter.rb'
 require 'xmlresolver/xmlresolver.rb'
 require 'yaml'
 
-require 'debugger'
+require 'debugger'  # TODO: this is a crock... do better
 
-# TODO: remove old collections on the fly (say, after a week...) and support HEAD, DELETE, 400's, etags, and schema files
+# TODO: logger
+# TODO: configuration section?
+# TODO: remove old collections on the fly (say, after a week...) and
+# support HEAD, DELETE, 400's, etags, and schema files
+
 
 helpers do
 
@@ -40,7 +44,7 @@ helpers do
   end
 
   def collection_name_ok? collection_id
-    # collection_id =~ /^E2[0-9]{7}_[a-zA-Z0-9_]{6}$/
+    # collection_id =~ /^E2[0-9]{7}_[a-zA-Z0-9_]{6}$/                           # need to add this back
     not (collection_id =~ /\// or collection_id != URI.escape(collection_id))
   end
 
@@ -56,20 +60,17 @@ helpers do
     ResolverCollection.new(data_root, collection_id) 
   end
 
-  def tar_file_as_string collection_id
+  def get_tarfile collection_id
     fd = Tempfile.new 'xmlrez-tar'
     ResolverCollection.new(data_root, collection_id, proxy).tar(fd)
     fd.open.read
-  rescue => e
-    halt [ 500, e.message + "\n" ]  # TODO: close potential security problem - information leakage
   ensure
-    fd.close
+    fd.close true
   end
 
-  def add_xml_file_data collection_id, tempfile, filename=nil 
-    tempfile.open                                                  # reopens in read mode
+  def add_xml collection_id, xml_text, xml_filename
     rc = ResolverCollection.new(data_root, collection_id, proxy)   
-    rc.save_resolution_data(tempfile.read, filename)               # returns an xml document describing the outcome
+    rc.save_resolution_data(xml_text, xml_filename)                # returns an xml document describing the outcome
   end
 
 end # of helpers
@@ -100,8 +101,8 @@ end
 # The top level page gives an introduction to using this service.
 
 get '/' do
-  port = @env['SERVER_PORT'].to_s
-  base_url = 'http://' + @env['SERVER_NAME'] + (port == '80' ? '' : ":#{port}")
+
+  base_url = 'http://' + @env['SERVER_NAME'] + (@env['SERVER_PORT'] == '80' ? '' : ":#{@env['SERVER_PORT']}")
   erb :site, :locals => { :base_url => base_url }
 end
 
@@ -111,13 +112,20 @@ get '/ieids/' do
   erb :ieids
 end
 
+
 # Get the collection of xml files we've associated with a collection id as a tar file
 
 get '/ieids/:collection_id/' do |collection_id|
-  halt [ 404, "No such collection #{collection_id}\n" ] unless collection_exists? collection_id
-  content_type "application/x-tar"
-  attachment   "#{collection_id}.tar"
-  tar_file_as_string collection_id
+  begin
+    halt [ 404, "No such collection /ieids/#{collection_id}\n" ] unless collection_exists? collection_id
+    tar_data = get_tarfile collection_id
+    content_type "application/x-tar"
+    attachment   "#{collection_id}.tar"
+    tar_data
+  rescue => e
+    content_type "text/plain"
+    halt [ 500, "Error creating tarfile.\n" ]  # TODO: be nice to get a backtrace in a log somewhere....
+  end
 end
 
 # Create a new collection:
@@ -125,7 +133,8 @@ end
 put '/ieids/:collection_id' do |collection_id|
   halt [ 403, "Collection #{collection_id} already exists\n" ]  if collection_exists? collection_id
   halt [ 400, "Collection #{collection_id} is badly named\n" ]  unless collection_name_ok? collection_id
-  create_collection collection_id
+
+  create_collection collection_id  ### TODO: catch error
   status 201
   "collection #{collection_id} created\n"
 end
@@ -134,19 +143,23 @@ end
 # POST an xmlfile to a resource collection.
 #
 # We expect Content-Type of enctype=multipart/form-data, which is used in your basic file upload form.
-# It expects behavior produced as the form input having type="file" name="xmlfile".  Additionally, if
-# the content disposition supplies a filename, we'll use that.
+# It expects behavior produced as the form input having type="file" name="xmlfile".  Additionally, we
+# content disposition must supply a filename.
 
 post '/ieids/:collection_id/' do |collection_id|
+  begin
+    halt [ 400, "Missing form data name='xmlfile'\n" ]    unless params['xmlfile']
+    halt [ 400, "Missing form data filename='...'\n" ]    unless filename = params['xmlfile'][:filename]
+    halt [ 500, "Data unavailable (missing tempfile)\n" ] unless tempfile = params['xmlfile'][:tempfile]
+    
+    status 200
+    content_type 'application/xml'
+    add_xml(collection_id, tempfile.open.read, filename)   # TODO:  sic - raise and catch specific errors (e.g. non-xmlfiles)
 
-  halt [ 400, "Missing required parameter 'xmlfile'\n" ] unless params['xmlfile']
-
-  tempfile = params['xmlfile'][:tempfile]
-  filename = params['xmlfile'][:filename] or 'unnamed.xml'    # TODO:  need to raise an exception here: filename is now required
-
-  content_type "application/xml"
-  status 200
-  add_xml_file_data(collection_id, tempfile, filename)   # TODO:  percolate errors up to here
+  rescue => e
+    content_type 'text/plain'
+    halt [ 500, "Can't get filedata for #{filename}.\n" ]
+  end
 end
 
 get '/test/' do
