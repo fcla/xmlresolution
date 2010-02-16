@@ -1,21 +1,19 @@
  set :application,       "xmlresolution"
  set :domain,            "xmlresolution.dev.fcla.edu"
- set :repository,        "ssh://retsina.fcla.edu//var/git/#{application}.git"
-#set :local_repository,  "file:///var/git/#{application}.git"
+ set :repository,        "git@github.com:daitss/xmlresolution.git"
  set :use_sudo,          false
  set :deploy_to,         "/opt/web-services/#{application}"
  set :scm,               "git"
-#set :gateway,		 "gnvssh.fcla.edu:2020"   # what *is* my password?
-#set :gateway,		 "fcla"                   # a host/port alias from .ssh/config
 
  role :app, domain
  role :web, domain
  role :db,  domain, :primary => true
 
-after "deploy:update", "deploy:layout", "deploy:rdoc", "deploy:echo_revision", "deploy:restart"
+after "deploy:update", "deploy:layout", "deploy:rdoc", "deploy:restart"
 
  namespace :deploy do
-    task :start do
+
+    task :start do  # TODO: setup sudo command to restart apache?  doesn't seem necessary yet.
     end
 
     task :stop do
@@ -25,24 +23,26 @@ after "deploy:update", "deploy:layout", "deploy:rdoc", "deploy:echo_revision", "
       run "touch #{File.join(current_path, 'tmp', 'restart.txt')}"
     end
 
-    task :layout, :roles => :app do
+   task :layout, :roles => :app do
 
-      [ File.join(current_path, 'data', 'collections'),
- 	File.join(current_path, 'data', 'schemas'), 
-      	File.join(current_path, 'public') ].each  { |dir| run "mkdir -p #{dir}" }
+     [ 'data', 'public'].each do |dir|                # might not be in git, since these are empty. 
+       pathname = File.join(current_path, dir)
+       run "mkdir -p #{pathname}"       
+       run "chmod -R ug+rwX #{pathname}" 
+     end
 
-      [ File.join(current_path, 'data'),
-      	File.join(current_path, 'public') ].each  { |dir| run "chmod -R g+rwX #{dir}" }
+     ['collections', 'schemas'].each do |dir|         # want to preserve existing data, so let's keep in the shared data and link into it
+       realname = File.join(shared_path, dir)
+       linkname = File.join(current_path, 'data')
+       run "ln -s #{realname} #{linkname}"
+       run "chmod -R ug+rwX #{realname}" 
+     end
 
     end
 
-    task :rdoc, :roles => :app do
+    task :rdoc, :roles => :app do                     # generate fresh rdoc.
        run "cd #{current_path}; rake rdoc"
        run "chmod -R g+rwX #{File.join(current_path, 'public', 'rdoc')}"
-    end
-
-    task :echo_revision, :roles => :app do
-       run "echo 'REVISION: ' `cat #{File.join(current_path, 'REVISION')}`"
     end
 
  end
