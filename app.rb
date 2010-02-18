@@ -1,14 +1,12 @@
 require 'tempfile'
 require 'uri'
 require 'fileutils'
-require 'xmlresolver/resolvercollection.rb'
-require 'xmlresolver/tarwriter.rb'
-require 'xmlresolver/xmlresolver.rb'
+require 'xmlresolver.rb'
 require 'yaml'
 
 require 'debugger'  # TODO: this is a crock... do better
 
-# TODO: logger
+# TODO: logger, and use as before method
 # TODO: configuration section?
 # TODO: remove old collections on the fly (say, after a week...) and
 # support HEAD, DELETE, 400's, etags, and schema files
@@ -44,7 +42,7 @@ helpers do
   end
 
   def collection_name_ok? collection_id
-    # collection_id =~ /^E2[0-9]{7}_[a-zA-Z0-9_]{6}$/                           # need to add this back
+    # collection_id =~ /^E2[0-9]{7}_[a-zA-Z0-9_]{6}$/                           # TODO: need to add this back
     not (collection_id =~ /\// or collection_id != URI.escape(collection_id))
   end
 
@@ -112,7 +110,6 @@ get '/ieids/' do
   erb :ieids
 end
 
-
 # Get the collection of xml files we've associated with a collection id as a tar file
 
 get '/ieids/:collection_id/' do |collection_id|
@@ -124,7 +121,7 @@ get '/ieids/:collection_id/' do |collection_id|
     tar_data
   rescue => e
     content_type "text/plain"
-    halt [ 500, "Error creating tarfile.\n" ]  # TODO: be nice to get a backtrace in a log somewhere....
+    halt [ 500, "Error creating tarfile.\n" ]   # TODO: be nice to get a backtrace in a log somewhere....
   end
 end
 
@@ -144,7 +141,7 @@ end
 #
 # We expect Content-Type of enctype=multipart/form-data, which is used in your basic file upload form.
 # It expects behavior produced as the form input having type="file" name="xmlfile".  Additionally, we
-# content disposition must supply a filename.
+# require that the content disposition must supply an original filename.
 
 post '/ieids/:collection_id/' do |collection_id|
   begin
@@ -152,13 +149,13 @@ post '/ieids/:collection_id/' do |collection_id|
     halt [ 400, "Missing form data filename='...'\n" ]    unless filename = params['xmlfile'][:filename]
     halt [ 500, "Data unavailable (missing tempfile)\n" ] unless tempfile = params['xmlfile'][:tempfile]
     
-    status 200
+    status 201
     content_type 'application/xml'
-    add_xml(collection_id, tempfile.open.read, filename)   # TODO:  sic - raise and catch specific errors (e.g. non-xmlfiles)
+    add_xml(collection_id, tempfile.open.read, filename)   # TODO:  [sic] - raise and catch specific errors (e.g. non-xmlfiles)
 
   rescue => e
     content_type 'text/plain'
-    halt [ 500, "Can't get filedata for #{filename}.\n" ]
+    halt [ 500, "Can't get parse file data for supplied file named '#{filename}'.\n" ]
   end
 end
 

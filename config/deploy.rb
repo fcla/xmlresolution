@@ -29,13 +29,13 @@ after "deploy:update", "deploy:layout", "deploy:rdoc", "deploy:restart"
    
    task :layout, :roles => :app do
      
-     [ 'data', 'public'].each do |dir|                # might not be in git, since these are empty. 
+     ['data', 'public'].each do |dir|                 # might not be in git, since these directories are usually empty.
        pathname = File.join(current_path, dir)
        run "mkdir -p #{pathname}"       
        run "chmod -R ug+rwX #{pathname}" 
      end
      
-     ['collections', 'schemas'].each do |dir|         # want to preserve existing data, so let's keep in the shared directory and link into it
+     ['collections', 'schemas'].each do |dir|         # want to preserve existing data, so let's keep this in the shared directory and link into it
        realname = File.join(shared_path, dir)
        linkname = File.join(current_path, 'data')
        run "ln -s #{realname} #{linkname}"
@@ -46,7 +46,7 @@ after "deploy:update", "deploy:layout", "deploy:rdoc", "deploy:restart"
    
    task :rdoc, :roles => :app do                     # generate fresh rdoc.
      run "cd #{current_path}; rake rdoc"
-     run "chmod -R g+rwX #{File.join(current_path, 'public', 'rdoc')}"
+     run "chmod -R ug+rwX #{File.join(current_path, 'public', 'rdoc')}"
    end
    
  end
