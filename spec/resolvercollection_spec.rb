@@ -1,6 +1,6 @@
 require 'xmlresolution/resolvercollection'
 
-describe ResolverCollection do
+describe XmlResolution::ResolverCollection do
 
   before do
 

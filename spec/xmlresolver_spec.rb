@@ -1,14 +1,17 @@
 require 'xmlresolution/xmlresolver'
 require 'xmlresolution/exceptions'
 
+
+STDERR.puts "Expect the message \"Fatal error: Start tag expected, '<' not found at :1.\" It's from LibXML."
+
 describe XmlResolution::XmlResolver do
 
-  @@mets_xres = nil                           # we'll fill this in later
+  @@mets_xres     = nil                           # we'll fill this in later
+  @@mets_reloaded = nil
 
   def test_proxy
-    "satyagraha.sacred.net"
+    "sake.fcla.edu"
   end
-
 
   def mets_namespace 
     "http://www.loc.gov/METS/"
@@ -73,5 +76,52 @@ describe XmlResolution::XmlResolver do
   it "should get the METS schema location from among the schemas fetched for a typical METS descriptor" do
     @@mets_xres.schemas.map { |elt| elt.location }.include?(mets_location).should == true
   end
+
+  it "should give us a data dump representation of itself" do
+    (@@mets_xres.dump =~ /^UNRESOLVED_NAMESPACES /).should_not == nil
+    (@@mets_xres.dump =~ /^SCHEMA /).should_not == nil
+  end
+
+  it "should give us a digest of the document text" do
+    (@@mets_xres.dump =~ /^DIGEST [a-f0-9]{32}/).should == 0
+  end
+
+  it "should not include a filename yet" do
+    (@@mets_xres.dump =~ /^FILENAME /).should == nil
+  end
+
+  it "should let us add a filename" do
+    @@mets_xres.filename = 'myfile.xml'
+    @@mets_xres.filename.should == 'myfile.xml'   
+  end
+
+  it "should now include the filename in the dump" do
+    (@@mets_xres.dump =~ /^FILENAME /).should_not == nil
+    (@@mets_xres.dump =~ /myfile.xml/).should_not == nil
+  end
+
+  it "should allow us to recreate much of its behavior by using the dump in a duck-class" do
+    lambda { @@mets_reloaded = XmlResolution::XmlResolverReloaded.new @@mets_xres.dump }.should_not raise_error
+  end
+
+  it "should match the digest in it's duck-class" do
+    @@mets_xres.digest.should == @@mets_reloaded.digest
+  end
+
+  it "should match the filename in it's duck-class" do
+    @@mets_xres.filename.should == @@mets_reloaded.filename
+  end
+
+  it "should match the schema data in it's duck-class" do
+    @@mets_xres.schemas.length.should == @@mets_reloaded.schemas.length
+  end
+
+  it "should match the internal data in it's duck-class" do
+    @@mets_xres.schemas[0].digest.should            == @@mets_reloaded.schemas[0].digest
+    @@mets_xres.schemas[0].modification_time.should == @@mets_reloaded.schemas[0].modification_time
+    @@mets_xres.schemas[0].location.should          == @@mets_reloaded.schemas[0].location
+    @@mets_xres.schemas[0].namespace.should         == @@mets_reloaded.schemas[0].namespace
+  end
+
 
 end

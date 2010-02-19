@@ -1,7 +1,7 @@
 require 'tempfile'
 require 'uri'
 require 'fileutils'
-require 'xmlresolver.rb'
+require 'xmlresolution.rb'
 require 'yaml'
 
 require 'debugger'  # TODO: this is a crock... do better
@@ -11,6 +11,7 @@ require 'debugger'  # TODO: this is a crock... do better
 # TODO: remove old collections on the fly (say, after a week...) and
 # support HEAD, DELETE, 400's, etags, and schema files
 
+$KCODE = 'UTF8'
 
 helpers do
 
@@ -47,27 +48,27 @@ helpers do
   end
 
   def collection_exists? collection_id
-    ResolverCollection.collection_exists? data_root, collection_id
+    XmlResolution::ResolverCollection.collection_exists? data_root, collection_id
   end
 
   def collections
-    ResolverCollection.collections data_root
+    XmlResolution::ResolverCollection.collections data_root
   end
   
   def create_collection collection_id
-    ResolverCollection.new(data_root, collection_id) 
+    XmlResolution::ResolverCollection.new(data_root, collection_id) 
   end
 
   def get_tarfile collection_id
     fd = Tempfile.new 'xmlrez-tar'
-    ResolverCollection.new(data_root, collection_id, proxy).tar(fd)
+    XmlResolution::ResolverCollection.new(data_root, collection_id, proxy).tar(fd)
     fd.open.read
   ensure
     fd.close true
   end
 
   def add_xml collection_id, xml_text, xml_filename
-    rc = ResolverCollection.new(data_root, collection_id, proxy)   
+    rc = XmlResolution::ResolverCollection.new(data_root, collection_id, proxy)   
     rc.save_resolution_data(xml_text, xml_filename)                # returns an xmlresolver object - the information 
   end
 
@@ -155,7 +156,8 @@ post '/ieids/:collection_id/' do |collection_id|
 
   rescue => e
     content_type 'text/plain'
-    halt [ 500, "Can't get parse file data for supplied file named '#{filename}'.\n" ]
+    halt [ 500, "Can't get parse file data for supplied file named '#{filename}': #{e.message}.\n" + e.backtrace.join("\n") + "\n" ]
+    # halt [ 500, "Can't get parse file data for supplied file named '#{filename}': #{e.message}.\n" ]
   end
 end
 

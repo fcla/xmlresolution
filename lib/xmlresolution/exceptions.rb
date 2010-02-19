@@ -1,12 +1,27 @@
 module XmlResolution
 
-  # these are 400-class errors:
+  class XmlResolutionError < StandardError; end
 
-  class XmlParseError < StandardError; end  # The xml parser complained bitterly.
-  class LocationError < StandardError; end  # Bad schema location somehow - not http, too many redirects, etc.
+    # Bad schema location somehow - not http, too many redirects.  Should be entirely fielded within our classes.
 
-  # these are 500-class errors:
+    class LocationError < XmlResolutionError; end  
 
-  class ResolverError < StandardError; end   # General programming error in xmlresolver.rb  Can't happen.
+    # User errors
+
+    class Http400Error < XmlResolutionError; end
+
+       # The xml parser complained, bitterly.
+
+       class XmlParseError < Http400Error; end     
+
+    # System errors
+
+    class Http500Error < XmlResolutionError; end
+
+       # general fatal errors
+
+       class ResolverError                 < Http500Error; end
+       class CollectionInitializationError < Http500Error; end
+       class LockError                     < Http500Error; end
 
 end
