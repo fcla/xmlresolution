@@ -68,7 +68,7 @@ helpers do
 
   def add_xml collection_id, xml_text, xml_filename
     rc = ResolverCollection.new(data_root, collection_id, proxy)   
-    rc.save_resolution_data(xml_text, xml_filename)                # returns an xml document describing the outcome
+    rc.save_resolution_data(xml_text, xml_filename)                # returns an xmlresolver object - the information 
   end
 
 end # of helpers

@@ -7,9 +7,8 @@ require 'uri'
 require 'builder'
 require 'time'        # brings in parse & iso8601 methods for Time objects
 require 'tempfile'
-
-require 'xmlresolver/xmlresolver' #
-require 'xmlresolver/tarwriter'   # lets us build tar files on the fly
+require 'xmlresolution/xmlresolver' #
+require 'xmlresolution/tarwriter'   # lets us build tar files on the fly
 
 # This class stores and retrieves information for XmlResolution
 # service.  It maintains a set of collection identifiers supplied by
@@ -193,7 +192,7 @@ class ResolverCollection
     # document that was associated with the collection E20071201_AAABCD.  Here's 
     # an example:
     #
-    # TEXT_IDENTIFIER test.xml
+    # FILENAME test.xml
     # SCHEMA c703435da3490c8bbd58b69fad125017 http://www.loc.gov/standards/mets/mets.xsd http://www.loc.gov/METS/ schemas/c703435da3490c8bbd58b69fad125017 2009-05-05T14:40:48-04:00
     # SCHEMA 54fbb3ef95c5f2f0d89a9c755e9b616e http://www.fcla.edu/dls/md/daitss/daitss.xsd http://www.fcla.edu/dls/md/daitss/ schemas/54fbb3ef95c5f2f0d89a9c755e9b616e 2007-07-27T15:12:52-04:00
     # SCHEMA 446839f319de8d5b40871c9da8f99c37 http://www.fcla.edu/dls/md/palmm.xsd http://www.fcla.edu/dls/md/palmm/ schemas/446839f319de8d5b40871c9da8f99c37 2006-06-16T14:39:11-04:00
@@ -219,7 +218,7 @@ class ResolverCollection
       fd.readlines.each do |line|
         data = unescape(line.chomp)
         case data.shift
-        when 'TEXT_IDENTIFIER'       
+        when 'FILENAME'       
           info['name']  =  data.shift
         when 'RESOLUTION_FAILURE'    
           info['error'] =  data[0]
@@ -282,14 +281,14 @@ class ResolverCollection
   public
 
   # For the given DOCUMENT_TEXT, a string containing an XML document,
-  # and optionally the string TEXT_IDENTIFIER, run the xml resolution
+  # and optionally the string FILENAME, run the xml resolution
   # procedure over it and store the information it produces into this
   # collection.  Returns an xml snippet describing the outcome
-  # of processing the text.  The intent for TEXT_IDENTIFIER is that it be a
+  # of processing the text.  The intent for FILENAME is that it be a
   # filename from a form/mulipart submission, or similar.  If we've previously
   # stored this particular document, over-write the last set of data.
 
-  def save_resolution_data(document_text, text_identifier = nil)
+  def save_resolution_data(document_text, filename)
 
     # We use the md5 checksum of the document text to identify the
     # file.  In fact, we'll store all the data about this file in a
@@ -301,7 +300,7 @@ class ResolverCollection
     resolution_data_pathname = File.join(collection_path, document_digest)
 
     write_lock(resolution_data_pathname) do |fd|
-      fd.puts escape('TEXT_IDENTIFIER',  text_identifier)
+      fd.puts escape('FILENAME',  filename)
       begin
         rez = XmlResolver.new(document_text, proxy)
       rescue => e
@@ -316,6 +315,8 @@ class ResolverCollection
         end
       end
     end   # of write_lock
+
+### looks like I really want the premis document, for just this xml
 
     utf8 do
       xml = Builder::XmlMarkup.new(:indent => 2)    
