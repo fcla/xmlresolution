@@ -31,6 +31,12 @@ describe XmlResolution::ResolverCollection do
     XmlResolution::ResolverCollection.data_path.should == path
   end
 
+  it "should tell us that a badly named collection id is invalid" do
+        XmlResolution::ResolverCollection.collection_name_ok?('bad name').should == false
+        XmlResolution::ResolverCollection.collection_name_ok?('good-name').should == true
+        XmlResolution::ResolverCollection.collection_name_ok?('bad/name').should == false
+  end
+
   it "should initially give us an empty list of collections" do
     XmlResolution::ResolverCollection.collections.length.should == 0
   end
@@ -42,7 +48,6 @@ describe XmlResolution::ResolverCollection do
   it "should allow us to specify the creation of a collection a second time with the same name" do
     lambda { XmlResolution::ResolverCollection.new(collection_one) }.should_not raise_error
   end
-
 
   it "should allow us to retrieve a list of collections" do
     list = XmlResolution::ResolverCollection.collections
@@ -59,16 +64,20 @@ describe XmlResolution::ResolverCollection do
     list.include?(collection_two).should == true
   end
 
-  it "should allow us to retrieve the schemas directory" do
+  it "should allow us to determine if a collection exists" do
+    XmlResolution::ResolverCollection.collection_exists?(collection_two).should == true
+    XmlResolution::ResolverCollection.collection_exists?('bogus_collection').should == false
+  end
+
+  it "should allow us to retrieve the schemas directory from an object" do
     col = XmlResolution::ResolverCollection.new(collection_one)
     File.directory?(col.schema_path).should == true 
   end
 
-  it "should allow us to retrieve the collections directory" do
+  it "should allow us to retrieve the collections directory from an object" do
     col = XmlResolution::ResolverCollection.new(collection_one)
     File.directory?(col.collection_path).should == true 
     (col.collection_path =~ /#{collection_one}$/).should > 0
-
   end
 
 end

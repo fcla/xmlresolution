@@ -10,7 +10,8 @@ describe XmlResolution::XmlResolver do
   @@mets_reloaded = nil
 
   def test_proxy
-    "sake.fcla.edu"
+    # "sake.fcla.edu"
+    "satyagraha.sacred.net"
   end
 
   def mets_namespace 

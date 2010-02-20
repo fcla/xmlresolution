@@ -16,15 +16,23 @@ module XmlResolution
   #
   # This class stores and retrieves information for XmlResolution
   # service.  It maintains a set of collection identifiers supplied by
-  # the calling program, and certain resolution_data for files with that
-  # collection id.  That resolution_data includes everything of importance
-  # produced by the XmlResolution class.
+  # the calling program, and uses the XmlResolution::XmlResolver class
+  # to associate documents and the schemas necessary to validate them
+  # with a given collection identifier. All of the schemas can be 
+  # retrieved in a per-collection tarfile.
   #
   # Example usage:
   #
-  # XmlResolution::ResolverCollection.data_path = "/service/path/data"
-  # rc = XmlResolution::ResolverCollection.new('E20101201_DECADE')
+  #   XmlResolution::ResolverCollection.data_path = "/service/path/data"
+  #   rc = XmlResolution::ResolverCollection.new('mycollection')
   # 
+  #   xrez = XmlResolution::XmlResolver.new(xml_text, proxy)
+  #   xrez.filename = its_filename
+  #   rc.add xrez
+  #
+  #    ... add some more resolved xml over time ...
+  #
+  #   rc.tar(STDOUT)
 
   class ResolverCollection
 
@@ -42,8 +50,10 @@ module XmlResolution
 
     @@data_path = nil
 
-    # ResolverCollection.data_path sets the root directory where all of the data for this class will be
-    # stored.  It must be done before using any of the other class methods, especially the constructor.
+    # ResolverCollection.data_path= sets the root directory where all of the data for this class will be
+    # stored.  It must be done before using any of the other class methods, except perhaps the
+    # ResolverCollection.data_path method.   Objects constructed after this point will keep a local
+    # copy
 
     def self.data_path= path
       raise CollectionInitializationError, "ResolverCollections cannot find the directory '#{path}'."     unless File.directory? path
@@ -57,13 +67,29 @@ module XmlResolution
       raise CollectionInitializationError, "ResolverCollections couldn't initialize directory #{path}: '#{e.message}'."
     end
     
+    # Return the current data_path that will be used for created objects.
+    
     def self.data_path 
       @@data_path
     end
 
+    # Return a list of all of the active collections stored at this data_path
+
     def self.collections
       raise CollectionInitializationError, "The ResolverCollections system has not been told what directory to use yet." unless ResolverCollection.data_path     
       Dir[File.join(data_path, COLLECTIONS, '*')].map { |path| File.split(path)[-1] }.sort
+    end
+
+    # A boolean to determine if a collection_id is active.
+
+    def self.collection_exists? collection_id
+      ResolverCollection.collections.include? collection_id
+    end
+    
+    # A boolean to determine if a string is a valid collection id. It has to fit into the filesystem, so must be a valid single directory name.
+
+    def self.collection_name_ok? collection_id
+      not (collection_id =~ /\// or collection_id != URI.escape(collection_id))
     end
         
     attr_reader :collection_name
@@ -82,22 +108,17 @@ module XmlResolution
 
     private
 
-    # Access the file FILEPATH exclusively. Times out after LOCK_TIMEOUT seconds.  Truncates
-    # the file, and yields a file descriptor ready to write to.
-
-    def self.write_lock(filepath)
-      open(filepath, 'w') do |fd|
-        Timeout.timeout(LOCK_TIMEOUT) { fd.flock(File::LOCK_EX) }
-        yield fd
-      end
-    rescue Timeout::Error => e
-      raise LockError, "Timed out waiting #{LOCK_TIMEOUT} seconds for write lock to #{filepath}: #{e.message}"
-    end
-
-    # Access the file FILEPATH in a shared manner: many read_locks may
-    # be simultaneous active, if there is a write_lock, it is the only
-    # lock of any kind.  Timeouts after LOCK_TIMEOUT seconds, and
-    # yields a file desciptor ready to read from.
+    # Access the file FILEPATH in a shared manner.  Note that we have
+    # two kinds of locks associated with files, read_locks and
+    # write_locks.  There may be 0, 1 or many locks active at any
+    # time. There may exist many active read_locks at once, but if
+    # there is an active write_lock, it is the only lock of any kind.
+    # Requests for locks may block for up to LOCK_TIMEOUT seconds,
+    # after which a LockError exception is raised.
+    # 
+    # On success, we yield a file desciptor positioned at the
+    # beginning of the file and ready to read from.  On return, the
+    # file is properly closed.
 
     def self.read_lock(filepath)
       open(filepath, 'r') do |fd|
@@ -108,15 +129,25 @@ module XmlResolution
       raise LockError, "Timed out waiting #{LOCK_TIMEOUT} seconds for read lock to #{filepath}: #{e.message}"
     end
 
-    public
+    # Access the file FILEPATH exclusively. Times out after
+    # LOCK_TIMEOUT seconds, raising a LockError exception.  On
+    # successfully obtaining a lock we truncate the file, and yield a
+    # file descriptor ready for writing.  On return, the file is
+    # properly closed.
 
+    def self.write_lock(filepath)
+      open(filepath, 'w') do |fd|
+        Timeout.timeout(LOCK_TIMEOUT) { fd.flock(File::LOCK_EX) }
+        yield fd
+      end
+    rescue Timeout::Error => e
+      raise LockError, "Timed out waiting #{LOCK_TIMEOUT} seconds for write lock to #{filepath}: #{e.message}"
+    end
 
     # Given an XmlResolution::XmlResolver object XREZ, save the
-    # information about the file that was resolved.  That includes the
-    # locations, namespaces, and the local filenames of schemas that
-    # are necessary to resolve it.  We always construct the filenames
-    # from the digest of the schema text.  We'll save the actual
-    # schema text elsewhere.
+    # information regarding the file that was analyzed.  That includes the
+    # original locations, namespaces, and names of the local copies 
+    # of all of the schemas that were necessary to fully resolve it.
 
     def save_document_information xrez
 
@@ -132,8 +163,8 @@ module XmlResolution
       end
     end
 
-    # Given an XmlResolution::XmlResolver object XREZ, save all of the schema data we 
-    # have collected. We never save the schema file text itself.
+    # Given an XmlResolution::XmlResolver object XREZ, save the schema texts we've
+    # found.  We use the digest of the text as the filename.
 
     def save_schema_information xrez
 
@@ -147,7 +178,15 @@ module XmlResolution
           File.utime(File.atime(filepath), s.last_modified, filepath)
         end
       end
+    end
 
+    public
+
+    # TODO: wrap in a timeout
+
+    def add xrez
+      save_schema_information xrez
+      save_document_information xrez
     end
 
   end # of class

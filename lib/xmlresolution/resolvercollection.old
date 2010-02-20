@@ -146,12 +146,12 @@ module XmlResolution
     def get_resolution_data(filepath)
 
       # We are given the string FILEPATH, the location of a file such as
-      # <root>/collections/E20071201_AAABCD/789ff2cf70da382ddf59339293e61456
+      # <data_path>/collections/E20071201_AAABCD/789ff2cf70da382ddf59339293e61456
       # It has all the resolution_data we preserve for a particular XML
       # document that was associated with the collection E20071201_AAABCD.  Here's 
       # an example:
       #
-      # FILENAME test.xml
+      # FILENAME SNWF000003.xml
       # SCHEMA c703435da3490c8bbd58b69fad125017 2009-05-05T14:40:48-04:00 http://www.loc.gov/standards/mets/mets.xsd   http://www.loc.gov/METS/
       # SCHEMA 54fbb3ef95c5f2f0d89a9c755e9b616e 2007-07-27T15:12:52-04:00 http://www.fcla.edu/dls/md/daitss/daitss.xsd   http://www.fcla.edu/dls/md/daitss/ 
       # SCHEMA 446839f319de8d5b40871c9da8f99c37 2006-06-16T14:39:11-04:00 http://www.fcla.edu/dls/md/palmm.xsd   http://www.fcla.edu/dls/md/palmm/
