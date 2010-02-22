@@ -11,7 +11,7 @@ $KCODE = 'UTF8'
 
 configure do
   XmlResolution::ResolverCollection.data_path = File.expand_path(File.join(File.dirname(__FILE__), 'data'))
-  set :proxy, 'satyagraha.sacred.net'
+  set :proxy, 'sake.fcla.edu'
 end
 
 helpers do
@@ -19,6 +19,8 @@ helpers do
   def server_base_name
     'http://' + @env['SERVER_NAME'] + (@env['SERVER_PORT'] == '80' ? '' : ":#{@env['SERVER_PORT']}") + '/'
   end
+
+  # TODO: clean way of deleting the temporary tarfile
 
   def tar_up collection_id
     fd = Tempfile.new 'xmlrez-tar'
@@ -68,9 +70,12 @@ get '/ieids/' do
   erb :ieids, :locals => { :collections => XmlResolution::ResolverCollection.collections.sort }
 end
 
-#### TODO: well, to re-do actually...
+# Return a tarfile of all of the schemas we've collected for the xml documents submitted
+# to this service.
 
 get '/ieids/:collection_id/' do |collection_id|
+
+  [ halt 404, "No such collection #{collection_id}" ] unless XmlResolution::ResolverCollection.collection_exists? collection_id 
   begin
     content_type "text/plain"
     tar_data = tar_up collection_id

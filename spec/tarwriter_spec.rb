@@ -3,7 +3,7 @@ require 'tmpdir'
 require 'tempfile'
 require 'fileutils'
 
-describe TarWriter do
+describe XmlResolution::TarWriter do
 
   @@dir = nil
   @@tarfile = nil
@@ -51,12 +51,12 @@ describe TarWriter do
   end
 
   it "should create a tarwriter object" do
-    TarWriter.new(@@tarfile, { :gid => 80, :uid => 80, :username => 'daitss', :groupname => 'daitss' }).class.to_s == 'TarWriter'
+    XmlResolution::TarWriter.new(@@tarfile, { :gid => 80, :uid => 80, :username => 'daitss', :groupname => 'daitss' }).class.to_s == 'XmlResolution::TarWriter'
   end
 
   it "should store files consectively in a tarfile" do
 
-    tf = TarWriter.new(@@tarfile, { :gid => 80, :uid => 80, :username => 'daitss', :groupname => 'daitss' })
+    tf = XmlResolution::TarWriter.new(@@tarfile, { :gid => 80, :uid => 80, :username => 'daitss', :groupname => 'daitss' })
 
     tf.write(some_filepath)
     tf.write(some_filepath)
@@ -70,7 +70,7 @@ describe TarWriter do
 
   it "should save files by their filename correctly in a tarfile" do
 
-    tf = TarWriter.new(@@tarfile, { :gid => 80, :uid => 80, :username => 'daitss', :groupname => 'daitss' })
+    tf = XmlResolution::TarWriter.new(@@tarfile, { :gid => 80, :uid => 80, :username => 'daitss', :groupname => 'daitss' })
 
     filepath = some_filepath
     tf.write(filepath)
@@ -85,7 +85,7 @@ describe TarWriter do
 
   it "should save files by our specified path in a tarfile" do
 
-    tf = TarWriter.new(@@tarfile, { :gid => 80, :uid => 80, :username => 'daitss', :groupname => 'daitss' })
+    tf = XmlResolution::TarWriter.new(@@tarfile, { :gid => 80, :uid => 80, :username => 'daitss', :groupname => 'daitss' })
 
     filepath = some_filepath
     tf.write(filepath, 'myfile')
@@ -100,7 +100,7 @@ describe TarWriter do
 
   it "should save files with the correct user and group names in a tarfile" do
 
-    tf = TarWriter.new(@@tarfile, { :gid => 80, :uid => 80, :username => 'daitss-user', :groupname => 'daitss-group' })
+    tf = XmlResolution::TarWriter.new(@@tarfile, { :gid => 80, :uid => 80, :username => 'daitss-user', :groupname => 'daitss-group' })
 
     filepath = some_filepath
     tf.write(filepath)
@@ -114,7 +114,7 @@ describe TarWriter do
 
   it "should provide a file that gnutar can correctly extract, retaining the file metadata" do
 
-    tf = TarWriter.new(@@tarfile, { :gid => 80, :uid => 80, :username => 'daitss-user', :groupname => 'daitss-group' })
+    tf = XmlResolution::TarWriter.new(@@tarfile, { :gid => 80, :uid => 80, :username => 'daitss-user', :groupname => 'daitss-group' })
     tf.write("/etc/passwd", "/tmp/passwd")
     tf.close
 

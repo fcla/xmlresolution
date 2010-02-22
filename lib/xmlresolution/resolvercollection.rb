@@ -179,6 +179,52 @@ module XmlResolution
       end
     end
 
+
+# TODO: get manifest data
+
+    def manifest
+#      Tempfile.open('manifest') do |tmp|
+#        tmp.write(manifest)
+#        tmp.close
+#        FileUtils.chmod(0644, tmp.path)
+#        yield tmp.pathname
+#      ensure...deleted
+#      end
+
+    end
+
+    # We save schema files by their digests; this returns the full pathname
+
+    def schema_pathname digest
+      File.join(schema_path, digest)
+    end
+
+    # Loops over all of the collections of saved resolution data for a collection,
+    # returning an XmlResolverReloaded object.
+
+    def for_resolutions
+      Dir[ File.join(collection_path, '*') ].each do |filepath|
+        next if File.directory? filepath
+        next unless filepath =~ /[a-z0-9]{32}/
+        yield  XmlResolverReloaded.new File.read(filepath)
+      end
+    end
+
+    # Loops over all of the schemas for all resolutions performed in this collection.
+    # The intent is to keep from repeating any schemas, sort the list of schemas
+    # by location, and yield each of the schema data-nuggets. Yum!
+
+    def for_schemas
+      seen = {}
+      for_resolutions do |xrez| 
+        xrez.schemas.each do |s| 
+          next unless s.status == :success
+          seen[s.location] = s
+        end
+      end
+      seen.keys.sort.each { |loc| yield seen[loc] }
+    end
+    
     public
 
     # Add the information from the XmlResolver object XREZ to our collection.
@@ -187,18 +233,23 @@ module XmlResolution
     def add xrez
       save_schema_information xrez
       save_document_information xrez
-
-      xrez
     end
 
-    # TODO:  add tar support back, wrap in read_lock this time!
+    # Create a tar file of all the schemas we've found when resolving xml documents sent
+    # to this collection. We use the schema location as the filename in the tarfile.
 
     def tar io
+      tarfile = TarWriter.new(io, { :uid => 80, :gid => 80, :username => 'daitss', :groupname => 'daitss' })
 
-    end
+      create_manifest do |path|
+        tarfile.write path, 'manifest.xml'
+      end
 
-    def manifest
+      for_schemas do |s|
+        tarfile.write schema_pathname(s.digest), s.location
+      end
 
+      tarfile.close
     end
 
 
