@@ -140,7 +140,7 @@ post '/ieids/:collection_id/' do |collection_id|
   else
     status 201
     content_type 'application/xml'
-    XmlResolution.xml_resolver_report xrez, server_base_name
+    XmlResolution.xml_resolver_report xrez, service_name 
   end
 end
 
