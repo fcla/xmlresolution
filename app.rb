@@ -2,7 +2,6 @@ require 'tempfile'
 require 'uri'
 require 'fileutils'
 require 'xmlresolution.rb'
-require 'yaml'
 
 # TODO: logger, and use as before method
 # TODO: remove old collections on the fly (say, after a week...) and
@@ -78,7 +77,7 @@ get '/ieids/:collection_id/' do |collection_id|
   rescue XmlResolution::Http400Error => e
     halt [ 400, e.message + "\n" ]
   rescue => e
-    halt [ 500, "Error creating tarfile for collection #{collection_id}: #{e.message}.\n" + bt(e) ]   # TODO: be nice to get a backtrace in a log somewhere
+    halt [ 500, "Error creating tarfile for collection #{collection_id}: #{e.message}.\n" + bt(e) ]
   else
     content_type "application/x-tar"
     attachment   "#{collection_id}.tar"
@@ -100,7 +99,7 @@ put '/ieids/:collection_id' do |collection_id|
       "Collection #{collection_id} created.\n"
     end
   rescue XmlResolution::Http400Error => e
-    halt [ 400, e.message + "\n" + bt(e) ]
+    halt [ 400, e.message + "\n" ]
   rescue => e
     halt [ 500, e.message + "\n" + bt(e) ]
   end    
@@ -129,7 +128,7 @@ post '/ieids/:collection_id/' do |collection_id|
     XmlResolution::ResolverCollection.new(collection_id).add xrez
     
   rescue XmlResolution::Http400Error => e
-    halt [ 400, e.message + "\n"  + bt(e) ]
+    halt [ 400, e.message + "\n" ]
   rescue => e
     halt [ 500, "Can't process file #{filename} for collection #{collection_id}: #{e.message}.\n"  + bt(e) ]
   else
