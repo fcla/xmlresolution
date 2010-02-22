@@ -1,6 +1,6 @@
   # Author: Randy Fischer (rf@ufl.edu) for DAITSS
   #
-  # This class allows us to write tar files on the fly from a list of 
+  # This class allows us to write tar files on the fly from a list of
   # filenames.
   #
   # Once we have the tar-writer object, we use the write method to
@@ -10,7 +10,7 @@
   # file names internally in the tar, and we always use the
   # permissions specified in the initialization of the TarWriter
   # object.
-  # 
+  #
   # Usage:
   #
   #   tr = TarWriter.new(STDOUT, { :uid => 80, :gid => 80, :username => 'daitss', :groupname => 'daitss' })
@@ -36,7 +36,7 @@ class TarWriter
   # TODO: instead of an explicit file descriptor, why not yield up the tar file
   # in larger chunks....
 
-  # TODO: we could use a simpler tar format than the one I'm using - I modeled this on 
+  # TODO: we could use a simpler tar format than the one I'm using - I modeled this on
   # bsdtar 2.6.2 (mac os x) - use recent version of gnutar instead....
 
 
@@ -81,7 +81,7 @@ class TarWriter
   end
 
   # Build a boilerplate header based on what we know won't change: for us, that's
-  # plain files on plain filesystems with a global set of ownership 
+  # plain files on plain filesystems with a global set of ownership
 
   def standard_header
     buff = 0.chr * 512
@@ -114,12 +114,12 @@ class TarWriter
     buff[265..(265 + str.length - 1)] = str
 
     str = ownership[:groupname][0..31]
-    buff[297..(297 + str.length - 1)] = str 
+    buff[297..(297 + str.length - 1)] = str
 
 
     return buff
   end
-      
+
   # Given the string FILE_PATH to a file and the string TARFILE_PATH, the pathname to use for the tar entry,
   # create a header for the file.
 
@@ -150,7 +150,7 @@ class TarWriter
 
     # size of file - we only use the short file size encoding - 11 octal characters, left padded with zeros, followed by a space
 
-    buff[124..135] = to_octal(fstat.size, 11) + ' '    
+    buff[124..135] = to_octal(fstat.size, 11) + ' '
 
     # now that all of the header is setup, we can compute the checksum:
 
@@ -163,7 +163,7 @@ class TarWriter
 
   public
 
-  # Write out a tar header for the file found at FILE_PATH, using the TAR_PATH string as the 
+  # Write out a tar header for the file found at FILE_PATH, using the TAR_PATH string as the
   # filename in the tar file.  If TAR_PATH is not supplied, initialize from FILE_PATH, removing
   # leading slashes.
 
@@ -173,14 +173,14 @@ class TarWriter
 
     tar_path = file_path.gsub(/^\/+/, '') unless tar_path
 
-    fd.write make_header(file_path, tar_path)    
+    fd.write make_header(file_path, tar_path)
     open(file_path, 'r') do |file|
       while buff = file.read(512)
         fd.write buff
         length = buff.length
       end
     end
-    
+
     fd.write 0.chr * (512 - length)   # pad with nul characters to 512 bytes, if necessary.
   end
 
@@ -189,5 +189,5 @@ class TarWriter
   def close
     fd.write 0.chr * 1024
     fd.close
-  end  
+  end
 end

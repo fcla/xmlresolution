@@ -1,4 +1,4 @@
-# TODO: Appropriate to do logging in this class?  
+# TODO: Appropriate to do logging in this class?
 # TODO: Should a general resolution failure percolate up an exception that can result in 400 error?
 
 require 'digest/md5'
@@ -22,7 +22,7 @@ module XmlResolution
 
   class ResolverCollection
 
-    # The collection id, a string, usually a simple IEID.  Cannot have funny characters.  
+    # The collection id, a string, usually a simple IEID.  Cannot have funny characters.
 
     attr_reader :collection_identifier
 
@@ -102,18 +102,18 @@ module XmlResolution
     # along with the associated location and its namespace.
 
     def save_and_note_schema_files(info_list)
-      info_list.each do |rec| # :body :digest :error_message :last_modified :location :namespace :processing_time :status         
+      info_list.each do |rec| # :body :digest :error_message :last_modified :location :namespace :processing_time :status
 
         next if rec[:status] != :success
 
-        schema_abs_path = File.join(schemas_path, rec[:digest]) 
+        schema_abs_path = File.join(schemas_path, rec[:digest])
 
         yield rec[:digest], rec[:location], rec[:namespace], rec[:last_modified], File.join('schemas', rec[:digest])
 
         next if File.exists? schema_abs_path  and  File.mtime(schema_abs_path) == rec[:last_modified]
         open schema_abs_path, 'w' do |fd|
           fd.write rec[:body]
-        end      
+        end
         File.utime(File.atime(schema_abs_path), rec[:last_modified], schema_abs_path)
       end
     end
@@ -133,10 +133,10 @@ module XmlResolution
     # Loop over all of our resolution_data files, providing each path.  The paths
     # are suitable for using as arguments to get_resolution_data.
 
-    def list_resolution_data_files 
+    def list_resolution_data_files
       Dir[ File.join(collection_path, '*') ].each do |filepath|
         next if File.directory? filepath
-        next unless filepath =~ /[a-z0-9]{32}/        
+        next unless filepath =~ /[a-z0-9]{32}/
         yield filepath
       end
     end
@@ -148,12 +148,12 @@ module XmlResolution
       # We are given the string FILEPATH, the location of a file such as
       # <data_path>/collections/E20071201_AAABCD/789ff2cf70da382ddf59339293e61456
       # It has all the resolution_data we preserve for a particular XML
-      # document that was associated with the collection E20071201_AAABCD.  Here's 
+      # document that was associated with the collection E20071201_AAABCD.  Here's
       # an example:
       #
       # FILENAME SNWF000003.xml
       # SCHEMA c703435da3490c8bbd58b69fad125017 2009-05-05T14:40:48-04:00 http://www.loc.gov/standards/mets/mets.xsd   http://www.loc.gov/METS/
-      # SCHEMA 54fbb3ef95c5f2f0d89a9c755e9b616e 2007-07-27T15:12:52-04:00 http://www.fcla.edu/dls/md/daitss/daitss.xsd   http://www.fcla.edu/dls/md/daitss/ 
+      # SCHEMA 54fbb3ef95c5f2f0d89a9c755e9b616e 2007-07-27T15:12:52-04:00 http://www.fcla.edu/dls/md/daitss/daitss.xsd   http://www.fcla.edu/dls/md/daitss/
       # SCHEMA 446839f319de8d5b40871c9da8f99c37 2006-06-16T14:39:11-04:00 http://www.fcla.edu/dls/md/palmm.xsd   http://www.fcla.edu/dls/md/palmm/
       # SCHEMA a166f873a7607ebcec83c01354f300af 2004-09-29T17:30:36-04:00 http://www.fcla.edu/dls/md/techmd.xsd   http://www.fcla.edu/dls/md/techmd/
       # SCHEMA 86a5c9c8c17b91c97be61847218fe823 2004-09-29T17:30:36-04:00 http://www.fcla.edu/dls/md/rightsmd.xsd   http://www.fcla.edu/dls/md/rightsmd/
@@ -164,12 +164,12 @@ module XmlResolution
       # is followed by the retrieved location, namespace, the relative location of the schema document, and the
       # timestamp of the schema document.
 
-      info = { 
-        'error'               => nil,  
-        'name'                => nil, 
-        'unresolved'          => [], 
-        'bad-schemas'         => [], 
-        'good-schemas'        => [], 
+      info = {
+        'error'               => nil,
+        'name'                => nil,
+        'unresolved'          => [],
+        'bad-schemas'         => [],
+        'good-schemas'        => [],
         'document_identifier' => File.basename(filepath), # recall, this is the md5 sum of the contents of the xml document
       }
 
@@ -177,18 +177,18 @@ module XmlResolution
         fd.readlines.each do |line|
           data = XmlResolution.unescape(line.chomp)
           case data.shift
-          when 'FILENAME'       
+          when 'FILENAME'
             info['name']  =  data.shift
-          when 'RESOLUTION_FAILURE'    
+          when 'RESOLUTION_FAILURE'
             info['error'] =  data[0]
-          when 'SCHEMA'                
+          when 'SCHEMA'
             info['good-schemas'].push({ 'md5' => data[0], 'location' => data[1], 'namespace' => data[2], 'pathname' => data[3], 'mtime' => data[4] })
-          when 'UNRESOLVED_NAMESPACES' 
+          when 'UNRESOLVED_NAMESPACES'
             info['unresolved'] = data
-          when 'BROKEN_SCHEMA'         
+          when 'BROKEN_SCHEMA'
             info['bad-schemas'].push({ 'location' => data[0], 'namespace' => data[1], 'reason' => data[2] })
           end
-        end        
+        end
       end # of read_lock
 
       info
@@ -204,7 +204,7 @@ module XmlResolution
         if resolution_data['error']
           xmldoc.status(:outcome => 'failure') { xmldoc.error_message(resolution_data['error']) }
         else
-          xmldoc.status(:outcome => 'success')     
+          xmldoc.status(:outcome => 'success')
         end
 
         if not resolution_data['unresolved'].empty?
@@ -214,13 +214,13 @@ module XmlResolution
         end
 
         if not resolution_data['good-schemas'].empty?
-          resolution_data['good-schemas'].each do |elt| 
+          resolution_data['good-schemas'].each do |elt|
             xmldoc.schema(:status => 'success', :namespace => elt['namespace'], :location => elt['location'], :url => elt['pathname'], :md5 => elt['md5'])
           end
         end
 
         if not resolution_data['bad-schemas'].empty?
-          resolution_data['bad-schemas'].each do |elt| 
+          resolution_data['bad-schemas'].each do |elt|
             xmldoc.schema(:status => 'failure', :namespace => elt['namespace'], :location => elt['location'], :message => elt['reason'])
           end
         end
@@ -258,7 +258,7 @@ module XmlResolution
           save_and_note_schema_files(rez.schema_information)  do |digest, location, namespace, mtime, schema_pathname|
             fd.puts XmlResolution.escape('SCHEMA', digest, location, namespace, schema_pathname, mtime.iso8601)
           end
-          fd.puts XmlResolution.escape('UNRESOLVED_NAMESPACES', *rez.unresolved_namespaces)      
+          fd.puts XmlResolution.escape('UNRESOLVED_NAMESPACES', *rez.unresolved_namespaces)
           report_broken_schemas(rez.schema_information) do |location, namespace, reason|
             fd.puts XmlResolution.escape('BROKEN_SCHEMA', location, namespace, reason)
           end
@@ -268,7 +268,7 @@ module XmlResolution
   ### looks like I really want the premis document, for just this xml
 
       XmlResolution.utf8 do
-        xml = Builder::XmlMarkup.new(:indent => 2)    
+        xml = Builder::XmlMarkup.new(:indent => 2)
         xml.instruct!(:xml, :encoding => 'UTF-8')
         resolution_data_to_xml(xml, get_resolution_data(resolution_data_pathname))
         xml.target!
@@ -280,7 +280,7 @@ module XmlResolution
 
     def xml_report
       XmlResolution.utf8 do
-        xml = Builder::XmlMarkup.new(:indent => 2)    
+        xml = Builder::XmlMarkup.new(:indent => 2)
         xml.instruct!(:xml, :encoding => 'UTF-8')
         xml.resolutions(:collection => collection_identifier) {
           list_resolution_data_files do |filepath|
@@ -324,5 +324,3 @@ module XmlResolution
 
   end # of class
 end # of module
-
-

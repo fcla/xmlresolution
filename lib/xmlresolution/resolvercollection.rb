@@ -2,7 +2,7 @@ require 'digest/md5'
 require 'fileutils'
 require 'uri'
 require 'builder'
-require 'time'     
+require 'time'
 require 'tempfile'
 require 'xmlresolution/xmlresolver' #
 require 'xmlresolution/tarwriter'   # lets us build tar files on the fly
@@ -17,14 +17,14 @@ module XmlResolution
   # service.  It maintains a set of collection identifiers supplied by
   # the calling program, and uses the XmlResolution::XmlResolver class
   # to associate documents and the schemas necessary to validate them
-  # with a given collection identifier. All of the schemas can be 
+  # with a given collection identifier. All of the schemas can be
   # retrieved in a per-collection tarfile.
   #
   # Example usage:
   #
   #   XmlResolution::ResolverCollection.data_path = "/service/path/data"
   #   rc = XmlResolution::ResolverCollection.new('mycollection')
-  # 
+  #
   #   xrez = XmlResolution::XmlResolver.new(xml_text, proxy)
   #   xrez.filename = its_filename
   #   rc.add xrez
@@ -38,7 +38,7 @@ module XmlResolution
     # Timeout in seconds for the read_lock and write_lock methods.
 
     LOCK_TIMEOUT = 10
-    
+
     # Subdirectory where the collections we create will live:
 
     COLLECTIONS = 'collections'
@@ -65,17 +65,17 @@ module XmlResolution
     rescue => e
       raise CollectionInitializationError, "ResolverCollection couldn't initialize directory #{path}: '#{e.message}'."
     end
-    
+
     # Return the current data_path that will be used for created objects.
 
-    def self.data_path 
+    def self.data_path
       @@data_path
     end
 
     # Return a list of all of the active collections stored at this data_path
 
     def self.collections
-      raise CollectionInitializationError, "The ResolverCollection system has not been told what directory to use yet." unless ResolverCollection.data_path     
+      raise CollectionInitializationError, "The ResolverCollection system has not been told what directory to use yet." unless ResolverCollection.data_path
       Dir[File.join(data_path, COLLECTIONS, '*')].map { |path| File.split(path)[-1] }.sort
     end
 
@@ -84,15 +84,15 @@ module XmlResolution
     def self.collection_exists? collection_id
       ResolverCollection.collections.include? collection_id
     end
-    
+
     # A boolean to determine if a string is a valid collection id. It has to fit into the filesystem, so must be a valid single directory name.
 
     def self.collection_name_ok? collection_id
       not (collection_id =~ /\// or collection_id != URI.escape(collection_id))
     end
 
-    #### The 
-    
+    #### The
+
     attr_reader :collection_name
 
     attr_reader :data_path
@@ -100,7 +100,7 @@ module XmlResolution
     attr_reader :collection_path
 
     def initialize collection_name
-      raise CollectionInitializationError, "Must initialize this class with the data_path method before it can be used" unless ResolverCollection.data_path  
+      raise CollectionInitializationError, "Must initialize this class with the data_path method before it can be used" unless ResolverCollection.data_path
       raise CollectionNameError, "'#{collection_name}' is a bad name for a collection" unless ResolverCollection.collection_name_ok? collection_name
 
       @collection_name  = collection_name
@@ -120,7 +120,7 @@ module XmlResolution
     # there is an active write_lock, it is the only lock of any kind.
     # Requests for locks may block for up to LOCK_TIMEOUT seconds,
     # after which a LockError exception is raised.
-    # 
+    #
     # On success, we yield a file desciptor positioned at the
     # beginning of the file and ready to read from.  On return, the
     # file is properly closed.
@@ -151,7 +151,7 @@ module XmlResolution
 
     # Given an XmlResolution::XmlResolver object XREZ, save the
     # information regarding the file that was analyzed.  That includes the
-    # original locations, namespaces, and names of the local copies 
+    # original locations, namespaces, and names of the local copies
     # of all of the schemas that were necessary to fully resolve it.
 
     def save_document_information xrez
@@ -170,7 +170,7 @@ module XmlResolution
       xrez.schemas.each do |s|
         next unless s.status == :success
         filepath = File.join schema_path, s.digest
-        next if File.exists? filepath  and  File.mtime(filepath) == s.last_modified # don't bother rewriting 
+        next if File.exists? filepath  and  File.mtime(filepath) == s.last_modified # don't bother rewriting
         write_lock (filepath) do |fd|
           fd.write s.body
           fd.close
@@ -204,5 +204,3 @@ module XmlResolution
 
   end # of class
 end # of module
-
-

@@ -19,7 +19,7 @@ helpers do
   def server_base_name
     'http://' + @env['SERVER_NAME'] + (@env['SERVER_PORT'] == '80' ? '' : ":#{@env['SERVER_PORT']}") + '/'
   end
-  
+
   def tar_up collection_id
     fd = Tempfile.new 'xmlrez-tar'
     XmlResolution::ResolverCollection.new(collection_id).tar(fd)
@@ -44,11 +44,11 @@ get '/ieids/:collection_id' do |collection_id|
   redirect "/ieids/#{collection_id}/", 301
 end
 
-get '/rdoc' do 
+get '/rdoc' do
   redirect '/rdoc/index.html', 301
 end
 
-get '/rdoc/' do 
+get '/rdoc/' do
   redirect '/rdoc/index.html', 301
 end
 
@@ -102,7 +102,7 @@ put '/ieids/:collection_id' do |collection_id|
     halt [ 400, e.message + "\n" ]
   rescue => e
     halt [ 500, e.message + "\n" + bt(e) ]
-  end    
+  end
 end
 
 
@@ -121,12 +121,12 @@ post '/ieids/:collection_id/' do |collection_id|
     halt [ 400, "Missing form data name='xmlfile'\n" ]    unless params['xmlfile']
     halt [ 400, "Missing form data filename='...'\n" ]    unless filename = params['xmlfile'][:filename]
     halt [ 500, "Data unavailable (missing tempfile)\n" ] unless tempfile = params['xmlfile'][:tempfile]
-    
+
     xrez = XmlResolution::XmlResolver.new(tempfile.open.read, options.proxy)
     xrez.filename = filename
 
     XmlResolution::ResolverCollection.new(collection_id).add xrez
-    
+
   rescue XmlResolution::Http400Error => e
     halt [ 400, e.message + "\n" ]
   rescue => e
@@ -153,4 +153,3 @@ end
 post '/dump' do
   raise
 end
-

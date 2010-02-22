@@ -25,21 +25,21 @@ module XmlResolution
 # Example usage:
 #
 #   xrez = XmlResolution::XmlResolver.new(File.read("F20060215_AAAAHL.xml"), "satyagraha.sacred.net:3128")
-#   xrez.schemas.each do |rec| 
+#   xrez.schemas.each do |rec|
 #     next unless rec.status == :success
 #     puts "#{rec.namespace}  => #{rec.location}\n"
 #   end
 #   puts "\nUnresolved: " + xrez.unresolved_namespaces.join(", ")
 #
 # which might return
-#  
+#
 #  http://www.loc.gov/METS/ => http://www.loc.gov/standards/mets/mets.xsd
 #  http://www.fcla.edu/dls/md/daitss/ => http://www.fcla.edu/dls/md/daitss/daitss.xsd
 #  http://www.fcla.edu/dls/md/palmm/ => http://www.fcla.edu/dls/md/palmm.xsd
 #  http://www.fcla.edu/dls/md/techmd/ => http://www.fcla.edu/dls/md/techmd.xsd
 #  http://www.fcla.edu/dls/md/rightsmd/ => http://www.fcla.edu/dls/md/rightsmd.xsd
 #  http://purl.org/dc/elements/1.1/ => http://dublincore.org/schemas/xmls/simpledc20021212.xsd
-#  
+#
 #  Unresolved: http://www.w3.org/1999/xlink, http://www.w3.org/2001/XMLSchema-instance
 #
 # Two notes on squid caching proxies: at least by default, redirects
@@ -65,7 +65,7 @@ module XmlResolution
     #   * location        => url-string                where we got the schema from
     #   * namespace       => urn-string                its associated namespace
     #   * status          => [ :success | :failure ]
-   
+
     attr_reader :schemas
 
     # proxy_address is the address part of the caching proxy server,
@@ -85,8 +85,8 @@ module XmlResolution
 
     attr_accessor :filename
 
-    # Like the filename accessor above, local_uri allows calling programs 
-    # to save the hostname and the file to which is the file containing 
+    # Like the filename accessor above, local_uri allows calling programs
+    # to save the hostname and the file to which is the file containing
     # information about this xml document; this is mostly to serve as a unique
     # id for people that want to create xml documents based on this
     # object. The intent is to use a filename URI.
@@ -104,7 +104,7 @@ module XmlResolution
     # Create an XML resolver object given an xml docment in the string
     # XML_TEXT. Optionally provide the string CACHING_HTTP_PROXY, naming
     # a caching proxy to use when retrieving schemas or DTDs (format
-    # "hostname:port",  port defaults to 3128). 
+    # "hostname:port",  port defaults to 3128).
 
     def initialize xml_text, caching_http_proxy = nil
       @namespaces_found = {}
@@ -112,11 +112,11 @@ module XmlResolution
       @filename = nil
       @proxy_port = @proxy_addr = nil   # possible to have no proxy - then we'll contact locations directly
 
-      if caching_http_proxy      
+      if caching_http_proxy
         @proxy_addr, @proxy_port = caching_http_proxy.split(':', 2)
         if @proxy_port.nil?
-          @proxy_port = 3128 
-        else 
+          @proxy_port = 3128
+        else
           @proxy_port = @proxy_port.to_i
         end
       end
@@ -136,10 +136,10 @@ module XmlResolution
     #
     #  DIGEST md5
     #  DATE_TIME time
-    #  SCHEMA md5 modification location namespace 
-    #  SCHEMA md5 modification location namespace 
-    #  SCHEMA md5 modification location namespace 
-    #  SCHEMA md5 modification location namespace 
+    #  SCHEMA md5 modification location namespace
+    #  SCHEMA md5 modification location namespace
+    #  SCHEMA md5 modification location namespace
+    #  SCHEMA md5 modification location namespace
     #   ....
     #  UNRESOLVED_NAMESPACES namespace namespace namespace ....
     #  BROKEN_SCHEMA location namespace error_message
@@ -153,11 +153,11 @@ module XmlResolution
 
     def dump
       str = ''
-      
+
       str += XmlResolution.escape("FILE_NAME", filename)         + "\n" if filename
       str += XmlResolution.escape("LOCAL_URI", local_uri)        + "\n" if local_uri
 
-      str += XmlResolution.escape("DATE_TIME", datetime.iso8601) + "\n" 
+      str += XmlResolution.escape("DATE_TIME", datetime.iso8601) + "\n"
       str += XmlResolution.escape("DIGEST",   digest)           + "\n"
 
       schemas.each do |s|
@@ -171,7 +171,7 @@ module XmlResolution
         next if s.status == :success
         str += XmlResolution.escape("BROKEN_SCHEMA", s.location, s.namespace, s.error_message) + "\n"
       end
-      
+
       str
     end
 
@@ -186,15 +186,15 @@ module XmlResolution
     # Returns a hash mapping locations to namespaces.
 
     def find_schema_references text, schema_location=nil
-      
+
       # TODO: on error, this outputs to STDERR.  That won't do!  We'd better dup STDERR to /dev/null around this
-      
+
       doc = XML::Parser.string(text).parse
 
       # Get a list of namespaces from the document - initially we don't have a location for any of them
 
-      doc.find("//*").each do |node| 
-        node.namespaces.each { |ns|  @namespaces_found[ns.href] = false unless @namespaces_found[ns.href] } 
+      doc.find("//*").each do |node|
+        node.namespaces.each { |ns|  @namespaces_found[ns.href] = false unless @namespaces_found[ns.href] }
       end
 
       location_namespaces = {}
@@ -202,7 +202,7 @@ module XmlResolution
       # Find any schema locations.
 
       doc.find('//@xsi:schemaLocation', 'xsi' => 'http://www.w3.org/2001/XMLSchema-instance').each do |sl|
-        sl.value.strip.split.each_slice(2) do |ns, url| 
+        sl.value.strip.split.each_slice(2) do |ns, url|
           location_namespaces[url] = ns
           @namespaces_found[ns]    = true
         end
@@ -235,7 +235,7 @@ module XmlResolution
 
     def get_schemas text
 
-      location_namespaces = find_schema_references(text)    
+      location_namespaces = find_schema_references(text)
       directory           = []
       locations_found     = []
 
@@ -257,12 +257,12 @@ module XmlResolution
         next if locations_checked.member? location
 
         begin
-          response = fetch location        
+          response = fetch location
 
           next_to_check.merge! find_schema_references(response.body, location)
 
           directory.push OpenStruct.new("body"            => response.body,
-                                        "digest"          => Digest::MD5.hexdigest(response.body), 
+                                        "digest"          => Digest::MD5.hexdigest(response.body),
                                         "error_message"   => nil,
                                         "last_modified"   => response['Last-Modified'] ? Time.parse(response['Last-Modified']) : Time.now,
                                         "location"        => location,
@@ -285,7 +285,7 @@ module XmlResolution
       end
 
       unless next_to_check.empty?
-        get_schemas_helper directory, next_to_check, locations_checked 
+        get_schemas_helper directory, next_to_check, locations_checked
       end
     end
 
@@ -300,11 +300,11 @@ module XmlResolution
 
       uri = URI.parse location
 
-      raise LocationError, "#{uri.scheme} is not a supported protocol - #{location} not retrieved."  unless uri.scheme == 'http'    
+      raise LocationError, "#{uri.scheme} is not a supported protocol - #{location} not retrieved."  unless uri.scheme == 'http'
       raise LocationError, "#{location} can't be retrieved, there were too many redirects."          if limit < 1
 
       # TODO: We plan to run this under Sinatra, but Net::HTTP::Proxy isn't thread safe.  Fix me!
-      
+
       # Note: if proxy_addr & proxy_port are nil, this is equivalent to Net::HTTP
 
       Net::HTTP::Proxy(proxy_addr, proxy_port).start(uri.host, uri.port) do |http|
@@ -312,7 +312,7 @@ module XmlResolution
         case response
         when Net::HTTPSuccess     then response
         when Net::HTTPRedirection then fetch response['location'], limit - 1
-        else 
+        else
           response.error!
         end
       end

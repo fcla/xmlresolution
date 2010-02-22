@@ -24,7 +24,7 @@ module XmlResolution
     the_value_formerly_known_as_kcode = $KCODE
     $KCODE = 'UTF8'
     yield
-  ensure 
+  ensure
     $KCODE = the_value_formerly_known_as_kcode
   end
 
@@ -52,17 +52,17 @@ module XmlResolution
       successes += 1 if s.status == :success
       failures  += 1 if s.status != :success
     end
-      
+
     if (successes > 0 and failures > 0)
       outcome = 'mixed'
     elsif failures > 0
-      outcome = 'failure'   
+      outcome = 'failure'
     else
       outcome = 'success'  # includes nothing at all - vacuous case
     end
-    
+
     xml = Builder::XmlMarkup.new(:indent => 2)
-    
+
     # TODO: set up the encoding based on the $KCODE?
 
     xml.instruct!(:xml, :encoding => 'UTF-8')  # well, if $KCODE  was set correctly
@@ -75,27 +75,27 @@ module XmlResolution
           xml.eventIdentifierType('URI')
           xml.eventIdentifierValue(xrez.local_uri) # typically this is only used as a placeholder
         }                                          # and will be re-written.
-        xml.eventType('XML Resolution')                  
+        xml.eventType('XML Resolution')
         xml.eventDateTime(xrez.datetime.xmlschema)
         xml.eventOutcomeInformation { xml.eventOutcome(outcome) }
-        xml.eventOutcomeDetail { 
+        xml.eventOutcomeDetail {
           xml.eventOutcomeDetailExtension {
-            # we list all the successes first, then all the failures, so 
+            # we list all the successes first, then all the failures, so
             # to group them in a more readable way for our descendents.
             xrez.schemas.each do |s|
               next if s.status != :success
-              xml.schema(:status        => s.status, 
+              xml.schema(:status        => s.status,
                          :md5           => s.digest,
                          :last_modified => s.last_modified.xmlschema,
-                         :namespace     => s.namespace, 
+                         :namespace     => s.namespace,
                          :location      => s.location)
             end
             xrez.schemas.each do |s|
               next if s.status == :success
-              xml.schema(:status        => s.status, 
+              xml.schema(:status        => s.status,
                          :md5           => s.digest,
                          :last_modified => s.last_modified.xmlschema,
-                         :namespace     => s.namespace, 
+                         :namespace     => s.namespace,
                          :location      => s.location)
             end
             xrez.unresolved_namespaces.each { |ns| xml.unresolved_namespace(ns) }
@@ -108,7 +108,7 @@ module XmlResolution
         xml.linkingObjectIdentifier {
           xml.linkingObjectIdentifierType('URI')
           xml.linkingObjectIdentifierValue(xrez.filename)
-        } 
+        }
       }
       xml.agent {
         xml.agentIdentifer {
@@ -123,7 +123,4 @@ module XmlResolution
     }
     xml.target!
   end
-  
-  
-  
 end
