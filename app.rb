@@ -16,18 +16,18 @@ end
 
 helpers do
 
-  def server_base_name
-    'http://' + @env['SERVER_NAME'] + (@env['SERVER_PORT'] == '80' ? '' : ":#{@env['SERVER_PORT']}") + '/'
+  def service_name
+    'http://' + @env['SERVER_NAME'] + (@env['SERVER_PORT'] == '80' ? '' : ":#{@env['SERVER_PORT']}")
   end
 
-  # TODO: clean way of deleting the temporary tarfile
+  # TODO: clean way of deleting the temporary tarfile?
 
   def tar_up collection_id
-    fd = Tempfile.new 'xmlrez-tar'
-    XmlResolution::ResolverCollection.new(collection_id).tar(fd)
-    fd.open.read
-  ensure
-    fd.close true
+    tmp = Tempfile.new 'xmlrez-tar-'
+    XmlResolution::ResolverCollection.new(collection_id).tar(tmp)
+    tmp.open.read
+  ensure 
+    tmp.close
   end
 
   def bt e
@@ -61,7 +61,7 @@ end
 # The top level page gives an introduction to using this service.
 
 get '/' do
-  erb :site, :locals => { :base_url => server_base_name }
+  erb :site, :locals => { :base_url => service_name }
 end
 
 # List all of the collections we've got
@@ -75,10 +75,11 @@ end
 
 get '/ieids/:collection_id/' do |collection_id|
 
-  [ halt 404, "No such collection #{collection_id}" ] unless XmlResolution::ResolverCollection.collection_exists? collection_id 
+  content_type "text/plain"
+  [ halt 404, "No such collection #{collection_id}\n" ] unless XmlResolution::ResolverCollection.collection_exists? collection_id 
+
   begin
-    content_type "text/plain"
-    tar_data = tar_up collection_id
+    data = tar_up collection_id
   rescue XmlResolution::Http400Error => e
     halt [ 400, e.message + "\n" ]
   rescue => e
@@ -86,7 +87,7 @@ get '/ieids/:collection_id/' do |collection_id|
   else
     content_type "application/x-tar"
     attachment   "#{collection_id}.tar"
-    tar_data
+    data
   end
 end
 

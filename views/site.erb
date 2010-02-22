@@ -45,7 +45,7 @@
 
 <p>
 The first step to using this service is to create a container resource that is named by a collection id.  We use
-the PUT method on a URL of the form <%= base_url %>ieids/&lt;collection-id&gt;.  The collection id  must not 
+the PUT method on a URL of the form <%= base_url %>/ieids/&lt;collection-id&gt;.  The collection id  must not 
 be in use.
 </p>
 
@@ -55,7 +55,7 @@ We can use curl to create a new resource as follows:
 </p>
 
 <pre>
-    curl --upload-file /dev/null -X PUT <%= base_url %>ieids/E20010101_TESTIN</a>
+    curl --upload-file /dev/null -X PUT <%= base_url %>/ieids/E20010101_TESTIN</a>
 </pre>
 
 <p>
@@ -72,7 +72,7 @@ browser would submit for the following:
 </p>
 
 <pre>
-    &lt;form action="<%= base_url %>ieids/E20010101_TESTIN" enctype="multipart/form-data" method="post"&gt;
+    &lt;form action="<%= base_url %>/ieids/E20010101_TESTIN" enctype="multipart/form-data" method="post"&gt;
     &lt;p&gt;
     Please specify a file:&lt;br&gt;
     &lt;input type="file" name="xmlfile" size="72"&gt;
@@ -88,7 +88,7 @@ The following curl program can be used to perform the above action:
 </p>
 
 <pre>
-    curl -F xmlfile=@myfile.xml <%= base_url %>ieids/E20010101_TESTIN/
+    curl -F xmlfile=@myfile.xml <%= base_url %>/ieids/E20010101_TESTIN/
 </pre>
 
 The above curl command generates a request document along the lines of

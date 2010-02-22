@@ -1,5 +1,6 @@
 require 'xmlresolution/xmlresolver'
 require 'xmlresolution/exceptions'
+require 'uri'
 
 STDERR.puts "Expect the message \"Fatal error: Start tag expected, '<' not found at :1.\" It's from LibXML."
 
@@ -11,6 +12,8 @@ describe XmlResolution::XmlResolver do
 
   @@mets_xres     = nil                           # we'll fill this in later
   @@mets_reloaded = nil
+  @@filename      = 'file://campy.flca.edu/C:/Documents and Settings/Sheldon/bicycle.xml'
+  @@local_uri     = 'file://example.com/var/tmp/data/collections/E20100110_CAFEED/a166f873a7607ebcec83c01354f300af'
 
   def test_proxy
     ENV['HTTP_PROXY']
@@ -90,32 +93,31 @@ describe XmlResolution::XmlResolver do
   end
 
   it "should not include a filename yet" do
-    (@@mets_xres.dump =~ /^FILENAME /).should == nil
+    (@@mets_xres.dump =~ /^FILE_NAME /).should == nil
   end
 
   it "should let us add a filename" do
-    @@mets_xres.filename = 'myfile.xml'
-    @@mets_xres.filename.should == 'myfile.xml'   
+    @@mets_xres.filename = @@filename
+    @@mets_xres.filename.should == @@filename
   end
 
   it "should now include the filename in the dump" do
-    (@@mets_xres.dump =~ /^FILENAME /).should_not == nil
-    (@@mets_xres.dump =~ /myfile.xml/).should_not == nil
+    (@@mets_xres.dump =~ /^FILE_NAME /).should_not == nil
+    (@@mets_xres.dump =~ /#{URI.escape(@@filename)}/).should_not == nil
   end
 
-  it "should not include a filename yet" do
-    (@@mets_xres.dump =~ /^LOCALURI /).should == nil
+  it "should not include a local uri yet" do
+    (@@mets_xres.dump =~ /^LOCAL_URI /).should == nil
   end
 
-  it "should let us add a local_uri" do
-    uri = 'file://example.com/var/tmp/data/collections/E20100110_CAFEED/a166f873a7607ebcec83c01354f300af'
-    @@mets_xres.local_uri = uri
-    @@mets_xres.local_uri.should == uri
+  it "should let us add a local uri" do
+    @@mets_xres.local_uri = @@local_uri
+    @@mets_xres.local_uri.should == @@local_uri
   end
 
   it "should now include the local_uri in the dump" do
-    (@@mets_xres.dump =~ /^LOCALURI /).should_not == nil
-    (@@mets_xres.dump =~ /myfile.xml/).should_not == nil
+    (@@mets_xres.dump =~ /^LOCAL_URI /).should_not == nil
+    (@@mets_xres.dump =~ /#{URI.escape(@@local_uri)}/).should_not == nil
   end
 
   it "should allow us to recreate much of its behavior by using the dump in a duck-class" do
