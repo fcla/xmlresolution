@@ -91,8 +91,6 @@ module XmlResolution
       not (collection_id =~ /\// or collection_id != URI.escape(collection_id))
     end
 
-    #### The
-
     attr_reader :collection_name
 
     attr_reader :data_path
@@ -190,7 +188,6 @@ module XmlResolution
 #        yield tmp.pathname
 #      ensure...deleted
 #      end
-
     end
 
     # We save schema files by their digests; this returns the full pathname
@@ -241,12 +238,12 @@ module XmlResolution
     def tar io
       tarfile = TarWriter.new(io, { :uid => 80, :gid => 80, :username => 'daitss', :groupname => 'daitss' })
 
-      create_manifest do |path|
-        tarfile.write path, 'manifest.xml'
-      end
+#      create_manifest do |path|
+#        tarfile.write path, 'manifest.xml'
+#      end
 
       for_schemas do |s|
-        tarfile.write schema_pathname(s.digest), s.location
+        tarfile.write schema_pathname(s.digest), File.join(collection_name,  s.location)
       end
 
       tarfile.close
