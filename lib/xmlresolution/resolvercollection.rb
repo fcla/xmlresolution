@@ -1,4 +1,3 @@
-
 require 'digest/md5'
 require 'fileutils'
 require 'uri'
@@ -56,19 +55,19 @@ module XmlResolution
     # copy
 
     def self.data_path= path
-      raise CollectionInitializationError, "ResolverCollections cannot find the directory '#{path}'."     unless File.directory? path
-      raise CollectionInitializationError, "ResolverCollections cannot write to the directory '#{path}'." unless File.writable? path
+      raise CollectionInitializationError, "ResolverCollection cannot find the directory '#{path}'."     unless File.directory? path
+      raise CollectionInitializationError, "ResolverCollection cannot write to the directory '#{path}'." unless File.writable? path
       @@data_path = path
       [ File.join(path, COLLECTIONS), File.join(path, SCHEMAS) ].each do |p|
         FileUtils.mkdir_p p
         raise "'#{p}' is not writable." unless File.writable? p
       end
     rescue => e
-      raise CollectionInitializationError, "ResolverCollections couldn't initialize directory #{path}: '#{e.message}'."
+      raise CollectionInitializationError, "ResolverCollection couldn't initialize directory #{path}: '#{e.message}'."
     end
     
     # Return the current data_path that will be used for created objects.
-    
+
     def self.data_path 
       @@data_path
     end
@@ -76,7 +75,7 @@ module XmlResolution
     # Return a list of all of the active collections stored at this data_path
 
     def self.collections
-      raise CollectionInitializationError, "The ResolverCollections system has not been told what directory to use yet." unless ResolverCollection.data_path     
+      raise CollectionInitializationError, "The ResolverCollection system has not been told what directory to use yet." unless ResolverCollection.data_path     
       Dir[File.join(data_path, COLLECTIONS, '*')].map { |path| File.split(path)[-1] }.sort
     end
 
@@ -91,12 +90,18 @@ module XmlResolution
     def self.collection_name_ok? collection_id
       not (collection_id =~ /\// or collection_id != URI.escape(collection_id))
     end
-        
+
+    #### The 
+    
     attr_reader :collection_name
-    attr_reader :data_path, :schema_path, :collection_path
+
+    attr_reader :data_path
+    attr_reader :schema_path
+    attr_reader :collection_path
 
     def initialize collection_name
       raise CollectionInitializationError, "Must initialize this class with the data_path method before it can be used" unless ResolverCollection.data_path  
+      raise CollectionNameError, "'#{collection_name}' is a bad name for a collection" unless ResolverCollection.collection_name_ok? collection_name
 
       @collection_name  = collection_name
       @data_path        = ResolverCollection.data_path
@@ -120,7 +125,7 @@ module XmlResolution
     # beginning of the file and ready to read from.  On return, the
     # file is properly closed.
 
-    def self.read_lock(filepath)
+    def read_lock(filepath)
       open(filepath, 'r') do |fd|
         Timeout.timeout(LOCK_TIMEOUT) { fd.flock(File::LOCK_SH) }
         yield fd
@@ -135,7 +140,7 @@ module XmlResolution
     # file descriptor ready for writing.  On return, the file is
     # properly closed.
 
-    def self.write_lock(filepath)
+    def write_lock(filepath)
       open(filepath, 'w') do |fd|
         Timeout.timeout(LOCK_TIMEOUT) { fd.flock(File::LOCK_EX) }
         yield fd
@@ -150,15 +155,10 @@ module XmlResolution
     # of all of the schemas that were necessary to fully resolve it.
 
     def save_document_information xrez
+      path = File.expand_path(File.join(collection_path, xrez.digest))
+      xrez.local_uri = 'file://' + XmlResolution.hostname  + path
 
-      # # If XmlResolver throws an error, we let the top level figure out if it's a 400 or 500 class error.
-      #
-      # given xml_text, filename, and a caching proxy:
-      # 
-      # xrez = XmlResolution::XmlResolver.new(xml_text, caching_proxy)
-      # xrez.filename = filename
-
-      writelock (File.join collections, xrez.digest) do |fd|
+      write_lock (path) do |fd|
         fd.write xrez.dump
       end
     end
@@ -167,12 +167,11 @@ module XmlResolution
     # found.  We use the digest of the text as the filename.
 
     def save_schema_information xrez
-
-      xrez.schemas do |s|
+      xrez.schemas.each do |s|
         next unless s.status == :success
-        filepath = File.join schemas, s.digest
-        next if File.exists? filepath  and  File.mtime(filepath) == s.last_modified
-        writelock (filepath) do |fd|
+        filepath = File.join schema_path, s.digest
+        next if File.exists? filepath  and  File.mtime(filepath) == s.last_modified # don't bother rewriting 
+        write_lock (filepath) do |fd|
           fd.write s.body
           fd.close
           File.utime(File.atime(filepath), s.last_modified, filepath)
@@ -182,12 +181,26 @@ module XmlResolution
 
     public
 
-    # TODO: wrap in a timeout
+    # Add the information from the XmlResolver object XREZ to our collection.
+    # Note that XREZ is modified; its local_uri slot is updated.
 
     def add xrez
       save_schema_information xrez
       save_document_information xrez
+
+      xrez
     end
+
+    # TODO:  add tar support back, wrap in read_lock this time!
+
+    def tar io
+
+    end
+
+    def manifest
+
+    end
+
 
   end # of class
 end # of module

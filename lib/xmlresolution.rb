@@ -1,5 +1,8 @@
 
-require 'xmlresolution/resolvercollection.rb'
-require 'xmlresolution/tarwriter.rb'
-require 'xmlresolution/xmlresolver.rb'
+
+require 'xmlresolution/utils'
+require 'xmlresolution/exceptions'
+require 'xmlresolution/resolvercollection'
+require 'xmlresolution/tarwriter'
+require 'xmlresolution/xmlresolver'
 

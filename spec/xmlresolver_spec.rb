@@ -1,17 +1,19 @@
 require 'xmlresolution/xmlresolver'
 require 'xmlresolution/exceptions'
 
-
 STDERR.puts "Expect the message \"Fatal error: Start tag expected, '<' not found at :1.\" It's from LibXML."
 
 describe XmlResolution::XmlResolver do
+
+  before(:all) do 
+    STDERR.puts "Warning: no HTTP_PROXY environment variable found. Winging it." unless ENV['HTTP_PROXY']    
+  end
 
   @@mets_xres     = nil                           # we'll fill this in later
   @@mets_reloaded = nil
 
   def test_proxy
-    # "sake.fcla.edu"
-    "satyagraha.sacred.net"
+    ENV['HTTP_PROXY']
   end
 
   def mets_namespace 
@@ -37,9 +39,9 @@ describe XmlResolution::XmlResolver do
   end
 
   it "should let us initialize with just host proxy information, and get 3128 for proxy port and the initialized address" do
-    xres = XmlResolution::XmlResolver.new "<root/>", test_proxy
+    xres = XmlResolution::XmlResolver.new "<root/>", 'example.com'
     xres.proxy_port.should == 3128
-    xres.proxy_addr.should == test_proxy
+    xres.proxy_addr.should == 'example.com'
   end
 
   it "should let us initialize with proxy host and port information, and get back the initialized proxy port and the initialized address" do
@@ -59,7 +61,7 @@ describe XmlResolution::XmlResolver do
 
   it "should get schema information from a typical METS descriptor" do
     @@mets_xres = XmlResolution::XmlResolver.new example_mets_document, test_proxy
-    @@mets_xres.schemas.length.should_not == 0
+    @@mets_xres.schemas.length.should > 10
   end
 
   it "should get some typical unresolved namespaces for a typical METS descriptor" do
@@ -84,7 +86,7 @@ describe XmlResolution::XmlResolver do
   end
 
   it "should give us a digest of the document text" do
-    (@@mets_xres.dump =~ /^DIGEST [a-f0-9]{32}/).should == 0
+    (@@mets_xres.dump =~ /^DIGEST [a-f0-9]{32}/).should_not == nil
   end
 
   it "should not include a filename yet" do
@@ -98,6 +100,21 @@ describe XmlResolution::XmlResolver do
 
   it "should now include the filename in the dump" do
     (@@mets_xres.dump =~ /^FILENAME /).should_not == nil
+    (@@mets_xres.dump =~ /myfile.xml/).should_not == nil
+  end
+
+  it "should not include a filename yet" do
+    (@@mets_xres.dump =~ /^LOCALURI /).should == nil
+  end
+
+  it "should let us add a local_uri" do
+    uri = 'file://example.com/var/tmp/data/collections/E20100110_CAFEED/a166f873a7607ebcec83c01354f300af'
+    @@mets_xres.local_uri = uri
+    @@mets_xres.local_uri.should == uri
+  end
+
+  it "should now include the local_uri in the dump" do
+    (@@mets_xres.dump =~ /^LOCALURI /).should_not == nil
     (@@mets_xres.dump =~ /myfile.xml/).should_not == nil
   end
 
@@ -118,11 +135,23 @@ describe XmlResolution::XmlResolver do
   end
 
   it "should match the internal data in it's duck-class" do
+    @@mets_xres.datetime.iso8601.should  == @@mets_reloaded.datetime.iso8601
+    @@mets_xres.filename.should          == @@mets_reloaded.filename
+    @@mets_xres.local_uri.should         == @@mets_reloaded.local_uri
+
     @@mets_xres.schemas[0].digest.should            == @@mets_reloaded.schemas[0].digest
     @@mets_xres.schemas[0].modification_time.should == @@mets_reloaded.schemas[0].modification_time
     @@mets_xres.schemas[0].location.should          == @@mets_reloaded.schemas[0].location
     @@mets_xres.schemas[0].namespace.should         == @@mets_reloaded.schemas[0].namespace
+    @@mets_xres.schemas[0].status.should            == @@mets_reloaded.schemas[0].status
   end
 
+  # The following is lame.  But how far should we go? Use Schematron to check?
+
+  it "should produce a premis report of what it has done" do
+    premis = XmlResolution.xml_resolver_report @@mets_xres, 'http://xmlresolution.dev.flca.edu/'
+    STDERR.puts premis
+    (premis =~ /<premis.*>.*<\/premis>$/mi).should_not == nil
+  end
 
 end

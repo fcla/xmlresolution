@@ -4,6 +4,7 @@ require 'net/http'
 require 'uri'
 require 'time'      # brings in parse method, iso8601, xmlschema
 require 'ostruct'
+require 'builder'
 require 'xmlresolution/exceptions'
 require 'xmlresolution/utils'
 
@@ -18,12 +19,8 @@ module XmlResolution
 # This class analyzes an XML document, attempting to recursively
 # retrieve all of the schema documents required to correctly validate
 # it. It will optionally use an HTTP caching proxy such as squid to
-# fetch the schemas.  A list of namespaces that were not
-# able to be resolved can be retrieved using the
-# unresolved_namespaces method.
-#
-# The contents of the schema files are available in the
-# schemas record under the .body slot.
+# fetch the schemas.  A list of namespaces that were not able to be
+# resolved can be retrieved using the unresolved_namespaces method.
 #
 # Example usage:
 #
@@ -83,9 +80,22 @@ module XmlResolution
 
     attr_reader :proxy_port
 
-    # Calling programs may want to decorate this object with a filename, which we'll dump if we have
+    # Calling programs may want to decorate this object with the original filename (we get only
+    # the xml document text as a string),  we'll save this if we have it.
 
     attr_accessor :filename
+
+    # Like the filename accessor above, local_uri allows calling programs 
+    # to save the hostname and the file to which is the file containing 
+    # information about this xml document; this is mostly to serve as a unique
+    # id for people that want to create xml documents based on this
+    # object. The intent is to use a filename URI.
+
+    attr_accessor :local_uri
+
+    # Time that we started processing this xml document.
+
+    attr_accessor :datetime
 
     # We'll want to record the digest fingerprint for the data for the xml document
 
@@ -111,8 +121,9 @@ module XmlResolution
         end
       end
 
-      @digest  = Digest::MD5.hexdigest xml_text
-      @schemas = get_schemas xml_text
+      @digest   = Digest::MD5.hexdigest xml_text
+      @schemas  = get_schemas xml_text
+      @datetime = Time.now
     end
 
     # Return a list of namespaces that were encountered, but never had a location associated with them.
@@ -121,9 +132,10 @@ module XmlResolution
       @namespaces_found.collect { |namespace, located| namespace if not located }.compact.sort
     end
 
-    # Return a string representation of our data:
+    # Return a string representation of our analysis of an xml document, lookinf something like this:
     #
     #  DIGEST md5
+    #  DATE_TIME time
     #  SCHEMA md5 modification location namespace 
     #  SCHEMA md5 modification location namespace 
     #  SCHEMA md5 modification location namespace 
@@ -132,18 +144,21 @@ module XmlResolution
     #  UNRESOLVED_NAMESPACES namespace namespace namespace ....
     #  BROKEN_SCHEMA location namespace error_message
     #
-    # optionally:
+    # optionally, we may have:
     #
-    #  FILENAME externally-supplied-filename
+    #  FILE_NAME externally-supplied-filename
+    #  LOCAL_URI file-uri
     #
-    # Each 'phrase' is URL-escaped, so embeded whitespace won't cause problems parsing.
+    # Each 'phrase' is URL-escaped, so embeded whitespace won't cause parsing problems.
 
     def dump
       str = ''
       
-      str += XmlResolution.escape("FILENAME", filename) + "\n" if filename
+      str += XmlResolution.escape("FILE_NAME", filename)         + "\n" if filename
+      str += XmlResolution.escape("LOCAL_URI", local_uri)        + "\n" if local_uri
 
-      str += XmlResolution.escape("DIGEST", digest) + "\n"
+      str += XmlResolution.escape("DATE_TIME", datetime.iso8601) + "\n" 
+      str += XmlResolution.escape("DIGEST",   digest)           + "\n"
 
       schemas.each do |s|
         next unless s.status == :success
@@ -154,7 +169,7 @@ module XmlResolution
 
       schemas.each do |s|
         next if s.status == :success
-        str += XmlResolution.escape("BROKEN_SCHEMA", s.location, s.namespace, s.error_message)   + "\n"
+        str += XmlResolution.escape("BROKEN_SCHEMA", s.location, s.namespace, s.error_message) + "\n"
       end
       
       str
@@ -210,15 +225,13 @@ module XmlResolution
       location_namespaces
 
     rescue LibXML::XML::Error => e
-      raise XmlParseError, e.message
+      raise XmlParseError, e.message # TODO: note potential information leakage here and next.
     rescue => e
-      raise ResolverError, e.message 
+      raise ResolverError, e.message # Some generic issue - my fault.
     end
 
     # Attempt to recursively retrieve all of the schemas used for the string TEXT, an XML Document.
     # This method is used to populate the schemas attribute.
-    #
-    # 
 
     def get_schemas text
 
@@ -277,10 +290,11 @@ module XmlResolution
     end
 
     # Fetch the schema document from the given the string LOCATION, a
-    # URL. Returns a Net::HTTP response object.  The number of followed
-    # redirects is limited to 5. Raises a variety of exceptions, which
-    # are handled within this class (an error message for this particular
-    # schema is recorded).
+    # URL. Returns a Net::HTTP response object.  The number of
+    # followed redirects is limited to 5. Raises a variety of
+    # exceptions, which are generally handled within this class (an
+    # error message for this particular schema is recorded and the
+    # status is marked as a failure, and we move on).
 
     def fetch location, limit = 5
 
@@ -290,7 +304,7 @@ module XmlResolution
       raise LocationError, "#{location} can't be retrieved, there were too many redirects."          if limit < 1
 
       # TODO: We plan to run this under Sinatra, but Net::HTTP::Proxy isn't thread safe.  Fix me!
-      #
+      
       # Note: if proxy_addr & proxy_port are nil, this is equivalent to Net::HTTP
 
       Net::HTTP::Proxy(proxy_addr, proxy_port).start(uri.host, uri.port) do |http|
@@ -302,23 +316,24 @@ module XmlResolution
           response.error!
         end
       end
-
     end # of fetch
+
   end # of class XmlResolver
 
 
   class XmlResolverReloaded
 
     # This class lets us duck type as much of XmlResolver as we can
-    # from its dump output, which is what we use (as a string) in
-    # its constructor. See the docs for XmlResolver#dump above for 
-    # the details on the dump format,  which is a simple text file.
+    # from its dump output, which is what we use (as a string) in its
+    # constructor. See the docs for XmlResolver#dump above for the
+    # details on the dump format, which is a simple text file.
 
     # The usual suspects:
 
-    attr_reader :schemas, :filename, :digest, :unresolved_namespaces
+    attr_reader :schemas, :filename, :digest, :unresolved_namespaces, :datetime, :local_uri
 
     def initialize  text
+
       @schemas               = []
       @unresolved_namespaces = []
       @filename              = nil
@@ -329,14 +344,12 @@ module XmlResolution
 
         case data.shift
 
-        when 'FILENAME'
-          @filename = data.shift
+        when 'DATE_TIME' then @datetime  = Time.parse data.shift
+        when 'DIGEST'    then @digest    = data.shift
+        when 'FILE_NAME' then @filename  = data.shift
+        when 'LOCAL_URI' then @local_uri = data.shift
 
-        when 'DIGEST'
-          @digest   = data.shift
-
-        when 'UNRESOLVED_NAMESPACES'
-          @unresolved_namespaces = data
+        when 'UNRESOLVED_NAMESPACES' then @unresolved_namespaces = data
 
         when 'SCHEMA'
           @schemas.push OpenStruct.new("body"            => nil,
@@ -346,6 +359,7 @@ module XmlResolution
                                        "namespace"       => data.shift,
                                        "status"          => :success,
                                        "error_message"   => nil)
+
         when 'BROKEN_SCHEMA'
           @schemas.push OpenStruct.new("body"            => nil,
                                        "digest"          => nil,
@@ -359,3 +373,4 @@ module XmlResolution
     end # of def
   end # of class XmlResolverReloaded
 end # of module XmlResolution
+# ha!

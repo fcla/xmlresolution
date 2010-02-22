@@ -4,78 +4,38 @@ require 'fileutils'
 require 'xmlresolution.rb'
 require 'yaml'
 
-require 'debugger'  # TODO: this is a crock... do better
-
 # TODO: logger, and use as before method
-# TODO: configuration section?
 # TODO: remove old collections on the fly (say, after a week...) and
-# support HEAD, DELETE, 400's, etags, and schema files
+# support HEAD, DELETE, etags and last-modified
 
 $KCODE = 'UTF8'
 
+configure do
+  XmlResolution::ResolverCollection.data_path = File.expand_path(File.join(File.dirname(__FILE__), 'data'))
+  set :proxy, 'satyagraha.sacred.net'
+end
+
 helpers do
 
-  def app_root
-    File.expand_path(File.dirname(__FILE__))
-  end
-
-  # so far, anything that requires a configuration variable knows how 
-  # to default from a nil value; TODO log a warning
-
-  def configuration name
-    filename = File.join app_root, 'config.yaml'
-    YAML::load_file(filename)[name]
-  rescue => e
-    STDERR.puts "Warning: expected a configuration file #{filename}. Returning nil for the #{name} configuration variable."
-    return nil
-  end
-
-  def hostname
-    Socket::gethostname.downcase
+  def server_base_name
+    'http://' + @env['SERVER_NAME'] + (@env['SERVER_PORT'] == '80' ? '' : ":#{@env['SERVER_PORT']}") + '/'
   end
   
-  def data_root
-    File.join app_root, 'data'
-  end
-
-  def proxy
-    configuration 'proxy'
-  end
-
-  def collection_name_ok? collection_id
-    # collection_id =~ /^E2[0-9]{7}_[a-zA-Z0-9_]{6}$/                           # TODO: need to add this back
-    not (collection_id =~ /\// or collection_id != URI.escape(collection_id))
-  end
-
-  def collection_exists? collection_id
-    XmlResolution::ResolverCollection.collection_exists? data_root, collection_id
-  end
-
-  def collections
-    XmlResolution::ResolverCollection.collections data_root
-  end
-  
-  def create_collection collection_id
-    XmlResolution::ResolverCollection.new(data_root, collection_id) 
-  end
-
-  def get_tarfile collection_id
+  def tar_up collection_id
     fd = Tempfile.new 'xmlrez-tar'
-    XmlResolution::ResolverCollection.new(data_root, collection_id, proxy).tar(fd)
+    XmlResolution::ResolverCollection.new(collection_id).tar(fd)
     fd.open.read
   ensure
     fd.close true
   end
 
-  def add_xml collection_id, xml_text, xml_filename
-    rc = XmlResolution::ResolverCollection.new(data_root, collection_id, proxy)   
-    rc.save_resolution_data(xml_text, xml_filename)                # returns an xmlresolver object - the information 
+  def bt e
+    e.backtrace.join("\n") + "\n"
   end
 
 end # of helpers
 
-
-# Clients that forgot trailing slashes:
+# Help out clients that forgot trailing slashes:
 
 get '/ieids' do
   redirect '/ieids/', 301
@@ -100,41 +60,50 @@ end
 # The top level page gives an introduction to using this service.
 
 get '/' do
-
-  base_url = 'http://' + @env['SERVER_NAME'] + (@env['SERVER_PORT'] == '80' ? '' : ":#{@env['SERVER_PORT']}")
-  erb :site, :locals => { :base_url => base_url }
+  erb :site, :locals => { :base_url => server_base_name }
 end
 
 # List all of the collections we've got
 
 get '/ieids/' do
-  erb :ieids
+  erb :ieids, :locals => { :collections => XmlResolution::ResolverCollection.collections.sort }
 end
 
-# Get the collection of xml files we've associated with a collection id as a tar file
+#### TODO: well, to re-do actually...
 
 get '/ieids/:collection_id/' do |collection_id|
   begin
-    halt [ 404, "No such collection /ieids/#{collection_id}\n" ] unless collection_exists? collection_id
-    tar_data = get_tarfile collection_id
+    content_type "text/plain"
+    tar_data = tar_up collection_id
+  rescue XmlResolution::Http400Error => e
+    halt [ 400, e.message + "\n" ]
+  rescue => e
+    halt [ 500, "Error creating tarfile for collection #{collection_id}: #{e.message}.\n" + bt(e) ]   # TODO: be nice to get a backtrace in a log somewhere
+  else
     content_type "application/x-tar"
     attachment   "#{collection_id}.tar"
     tar_data
-  rescue => e
-    content_type "text/plain"
-    halt [ 500, "Error creating tarfile.\n" ]   # TODO: be nice to get a backtrace in a log somewhere....
   end
 end
 
-# Create a new collection:
+# Create a new collection.
 
 put '/ieids/:collection_id' do |collection_id|
-  halt [ 403, "Collection #{collection_id} already exists\n" ]  if collection_exists? collection_id
-  halt [ 400, "Collection #{collection_id} is badly named\n" ]  unless collection_name_ok? collection_id
-
-  create_collection collection_id  ### TODO: catch error
-  status 201
-  "collection #{collection_id} created\n"
+  begin
+    content_type 'text/plain'
+    if XmlResolution::ResolverCollection.collection_exists? collection_id
+      status 200
+      "Collection #{collection_id} existed.\n"
+    else
+      XmlResolution::ResolverCollection.new collection_id
+      status 201
+      "Collection #{collection_id} created.\n"
+    end
+  rescue XmlResolution::Http400Error => e
+    halt [ 400, e.message + "\n" + bt(e) ]
+  rescue => e
+    halt [ 500, e.message + "\n" + bt(e) ]
+  end    
 end
 
 
@@ -144,25 +113,34 @@ end
 # It expects behavior produced as the form input having type="file" name="xmlfile".  Additionally, we
 # require that the content disposition must supply an original filename.
 
+# TODO: I notice that a brand new collection might be created on the fly here: bug? Or feature?
+
 post '/ieids/:collection_id/' do |collection_id|
   begin
+    content_type 'text/plain'
+
     halt [ 400, "Missing form data name='xmlfile'\n" ]    unless params['xmlfile']
     halt [ 400, "Missing form data filename='...'\n" ]    unless filename = params['xmlfile'][:filename]
     halt [ 500, "Data unavailable (missing tempfile)\n" ] unless tempfile = params['xmlfile'][:tempfile]
     
+    xrez = XmlResolution::XmlResolver.new(tempfile.open.read, options.proxy)
+    xrez.filename = filename
+
+    XmlResolution::ResolverCollection.new(collection_id).add xrez
+    
+  rescue XmlResolution::Http400Error => e
+    halt [ 400, e.message + "\n"  + bt(e) ]
+  rescue => e
+    halt [ 500, "Can't process file #{filename} for collection #{collection_id}: #{e.message}.\n"  + bt(e) ]
+  else
     status 201
     content_type 'application/xml'
-    add_xml(collection_id, tempfile.open.read, filename)   # TODO:  [sic] - raise and catch specific errors (e.g. non-xmlfiles)
-
-  rescue => e
-    content_type 'text/plain'
-    halt [ 500, "Can't get parse file data for supplied file named '#{filename}': #{e.message}.\n" + e.backtrace.join("\n") + "\n" ]
-    # halt [ 500, "Can't get parse file data for supplied file named '#{filename}': #{e.message}.\n" ]
+    XmlResolution.xml_resolver_report xrez, server_base_name
   end
 end
 
 get '/test/' do
-   erb :test
+  erb :test, :locals => { :collections => XmlResolution::ResolverCollection.collections.sort }
 end
 
 get '/test-form/:collection_id/' do |collection_id|
