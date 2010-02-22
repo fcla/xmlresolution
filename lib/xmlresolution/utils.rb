@@ -44,8 +44,9 @@ module XmlResolution
 
   def self.xml_resolver_report xrez, agent
 
-    xrez.filename   or raise MissingFilenameError, "Can't get the submittor's assigned filename when attempting to write the PREMIS resolution report for a submitted XML document."
-    xrez.local_uri  or raise ResolverError, "Can't determing the local file URI for a submitted XML document."
+    $KCODE =~ /UTF8/ or raise ResolverError, "Ruby $KCODE == #{$KCODE}, but it must be UTF-8"
+    xrez.filename    or raise MissingFilenameError, "Can't find submittor's assigned filename when attempting to write the PREMIS resolution report for a submitted XML document."
+    xrez.local_uri   or raise ResolverError, "Can't determing the local file URI for the submitted XML document #{xrez.filename} when attempting to write the PREMIS resolution report."
 
     successes = failures = 0
     xrez.schemas.each do |s|
@@ -58,12 +59,10 @@ module XmlResolution
     elsif failures > 0
       outcome = 'failure'
     else
-      outcome = 'success'  # includes nothing at all - vacuous case
+      outcome = 'success'  # vacuous case is success
     end
 
     xml = Builder::XmlMarkup.new(:indent => 2)
-
-    # TODO: set up the encoding based on the $KCODE?
 
     xml.instruct!(:xml, :encoding => 'UTF-8')  # well, if $KCODE  was set correctly
 
@@ -80,24 +79,7 @@ module XmlResolution
         xml.eventOutcomeInformation { xml.eventOutcome(outcome) }
         xml.eventOutcomeDetail {
           xml.eventOutcomeDetailExtension {
-            # we list all the successes first, then all the failures, so
-            # to group them in a more readable way for our descendents.
-            xrez.schemas.each do |s|
-              next if s.status != :success
-              xml.schema(:status        => s.status,
-                         :md5           => s.digest,
-                         :last_modified => s.last_modified.xmlschema,
-                         :namespace     => s.namespace,
-                         :location      => s.location)
-            end
-            xrez.schemas.each do |s|
-              next if s.status == :success
-              xml.schema(:status        => s.status,
-                         :md5           => s.digest,
-                         :last_modified => s.last_modified.xmlschema,
-                         :namespace     => s.namespace,
-                         :location      => s.location)
-            end
+            xrez.schemas.each { |s| xml.broken_link(s.location) unless s.status == :success } # note only schemas that can't be downloaded
             xrez.unresolved_namespaces.each { |ns| xml.unresolved_namespace(ns) }
           }
         }
