@@ -4,23 +4,19 @@ require 'fileutils'
 require 'xmlresolution.rb'
 
 # TODO: logger, and use as before method
-# TODO: remove old collections on the fly (say, after a week...) and
-# support HEAD, DELETE, etags and last-modified
-
-$KCODE = 'UTF8'
+# TODO: remove old collections on the fly (say, after a week...)
+# TODO: support HEAD, DELETE, etags and last-modified
 
 configure do
+  $KCODE = 'UTF8'
   XmlResolution::ResolverCollection.data_path = File.expand_path(File.join(File.dirname(__FILE__), 'data'))
   set :proxy, 'sake.fcla.edu'
 end
 
 helpers do
-
   def service_name
     'http://' + @env['SERVER_NAME'] + (@env['SERVER_PORT'] == '80' ? '' : ":#{@env['SERVER_PORT']}")
   end
-
-  # TODO: clean way of deleting the temporary tarfile?
 
   def tar_up collection_id
     tmp = Tempfile.new 'xmlrez-tar-'
@@ -33,7 +29,6 @@ helpers do
   def bt e
     e.backtrace.join("\n") + "\n"
   end
-
 end # of helpers
 
 # Help out clients that forgot trailing slashes:
