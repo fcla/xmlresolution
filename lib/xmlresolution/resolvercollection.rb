@@ -79,13 +79,13 @@ module XmlResolution
       Dir[File.join(data_path, COLLECTIONS, '*')].map { |path| File.split(path)[-1] }.sort
     end
 
-    # A boolean to determine if a collection_id is active.
+    # A boolean to determine if the collection named by  COLLECTION_ID is active.
 
     def self.collection_exists? collection_id
       ResolverCollection.collections.include? collection_id
     end
 
-    # A boolean to determine if a string is a valid collection id. It has to fit into the filesystem, so must be a valid single directory name.
+    # A boolean to determine if the string COLLECTION_ID is a valid collection id. It has to fit into the filesystem, so must be a valid single directory name.
 
     def self.collection_name_ok? collection_id
       not (collection_id =~ /\// or collection_id != URI.escape(collection_id))
@@ -99,11 +99,11 @@ module XmlResolution
 
     attr_reader :data_path
 
-    # The filesystem path where retreived schemas are are stored.
+    # The filesystem path where retrieved schemas are are stored.
 
     attr_reader :schema_path
 
-    # The filesystem path were data about files submitted to a particula collection are stored.
+    # The filesystem path were data about files submitted to this collection are stored.
 
     attr_reader :collection_path
 
@@ -196,7 +196,7 @@ module XmlResolution
     end
 
     # Loops over all of the collections of saved resolution data for a collection,
-    # returning an XmlResolverReloaded object.
+    # yielding each XmlResolverReloaded object in turn.
 
     def for_resolutions
       Dir[ File.join(collection_path, '*') ].each do |filepath|
