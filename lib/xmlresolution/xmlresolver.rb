@@ -227,7 +227,7 @@ module XmlResolution
       location_namespaces
 
     rescue LibXML::XML::Error => e
-      raise XmlParseError, e.message # TODO: note potential information leakage here and next.
+      raise XmlParseError, "The XML file could not be parsed: #{e.message}" # TODO: note potential information leakage here and next.
     rescue => e
       raise ResolverError, e.message # Some generic issue - my fault.
     end
