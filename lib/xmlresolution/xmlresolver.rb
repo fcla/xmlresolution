@@ -12,10 +12,8 @@ include LibXML
 
 module XmlResolution
 
-  # TODO: extend to DTDs.  Produce 400 for XML Files that fail entirely (e.g. non-xml)
-
-  # Author: Randy Fischer (rf@ufl.edu) for DAITSS
-
+  # Initial Author: Randy Fischer (rf@ufl.edu) for DAITSS
+  # 
   # This class analyzes an XML document, attempting to recursively
   # retrieve all of the schema documents required to correctly validate
   # it. It will optionally use an HTTP caching proxy such as squid to
@@ -134,7 +132,7 @@ module XmlResolution
       @namespaces_found.collect { |namespace, located| namespace if not located }.compact.sort
     end
 
-    # Return a string representation of our analysis of an xml document, lookinf something like this:
+    # Return a string representation of our analysis of an xml document, along the lines of:
     #
     #  DIGEST md5
     #  DATE_TIME time

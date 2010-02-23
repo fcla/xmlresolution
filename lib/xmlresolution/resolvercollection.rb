@@ -91,11 +91,24 @@ module XmlResolution
       not (collection_id =~ /\// or collection_id != URI.escape(collection_id))
     end
 
+    # The name of the collection.
+
     attr_reader :collection_name
 
+    # The filesystem path where our data is stored.
+
     attr_reader :data_path
+
+    # The filesystem path where retreived schemas are are stored.
+
     attr_reader :schema_path
+
+    # The filesystem path were data about files submitted to a particula collection are stored.
+
     attr_reader :collection_path
+
+    # A collection is instantiated by its name, the string COLLECTION_NAME.  The string must be usable as a single filesystem path component.
+    # New collections are created via this method; existing collections are retrieved as well.
 
     def initialize collection_name
       raise CollectionInitializationError, "Must initialize this class with the data_path method before it can be used" unless ResolverCollection.data_path
