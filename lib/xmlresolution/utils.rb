@@ -1,4 +1,5 @@
 require 'uri'
+require 'socket'
 require 'xmlresolution/exceptions'
 
 

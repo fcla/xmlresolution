@@ -22,6 +22,16 @@ describe XmlResolution::ResolverCollection do
     File.read(File.join(File.dirname(__FILE__), 'files', 'example-xml-documents', 'F20060215_AAAAHL.xml'))
   end
 
+  # this fellow doesn't get anything resolved:
+
+  def another_example_mets_document
+    File.read(File.join(File.dirname(__FILE__), 'files', 'example-xml-documents', 'E20090705_AAAAMG-1905070401.xml'))
+  end
+
+  def yet_another_example_mets_document
+    File.read(File.join(File.dirname(__FILE__), 'files', 'example-xml-documents', 'UF00056159_00002.xml'))
+  end
+
   def collection_one 
     'E20101010_DEFACE'
   end
@@ -108,11 +118,49 @@ describe XmlResolution::ResolverCollection do
   it "should allow us to add an already added XmlResolver object, and it should tell us where it is stored." do
     rc   = XmlResolution::ResolverCollection.new collection_one
     xrez = XmlResolution::XmlResolver.new example_mets_document, test_proxy
+    xrez.filename = 'example-mets-document.xml'
 
     xrez.local_uri.should == nil
     lambda { rc.add xrez }.should_not raise_error
     xrez.local_uri.should_not == nil
   end
 
+  it "should allow us to add a second and third XmlResolver object, and it should tell us where *they* is stored." do
+    rc   = XmlResolution::ResolverCollection.new collection_one
+
+    xrez = XmlResolution::XmlResolver.new another_example_mets_document, test_proxy
+    xrez.filename = 'another-example-mets-document.xml'
+
+    xrez.local_uri.should == nil
+    lambda { rc.add xrez }.should_not raise_error
+    xrez.local_uri.should_not == nil
+
+    xrez = XmlResolution::XmlResolver.new yet_another_example_mets_document, test_proxy
+    xrez.filename = 'yet-another-example-mets-document.xml'
+
+    xrez.local_uri.should == nil
+    lambda { rc.add xrez }.should_not raise_error
+    xrez.local_uri.should_not == nil
+  end
+
+
+  it "should produce a manifest file" do
+    rc   = XmlResolution::ResolverCollection.new collection_one
+    data = nil
+    rc.manifest { |pathname| data = File.read(pathname) }
+    data.length.should > 1024
+    (data =~ /<resolutions\s+/).should_not == nil
+    (data =~ /<resolution\s+/).should_not == nil
+    (data =~ /<schema status="success"\s+/).should_not == nil
+  end
+
+  it "should produce a tar file of our files, with a manifest" do
+    rc   = XmlResolution::ResolverCollection.new collection_one
+    temp = Tempfile.new(collection_one + '-tar')
+    rc.tar temp
+    toc = `tar -tvf #{temp.path}`
+    (toc =~ /#{File.join(collection_one, 'manifest.xml')}/).should_not == nil
+    (toc =~ /http:\/\/www.fcla.edu\/dls\/md\/daitss\/daitss.xsd/).should_not == nil
+  end
 
 end

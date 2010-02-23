@@ -155,7 +155,6 @@ module XmlResolution
     def save_document_information xrez
       path = File.expand_path(File.join(collection_path, xrez.digest))
       xrez.local_uri = 'file://' + XmlResolution.hostname  + path
-
       write_lock (path) do |fd|
         fd.write xrez.dump
       end
@@ -175,19 +174,6 @@ module XmlResolution
           File.utime(File.atime(filepath), s.last_modified, filepath)
         end
       end
-    end
-
-
-# TODO: get manifest data
-
-    def manifest
-#      Tempfile.open('manifest') do |tmp|
-#        tmp.write(manifest)
-#        tmp.close
-#        FileUtils.chmod(0644, tmp.path)
-#        yield tmp.pathname
-#      ensure...deleted
-#      end
     end
 
     # We save schema files by their digests; this returns the full pathname
@@ -213,19 +199,56 @@ module XmlResolution
 
     def for_schemas
       seen = {}
-      for_resolutions do |xrez| 
-        xrez.schemas.each do |s| 
+      for_resolutions do |xrez|
+        xrez.schemas.each do |s|
           next unless s.status == :success
           seen[s.location] = s
         end
       end
       seen.keys.sort.each { |loc| yield seen[loc] }
     end
-    
+
     public
 
+    # manifest produces an xml report on the current state of our collection. When we produce a
+    # tar file, a manifest.xml file is included.  This method yields a path to a newly created
+    # manifest.xml file.
+
+    def manifest
+      $KCODE =~ /UTF8/ or raise ResolverError, "When creating manifest for #{collection_name}, ruby $KCODE was '#{$KCODE}', but it must be 'UTF-8'"
+
+      xml = Builder::XmlMarkup.new(:indent => 2)
+      xml.instruct!(:xml, :encoding => 'UTF-8')
+      xml.resolutions(:collection => collection_name) {
+        for_resolutions do |xrez|
+          xml.resolution(:name => xrez.filename, :id => xrez.local_uri, :md5 => xrez.digest, :time => xrez.datetime.xmlschema) {
+            xrez.schemas.each do |s|
+              next unless s.status == :success
+              xml.schema(:status => 'success', :location => s.location, :namespace => s.namespace, :md5 => s.digest, :last_modified => s.last_modified.xmlschema )
+            end
+            xrez.schemas.each do |s|
+              next if s.status == :success
+              xml.schema(:status => 'failure', :location => s.location, :namespace => s.namespace, :message => s.error_message)
+            end
+            xrez.unresolved_namespaces.each do |ns|
+              xml.schema(:status => 'unresolved', :namespace => ns)
+            end
+          }
+        end
+      }
+
+      Tempfile.open("manifest-#{collection_name}") do |tmp|
+        tmp.write(xml.target!)
+        tmp.close
+        FileUtils.chmod(0644, tmp.path)
+        yield tmp.path
+        tmp.unlink
+      end
+    end
+
     # Add the information from the XmlResolver object XREZ to our collection.
-    # Note that XREZ is modified; its local_uri slot is updated.
+    # Note that XREZ is modified: its local_uri slot is updated to the file uri
+    # where it is saved.
 
     def add xrez
       save_schema_information xrez
@@ -238,17 +261,16 @@ module XmlResolution
     def tar io
       tarfile = TarWriter.new(io, { :uid => 80, :gid => 80, :username => 'daitss', :groupname => 'daitss' })
 
-#      create_manifest do |path|
-#        tarfile.write path, 'manifest.xml'
-#      end
+      manifest do |manpath|
+        tarfile.write  manpath, File.join(collection_name, 'manifest.xml')
+      end
 
-      for_schemas do |s|
-        tarfile.write schema_pathname(s.digest), File.join(collection_name,  s.location)
+      for_schemas do |srec|
+        tarfile.write schema_pathname(srec.digest), File.join(collection_name,  srec.location)
       end
 
       tarfile.close
     end
-
 
   end # of class
 end # of module

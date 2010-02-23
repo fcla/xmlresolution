@@ -31,6 +31,12 @@ describe XmlResolution::XmlResolver do
     File.read(File.join(File.dirname(__FILE__), 'files', 'example-xml-documents', 'F20060215_AAAAHL.xml'))
   end
 
+  # TODO: add this bad boy - doesn't resolve anything!
+
+  def problematic_mets_document
+    File.read(File.join(File.dirname(__FILE__), 'files', 'example-xml-documents', 'E20090705_AAAAMG-1905070401.xml'))
+  end
+
   def example_non_xml_document
     File.read("/etc/passwd")
   end
@@ -152,7 +158,6 @@ describe XmlResolution::XmlResolver do
 
   it "should produce a premis report of what it has done" do
     premis = XmlResolution.xml_resolver_report @@mets_xres, 'http://xmlresolution.dev.flca.edu/'
-    STDERR.puts premis
     (premis =~ /<premis.*>.*<\/premis>$/mi).should_not == nil
   end
 

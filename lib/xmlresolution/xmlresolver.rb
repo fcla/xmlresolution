@@ -12,46 +12,46 @@ include LibXML
 
 module XmlResolution
 
-# TODO: extend to DTDs.  Produce 400 for XML Files that fail entirely (e.g. non-xml)
+  # TODO: extend to DTDs.  Produce 400 for XML Files that fail entirely (e.g. non-xml)
 
-# Author: Randy Fischer (rf@ufl.edu) for DAITSS
+  # Author: Randy Fischer (rf@ufl.edu) for DAITSS
 
-# This class analyzes an XML document, attempting to recursively
-# retrieve all of the schema documents required to correctly validate
-# it. It will optionally use an HTTP caching proxy such as squid to
-# fetch the schemas.  A list of namespaces that were not able to be
-# resolved can be retrieved using the unresolved_namespaces method.
-#
-# Example usage:
-#
-#   xrez = XmlResolution::XmlResolver.new(File.read("F20060215_AAAAHL.xml"), "satyagraha.sacred.net:3128")
-#   xrez.schemas.each do |rec|
-#     next unless rec.status == :success
-#     puts "#{rec.namespace}  => #{rec.location}\n"
-#   end
-#   puts "\nUnresolved: " + xrez.unresolved_namespaces.join(", ")
-#
-# which might return
-#
-#  http://www.loc.gov/METS/ => http://www.loc.gov/standards/mets/mets.xsd
-#  http://www.fcla.edu/dls/md/daitss/ => http://www.fcla.edu/dls/md/daitss/daitss.xsd
-#  http://www.fcla.edu/dls/md/palmm/ => http://www.fcla.edu/dls/md/palmm.xsd
-#  http://www.fcla.edu/dls/md/techmd/ => http://www.fcla.edu/dls/md/techmd.xsd
-#  http://www.fcla.edu/dls/md/rightsmd/ => http://www.fcla.edu/dls/md/rightsmd.xsd
-#  http://purl.org/dc/elements/1.1/ => http://dublincore.org/schemas/xmls/simpledc20021212.xsd
-#
-#  Unresolved: http://www.w3.org/1999/xlink, http://www.w3.org/2001/XMLSchema-instance
-#
-# Two notes on squid caching proxies: at least by default, redirects
-# are not cached (even 301 "moved permanently") so that there will
-# always be a request to the original host resulting in a redirect
-# that we will handle (though the URL we are directed to will usually
-# be cached) - an example is http://www.loc.gov/mods/v3/mods-3-2.xsd.
-# Secondly, there are common schemas, such as
-# http://dublincore.org/schemas/xmls/simpledc20021212.xsd, that squid
-# cannot cache since there is no Last-Modified, Etag, or
-# caching/expiration information associated with it. These kinds of
-# issues slow us down somewhat.
+  # This class analyzes an XML document, attempting to recursively
+  # retrieve all of the schema documents required to correctly validate
+  # it. It will optionally use an HTTP caching proxy such as squid to
+  # fetch the schemas.  A list of namespaces that were not able to be
+  # resolved can be retrieved using the unresolved_namespaces method.
+  #
+  # Example usage:
+  #
+  #   xrez = XmlResolution::XmlResolver.new(File.read("F20060215_AAAAHL.xml"), "satyagraha.sacred.net:3128")
+  #   xrez.schemas.each do |rec|
+  #     next unless rec.status == :success
+  #     puts "#{rec.namespace}  => #{rec.location}\n"
+  #   end
+  #   puts "\nUnresolved: " + xrez.unresolved_namespaces.join(", ")
+  #
+  # which might return
+  #
+  #  http://www.loc.gov/METS/ => http://www.loc.gov/standards/mets/mets.xsd
+  #  http://www.fcla.edu/dls/md/daitss/ => http://www.fcla.edu/dls/md/daitss/daitss.xsd
+  #  http://www.fcla.edu/dls/md/palmm/ => http://www.fcla.edu/dls/md/palmm.xsd
+  #  http://www.fcla.edu/dls/md/techmd/ => http://www.fcla.edu/dls/md/techmd.xsd
+  #  http://www.fcla.edu/dls/md/rightsmd/ => http://www.fcla.edu/dls/md/rightsmd.xsd
+  #  http://purl.org/dc/elements/1.1/ => http://dublincore.org/schemas/xmls/simpledc20021212.xsd
+  #
+  #  Unresolved: http://www.w3.org/1999/xlink, http://www.w3.org/2001/XMLSchema-instance
+  #
+  # Two notes on squid caching proxies: at least by default, redirects
+  # are not cached (even 301 "moved permanently") so that there will
+  # always be a request to the original host resulting in a redirect
+  # that we will handle (though the URL we are directed to will usually
+  # be cached) - an example is http://www.loc.gov/mods/v3/mods-3-2.xsd.
+  # Secondly, there are common schemas, such as
+  # http://dublincore.org/schemas/xmls/simpledc20021212.xsd, that squid
+  # cannot cache since there is no Last-Modified, Etag, or
+  # caching/expiration information associated with it. These kinds of
+  # issues slow us down somewhat.
 
   class XmlResolver
 
@@ -125,6 +125,8 @@ module XmlResolution
       @schemas  = get_schemas xml_text
       @datetime = Time.now
     end
+
+
 
     # Return a list of namespaces that were encountered, but never had a location associated with them.
 
@@ -218,7 +220,7 @@ module XmlResolution
           url = inc['schemaLocation'] =~ /^http/i ? inc['schemaLocation'] : home + inc['schemaLocation']
 
           location_namespaces[url]     =  target_ns
-         @namespaces_found[target_ns] = true
+          @namespaces_found[target_ns] = true
         end
       end
 
@@ -240,14 +242,22 @@ module XmlResolution
       locations_found     = []
 
       get_schemas_helper directory, location_namespaces, locations_found
+
+      # sort directory by namespace - that set the order of XmlResolver#schemas
+
+      by_location = {}
+      directory.each { |s| by_location[s.location] = s }  # is location a unique key for us? or can an xml instance doc point to the same location for two different namespaces?
+      directory = []
+      by_location.keys.sort.each { |k| directory.push by_location[k] }
       return directory
     end
 
-    # Recursive helper for get_schemas.  Collects and analyzes schemas.
-    # Recurse.  Returns a list of information about the recovered
-    # schemas.  A particular schema will be marked as failed and
-    # provided with an error message if there was a problem retrieving
-    # or parsing it.
+    # Recursive helper for get_schemas.  Collects and analyzes
+    # schemas.  Recurse on newly extracted schemas.  Returns a list
+    # of information about the recovered schemas.  A particular
+    # schema will be marked as failed and provided with an error
+    # message if there was a problem retrieving or parsing it.
+
 
     def get_schemas_helper directory, location_namespaces_to_check, locations_checked
 
@@ -255,7 +265,6 @@ module XmlResolution
       location_namespaces_to_check.each do |location, namespace|
 
         next if locations_checked.member? location
-
         begin
           response = fetch location
 
@@ -305,7 +314,7 @@ module XmlResolution
 
       # TODO: We plan to run this under Sinatra, but Net::HTTP::Proxy isn't thread safe.  Fix me!
 
-      # Note: if proxy_addr & proxy_port are nil, this is equivalent to Net::HTTP
+      # Note: if proxy_addr & proxy_port are nil,  Net::HTTP::Proxy is equivalent to Net::HTTP
 
       Net::HTTP::Proxy(proxy_addr, proxy_port).start(uri.host, uri.port) do |http|
         response  = http.get(uri.path)
@@ -317,20 +326,24 @@ module XmlResolution
         end
       end
     end # of fetch
-
   end # of class XmlResolver
 
+  # The XmlResolverReloaded class lets us duck type as much of
+  # XmlResolver as we can from its dump output, which is what we use
+  # (as a string) in its constructor. See the docs for
+  # XmlResolver#dump above for the details on the dump format, which
+  # is a simple text file.
 
   class XmlResolverReloaded
 
-    # This class lets us duck type as much of XmlResolver as we can
-    # from its dump output, which is what we use (as a string) in its
-    # constructor. See the docs for XmlResolver#dump above for the
-    # details on the dump format, which is a simple text file.
+    # schemas provides a list of information about the schemas needed to analyze a document
 
-    # The usual suspects:
-
-    attr_reader :schemas, :filename, :digest, :unresolved_namespaces, :datetime, :local_uri
+    attr_reader :schemas
+    attr_reader :filename
+    attr_reader :digest
+    attr_reader :unresolved_namespaces
+    attr_reader :datetime
+    attr_reader :local_uri
 
     def initialize  text
 
