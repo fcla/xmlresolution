@@ -33,5 +33,6 @@ module XmlResolution
        class ResolverError                 < Http500Error; end
        class CollectionInitializationError < Http500Error; end
        class LockError                     < Http500Error; end
+       class LogError                      < Http500Error; end
 
 end
