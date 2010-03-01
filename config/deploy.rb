@@ -29,18 +29,23 @@ after "deploy:update", "deploy:layout", "deploy:rdoc", "deploy:restart"
    
    task :layout, :roles => :app do
      
-     ['data', 'public'].each do |dir|                 # might not be in git, since these directories are usually empty.
+     ['data', 'public'].each do |dir|               # might not be in git, since these directories are usually empty.
        pathname = File.join(current_path, dir)
        run "mkdir -p #{pathname}"       
        run "chmod -R ug+rwX #{pathname}" 
      end
      
-     ['collections', 'schemas'].each do |dir|         # want to preserve existing data, so let's keep this in the shared directory and link into it
+     ['collections', 'schemas'].each do |dir|       # want to preserve existing data, so let's keep these in the shared directory and link into them.
        realname = File.join(shared_path, dir)
        linkname = File.join(current_path, 'data')
        run "ln -s #{realname} #{linkname}"
        run "chmod -R ug+rwX #{realname}" 
      end
+
+     logdir = File.join(shared_path, 'logs')        # logs will be shared data
+     run "mkdir -p #{logdir}"
+     run "chmod -R ug+rwX #{logdir}" 
+     run "ln -s #{logdir} #{current_path}"
      
    end
    
