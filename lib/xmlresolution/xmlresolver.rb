@@ -5,8 +5,7 @@ require 'uri'
 require 'time'      # brings in parse method, iso8601, xmlschema
 require 'ostruct'
 require 'builder'
-require 'xmlresolution/exceptions'
-require 'xmlresolution/utils'
+require 'xmlresolution'
 
 include LibXML
 
@@ -55,7 +54,7 @@ module XmlResolution
 
     # The schemas attribute holds a list of ostructs, where
     # each has accessors defined as so:
-    #
+    
     #   * body            => [ string | nil ],         the schema text
     #   * digest          => [ md5-hex-string | nil ]  an md5 checksum of the body text
     #   * error_message   => [ string | nil ]          if status is :failure, an error message
@@ -179,19 +178,21 @@ module XmlResolution
 
     # Extract referenced schemas from the provided string TEXT, an XML
     # document.  If the string SCHEMA_LOCATION, a url, is provided, it
-    # indicates that the document is a schema and identifies the source of
-    # the document. This method will also analyze plain XML instance
-    # documents: in that case, SCHEMA_LOCATION will be nil.
+    # indicates that the document is a schema and identifies the
+    # source of the document. This method will also analyze plain XML
+    # instance documents: in that case, SCHEMA_LOCATION will be nil.
     #
     # Returns a hash mapping locations to namespaces.
 
     def find_schema_references text, schema_location=nil
 
-      # TODO: on error, this outputs to STDERR.  That won't do!  We'd better dup STDERR to /dev/null around this
+      # TODO: on error, this outputs to STDERR.  That won't do!  We'd
+      # better dup STDERR to /dev/null around this.
 
       doc = XML::Parser.string(text).parse
 
-      # Get a list of namespaces from the document - initially we don't have a location for any of them
+      # Get a list of namespaces from the document - initially we
+      # don't have a location for any of them.
 
       doc.find("//*").each do |node|
         node.namespaces.each { |ns|  @namespaces_found[ns.href] = false unless @namespaces_found[ns.href] }
@@ -230,8 +231,9 @@ module XmlResolution
       raise ResolverError, e.message # Some generic issue - my fault.
     end
 
-    # Attempt to recursively retrieve all of the schemas used for the string TEXT, an XML Document.
-    # This method is used to populate the schemas attribute.
+    # Attempt to recursively retrieve all of the schemas used for the
+    # string TEXT, an XML Document.  This method is used to populate
+    # the schemas attribute.
 
     def get_schemas text
 
@@ -334,7 +336,8 @@ module XmlResolution
 
   class XmlResolverReloaded
 
-    # schemas provides a list of information about the schemas needed to analyze a document
+    # The schemas method provides a list of information about the
+    # schemas needed to analyze a document
 
     attr_reader :schemas
     attr_reader :filename
