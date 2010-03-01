@@ -77,6 +77,13 @@ describe XmlResolution::ResolverCollection do
     lambda { XmlResolution::ResolverCollection.new(collection_one) }.should_not raise_error
   end
 
+
+  it "should allow us to get the last_modified time of a collection" do
+    xrez = XmlResolution::ResolverCollection.new(collection_one)
+    (Time.now - xrez.last_modified).should be_close(0, 2)
+  end
+
+
   it "should allow us to retrieve a list of collections" do
     list = XmlResolution::ResolverCollection.collections
     list.length.should == 1

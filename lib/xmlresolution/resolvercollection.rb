@@ -4,10 +4,7 @@ require 'uri'
 require 'builder'
 require 'time'
 require 'tempfile'
-require 'xmlresolution/xmlresolver' #
-require 'xmlresolution/tarwriter'   # lets us build tar files on the fly
-require 'xmlresolution/utils'
-require 'xmlresolution/exceptions'
+require 'xmlresolution'
 
 module XmlResolution
 
@@ -222,6 +219,17 @@ module XmlResolution
     end
 
     public
+
+    # Return a time object for the last modified time of the collection
+
+    def last_modified
+      File::stat(collection_path).mtime
+    end
+
+    # Sinatra's last_modified function will check respond_to? :httpdate.
+
+    alias httpdate last_modified
+
 
     # manifest produces an xml report on the current state of our collection. When we produce a
     # tar file, a manifest.xml file is included.  This method yields a path to a newly created
