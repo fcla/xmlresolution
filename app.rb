@@ -3,14 +3,15 @@ require 'uri'
 require 'fileutils'
 require 'xmlresolution.rb'
 
-# TODO: logger, and use as before method
 # TODO: remove old collections on the fly (say, after a week...)
-# TODO: support HEAD, DELETE, etags and last-modified
+# TODO: support HEAD, DELETE, etags and last-modified, accept headers
 
 configure do
   $KCODE = 'UTF8'
-  XmlResolution::ResolverCollection.data_path = File.expand_path(File.join(File.dirname(__FILE__), 'data'))
-  set :proxy, 'sake.fcla.edu'
+  XmlResolution::ResolverCollection.data_path = File.join(File.dirname(__FILE__), 'data')
+  XmlResolution::Logger.filename = File.join(File.dirname(__FILE__), 'logs', 'xmlresolution.log')
+  use Rack::CommonLogger, XmlResolution::Logger.new
+  set :proxy, 'sake.fcla.edu'   # TODO: better here - take it out of environment set by web server? Might make the most sense
 end
 
 helpers do
@@ -18,18 +19,20 @@ helpers do
     'http://' + @env['SERVER_NAME'] + (@env['SERVER_PORT'] == '80' ? '' : ":#{@env['SERVER_PORT']}")
   end
 
-  def tar_up collection_id
+  def tar_up xrez
     tmp = Tempfile.new 'xmlrez-tar-'
-    XmlResolution::ResolverCollection.new(collection_id).tar(tmp)
+    xrez.tar(tmp)
     tmp.open.read
   ensure 
     tmp.close
   end
 
-  def bt e
-    e.backtrace.join("\n") + "\n"
-  end
 end # of helpers
+
+# before do
+#   XmlResolution::Logger.info  env, 'Starting request....'  
+# end
+
 
 # Help out clients that forgot trailing slashes:
 
@@ -56,7 +59,7 @@ end
 # The top level page gives an introduction to using this service.
 
 get '/' do
-  erb :site, :locals => { :base_url => service_name }
+  erb :site, :locals => { :base_url => service_name, :revision => XmlResolution::REVISION }
 end
 
 # List all of the collections we've got
@@ -73,12 +76,17 @@ get '/ieids/:collection_id/' do |collection_id|
   content_type "text/plain"
   [ halt 404, "No such collection #{collection_id}\n" ] unless XmlResolution::ResolverCollection.collection_exists? collection_id 
 
+  xrez = XmlResolution::ResolverCollection.new(collection_id)
+  last_modified xrez.httpdate   # bails immediately w/o tar creation overhead
+
   begin
-    data = tar_up collection_id
+    data = tar_up xrez
   rescue XmlResolution::Http400Error => e
     halt [ 400, e.message + "\n" ]
   rescue => e
-    halt [ 500, "Error creating tarfile for collection #{collection_id}: #{e.message}.\n" + bt(e) ]
+    XmlResolution::Logger.err env, e.message
+    e.backtrace.each { |line| XmlResolution::Logger.err env, line }
+    halt [ 500, "Error creating tarfile for collection #{collection_id}\n" ]
   else
     content_type "application/x-tar"
     attachment   "#{collection_id}.tar"
@@ -102,7 +110,9 @@ put '/ieids/:collection_id' do |collection_id|
   rescue XmlResolution::Http400Error => e
     halt [ 400, e.message + "\n" ]
   rescue => e
-    halt [ 500, e.message + "\n" + bt(e) ]
+    XmlResolution::Logger.err env, e.message
+    e.backtrace.each { |line| XmlResolution::Logger.err env, line }
+    halt [ 500, "We're sorry, there was a problem creating the collection #{collection_id}. Please contact customer support.\n" ]
   end
 end
 
@@ -131,7 +141,10 @@ post '/ieids/:collection_id/' do |collection_id|
   rescue XmlResolution::Http400Error => e
     halt [ 400, e.message + "\n" ]
   rescue => e
-    halt [ 500, "Can't process file #{filename} for collection #{collection_id}: #{e.message}.\n"  + bt(e) ]
+    XmlResolution::Logger.err env, e.message
+    e.backtrace.each { |line| XmlResolution::Logger.err env, line }
+    
+    halt [ 500, "Can't process file #{filename} for collection #{collection_id}.\n"]
   else
     status 201
     content_type 'application/xml'
