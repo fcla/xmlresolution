@@ -46,7 +46,7 @@ task :restart do
 end
 
 module Tags
-  RUBY_FILES = FileList['**/*.rb'].exclude("pkg")
+  RUBY_FILES = FileList['**/*.rb', '**/*.ru'].exclude("pkg")
 end
 
 namespace "tags" do
