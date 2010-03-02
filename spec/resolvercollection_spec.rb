@@ -15,7 +15,7 @@ describe XmlResolution::ResolverCollection do
   end
 
   def test_proxy
-    ENV['HTTP_PROXY']
+    ENV['RESOLVER_PROXY']
   end
 
   def example_mets_document

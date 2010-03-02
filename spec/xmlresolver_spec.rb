@@ -16,7 +16,7 @@ describe XmlResolution::XmlResolver do
   @@local_uri     = 'file://example.com/var/tmp/data/collections/E20100110_CAFEED/a166f873a7607ebcec83c01354f300af'
 
   def test_proxy
-    ENV['HTTP_PROXY']
+    ENV['RESOLVER_PROXY']
   end
 
   def mets_namespace 
