@@ -32,19 +32,24 @@ Quickstart
 ----------
 
   1. Retrieve a copy of the xmlresolution service.  
-  2. Test the installation:  % rake spec
+  2. Test the installation:  `% rake spec`
   3. Run under a web server.  I'm using passenger phusion under apache:
->    &lt;VirtualHost *:80&gt;
->      ServerName xmlresolution.example.com
->      DocumentRoot "/.../xmlresolution/public"
->      SetEnv RACK_ENV development
->      SetEnv RESOLVER_PROXY squid.example.com:3128
->      SetEnv LOG_FACILITY LOG_LOCAL2
->      &lt;Directory "/.../xmlresolution/public"&gt;
->	Order allow,deny
->	Allow from all
->      &lt;/Directory&gt;
->    &lt;/VirtualHost&gt;
+	
+	<VirtualHost *:80>
+	  ServerName xmlresolution.example.com
+	  DocumentRoot "/.../xmlresolution/public"
+	  SetEnv RACK_ENV development
+	  SetEnv RESOLVER_PROXY squid.example.com:3128
+	  SetEnv LOG_FACILITY LOG_LOCAL2
+	  <Directory "/.../xmlresolution/public">
+	    Order allow,deny
+	    Allow from all
+ 	  </Directory>
+	</VirtualHost>
+
+or, 
+
+  3. `% RESOLVER_PROXY=squid.example.com:3128  rackup config.ru`
 
 
 Directory Structure
@@ -72,23 +77,24 @@ There are built-in test forms for exploring the system; see http://xmlresolution
 instructions.  The following models how your RESTful clients should access the service.
 
  * Create a collection (some versions of curl require you to use an empty document):
->
->   curl --upload-file /dev/null -X PUT http://xmlresolution.example.com/ieids/collection-1
->
+	 
+	curl --upload-file /dev/null -X PUT http://xmlresolution.example.com/ieids/collection-1
+	
  * Submit some XML documents to it (note trailing slash):
->
->   curl -F xmlfile=@myfile.xml http://xmlresolution.example.com/ieids/collection-1/
->   curl -F xmlfile=@myotherfile.xml http://xmlresolution.example.com/ieids/collection-1/
->
+	
+	curl -F xmlfile=@myfile.xml http://xmlresolution.example.com/ieids/collection-1/	
+	curl -F xmlfile=@myotherfile.xml http://xmlresolution.example.com/ieids/collection-1/
+	
  * Get the tarfile of the associated schemas
->
->   curl http://xmlresolution.example.com/ieids/collection-1/
->   
+	
+	curl http://xmlresolution.example.com/ieids/collection-1/
+	
 
 
 Documentation
 -------------
 See the root of the running webservice for instructions on use; there is
-a Rake task that will install the rdocs under public/rdoc, as well.
+a Rake task that will install the rdocs under public/rdoc, as well (the
+capistrano deployment will take care of that for you).
 
 
