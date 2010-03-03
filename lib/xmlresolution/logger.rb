@@ -37,18 +37,19 @@ module XmlResolution
   #  ERROR XmlResolution: 127.0.0.1 - - [01/Mar/2010:15:25:01] "GET /temp" the machine room appears to be on fire.
   #
   # The env variable is a hash, typically you'll use @env
-  # from the sinatra environment.  Anything that provides the
+  # from the Sinatra environment.  Anything that provides the
   # PEP 333 standard set of CGI environment variables is  
   # best (HTTP_SERVER, PATH_INFO, etc), but an empty hash will work
   # in a pinch (and is the default).
   #
-  # You can use an object to redirect Rack::CommonLogger to logging
-  # to your file:
+  # Here's an example of using a Logger object to direct Rack::CommonLogger to write
+  # to both a file and syslogd:
   #
   #  require 'xmlresolution'
   #  include XmlResolution
   #  
   #  Logger.filename = "myfile.log"
+  #  Logger.facility = :LOG_LOCAL0
   #  use Rack::CommonLogger, Logger.new
   
 
@@ -59,21 +60,26 @@ module XmlResolution
 
     @@initialized = false
 
+    # XmlResolution::Logger.filename = FILEPATH
+    #
+    # Intialize the logging system to write to the file named by
+    # string FILEPATH.
+    #
     # We envision a number of ways to initialize this class before
     # use. We can set up for logging to files, syslog, stderr, or any
-    # combination. At least one of them must be done.  The filename=
-    # method handles the file strategy: it registers the file named by
-    # the string FILEPATH for logging, creating the Log4r logging
-    # object if necessary.
-
+    # combination. At least one of them must be done before any actual
+    # logging occurs.  
 
     def Logger.filename= filepath
       Log4r::Logger.new 'XmlResolution' unless Log4r::Logger['XmlResolution']
       Log4r::Logger['XmlResolution'].add Log4r::FileOutputter.new($0, { :filename => filepath, :trunc => false })
       @@initialized = true
     end
+
     
-    # Initialize the logging to write to STDERR
+    # XmlResolution::Logger.stderr
+    #
+    # Initialize the logging system to write to STDERR.
 
     def Logger.stderr
       Log4r::Logger.new 'XmlResolution' unless Log4r::Logger['XmlResolution']
@@ -81,6 +87,8 @@ module XmlResolution
       @@initialized = true
     end
 
+    # XmlResolution::Logger.facility = FACILITY
+    #
     # Intialize the logging system to write to syslog, using the
     # the symbol FACILTIY to specify the facility to use. Typically
     # one uses one of the local facility codes:
@@ -115,31 +123,37 @@ module XmlResolution
       @@initialized = true
     end
 
-    # Write an error message MESSAGE, a string, to the log; The hash
-    # ENV is typically the sinatra env object, but any hash with the
+    # Logger.err MESSAGE, [ ENV ]
+    #
+    # Log an error message MESSAGE, a string; The hash
+    # ENV is typically the Sinatra env object, but any hash with the
     # common PEP 333 keys could be used.
 
     def Logger.err message, env = {}
       Log4r::Logger['XmlResolution'].error apache_common_prefix(env) + message
     end
 
-    # Write a warning message MESSAGE, a string, to the log; The hash
-    # ENV is typically the sinatra env object, but any hash with the
+    # Logger.warn MESSAGE, [ ENV ]
+    #
+    # Log a warning message MESSAGE, a string; The hash
+    # ENV is typically the Sinatra env object, but any hash with the
     # common PEP 333 keys could be used.
 
     def Logger.warn message, env = {}
       Log4r::Logger['XmlResolution'].warn  apache_common_prefix(env) + message
     end
 
-    # Write an informative message MESSAGE, a string, to the log; The hash
-    # ENV is typically the sinatra env object, but any hash with the
+    # Logger.info MESSAGE, [ ENV ]
+    #
+    # Log an informative message MESSAGE, a string; The hash
+    # ENV is typically the Sinatra env object, but any hash with the
     # common PEP 333 keys could be used.
 
     def Logger.info message, env = {}
       Log4r::Logger['XmlResolution'].info  apache_common_prefix(env) + message
     end
 
-    # While we use the class methods to write our own log entries, we
+    # While we normally use the class methods to write our own log entries, we
     # also have an object we can instantiate for Rack::CommonLogger to 
     # use. For example:
     #
@@ -150,8 +164,10 @@ module XmlResolution
       raise LogError, "The class has not been initialized with a log target yet. See XmlResolution::Logger.filename= and bretheren." unless @@initialized
     end
 
-    # Rack::CommonLogger can be told to use any logger that has a write method on
-    # it - here it is:
+    # log.write MESSAGE
+    #
+    # Rack::CommonLogger can be told to use as a logger any object that has a write method on
+    # it. See the Logger#new method for an example of its use.
 
     def write message
       Log4r::Logger['XmlResolution'].info message.chomp
@@ -159,10 +175,12 @@ module XmlResolution
 
     private
 
-    # For our class methods, we'd like to use the same format that the
-    # Rack::CommonLogger uses. This method produces that format, if
-    # possible. Swiped from rack/lib/commonlogger.rb, mostly.  Note
-    # that the object method #write will not use this.
+    # apache_common_prefix ENV
+    #
+    # For our class methods, we'd like to use roughly the same format
+    # that the Rack::CommonLogger uses. This method produces that
+    # format, if possible. Swiped from rack/lib/commonlogger.rb,
+    # mostly.  Note that the object method #write will not use this.
 
     def Logger.apache_common_prefix env
 
