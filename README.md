@@ -35,17 +35,17 @@ Quickstart
   2. Test the installation:  `% rake spec`
   3. Run under a web server.  I'm using passenger phusion under apache:
 	
-`	<VirtualHost>`
-`	  ServerName xmlresolution.example.com`
-`	  DocumentRoot "/.../xmlresolution/public"`
-`	  SetEnv RACK_ENV development`
-`	  SetEnv RESOLVER_PROXY squid.example.com:3128`
-`	  SetEnv LOG_FACILITY LOG_LOCAL2`
-`	  <Directory "/.../xmlresolution/public">`
-`	    Order allow,deny`
-`	    Allow from all`
-`	  </Directory>`
-`	</VirtualHost>`
+`	<VirtualHost>
+	  ServerName xmlresolution.example.com
+	  DocumentRoot "/.../xmlresolution/public"
+	  SetEnv RACK_ENV development
+	  SetEnv RESOLVER_PROXY squid.example.com:3128
+	  SetEnv LOG_FACILITY LOG_LOCAL2
+	  <Directory "/.../xmlresolution/public">
+	    Order allow,deny`
+	    Allow from all
+	  </Directory>
+	</VirtualHost>`
 
 or, 
 
