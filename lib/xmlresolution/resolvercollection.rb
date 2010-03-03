@@ -1,4 +1,3 @@
-require 'digest/md5'
 require 'fileutils'
 require 'uri'
 require 'builder'
@@ -46,10 +45,12 @@ module XmlResolution
 
     @@data_path = nil
 
-    # ResolverCollection.data_path= sets the root directory where all of the data for this class will be
-    # stored.  It must be done before using any of the other class methods, except perhaps the
-    # ResolverCollection.data_path method.   Objects constructed after this point will keep a local
-    # copy
+    # ResolverCollection.data_path= PATH sets the root directory where
+    # all of the persistent data for this class will be stored.  It
+    # must be done before using any of the other class methods, except
+    # perhaps the ResolverCollection.data_path accessor itself.
+    # Objects constructed after this point will keep a local copy of
+    # PATH.
 
     def self.data_path= path
       raise CollectionInitializationError, "ResolverCollection cannot find the directory '#{path}'."     unless File.directory? path
@@ -57,7 +58,8 @@ module XmlResolution
       @@data_path = path
       [ File.join(path, COLLECTIONS), File.join(path, SCHEMAS) ].each do |p|
         FileUtils.mkdir_p p
-        raise "'#{p}' is not writable." unless File.writable? p
+        raise CollectionInitializationError, "The path '#{p}' is not a directory." unless File.directory? p
+        raise CollectionInitializationError, "The path '#{p}' is not writable."    unless File.writable? p
       end
     rescue => e
       raise CollectionInitializationError, "ResolverCollection couldn't initialize directory #{path}: '#{e.message}'."
@@ -108,6 +110,7 @@ module XmlResolution
     # New collections are created via this method; existing collections are retrieved as well.
 
     def initialize collection_name
+
       raise CollectionInitializationError, "Must initialize this class with the data_path method before it can be used" unless ResolverCollection.data_path
       raise CollectionNameError, "'#{collection_name}' is a bad name for a collection" unless ResolverCollection.collection_name_ok? collection_name
 
@@ -186,9 +189,10 @@ module XmlResolution
       end
     end
 
-    # We save schema files by their digests; this returns the full pathname
+    # We save schema files by naming them after the md5 digest of
+    # their contents; this returns the full pathname.
 
-    def schema_pathname digest
+    def cached_schema_pathname digest
       File.join(schema_path, digest)
     end
 
@@ -208,14 +212,14 @@ module XmlResolution
     # by location, and yield each of the schema data-nuggets. Yum!
 
     def for_schemas
-      seen = {}
+      schema_info = {}
       for_resolutions do |xrez|
         xrez.schemas.each do |s|
           next unless s.status == :success
-          seen[s.location] = s
+          schema_info[s.location] = s
         end
       end
-      seen.keys.sort.each { |loc| yield seen[loc] }
+      schema_info.keys.sort.each { |location| yield schema_info[location] }
     end
 
     public
@@ -286,8 +290,8 @@ module XmlResolution
         tarfile.write  manpath, File.join(collection_name, 'manifest.xml')
       end
 
-      for_schemas do |srec|
-        tarfile.write schema_pathname(srec.digest), File.join(collection_name,  srec.location)
+      for_schemas do |schema_info|
+        tarfile.write cached_schema_pathname(schema_info.digest), File.join(collection_name,  schema_info.location)
       end
 
       tarfile.close

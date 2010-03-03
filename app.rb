@@ -1,6 +1,4 @@
 require 'tempfile'
-require 'uri'
-require 'fileutils'
 require 'xmlresolution.rb'
 
 # TODO: remove old collections on the fly (say, after a week...)
@@ -8,18 +6,18 @@ require 'xmlresolution.rb'
 
 include XmlResolution
 
+# ENV variables are set in apache configuration files.
+
 configure do
   $KCODE = 'UTF8'
   ResolverCollection.data_path = File.join(File.dirname(__FILE__), 'data')
   Logger.filename = File.join(File.dirname(__FILE__), 'logs', 'xmlresolution.log')
+  Logger.facility = ENV['LOG_FACILITY'] unless ENV['LOG_FACILITY'].nil?
+  set :proxy, ENV['RESOLVER_PROXY']
   use Rack::CommonLogger, Logger.new
 end
 
 helpers do
-
-  def proxy
-    @env['RESOLVER_PROXY']
-  end
 
   def service_name
     'http://' + @env['SERVER_NAME'] + (@env['SERVER_PORT'] == '80' ? '' : ":#{@env['SERVER_PORT']}")
@@ -89,8 +87,8 @@ get '/ieids/:collection_id/' do |collection_id|
   rescue Http400Error => e
     halt [ 400, e.message + "\n" ]
   rescue => e
-    Logger.err env, e.message
-    e.backtrace.each { |line| Logger.err env, line }
+    Logger.err e.message, @env
+    e.backtrace.each { |line| Logger.err line, @env }
     halt [ 500, "Error creating tarfile for collection #{collection_id}\n" ]
   else
     content_type "application/x-tar"
@@ -115,8 +113,8 @@ put '/ieids/:collection_id' do |collection_id|
   rescue Http400Error => e
     halt [ 400, e.message + "\n" ]
   rescue => e
-    Logger.err env, e.message
-    e.backtrace.each { |line| Logger.err env, line }
+    Logger.err e.message, @env
+    e.backtrace.each { |line| Logger.err line, @env }
     halt [ 500, "We're sorry, there was a problem creating the collection #{collection_id}. Please contact customer support.\n" ]
   end
 end
@@ -140,7 +138,7 @@ post '/ieids/:collection_id/' do |collection_id|
     halt [ 400, "Missing form data filename='...'\n" ]    unless filename = params['xmlfile'][:filename]
     halt [ 500, "Data unavailable (missing tempfile)\n" ] unless tempfile = params['xmlfile'][:tempfile]
 
-    xrez = XmlResolver.new(tempfile.open.read, proxy)
+    xrez = XmlResolver.new(tempfile.open.read, options.proxy)
     xrez.filename = filename
 
     ResolverCollection.new(collection_id).add xrez
@@ -148,8 +146,8 @@ post '/ieids/:collection_id/' do |collection_id|
   rescue Http400Error => e
     halt [ 400, e.message + "\n" ]
   rescue => e
-    Logger.err env, e.message
-    e.backtrace.each { |line| Logger.err env, line }
+    Logger.err e.message, @env
+    e.backtrace.each { |line| Logger.err line, @env }
     
     halt [ 500, "Can't process file #{filename} for collection #{collection_id}.\n"]
   else

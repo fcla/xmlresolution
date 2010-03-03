@@ -1,9 +1,9 @@
 require 'log4r'
-# require 'syslog'
-# require 'log4r/outputter/syslogoutputter'
-# require 'log4r/outputter/fileoutputter'
+require 'syslog'
+require 'log4r/outputter/syslogoutputter'
+require 'log4r/outputter/fileoutputter'
 require 'log4r/outputter/rollingfileoutputter'
-require 'xmlresolution/exceptions'
+require 'xmlresolution'
 
 module XmlResolution
 
@@ -11,7 +11,7 @@ module XmlResolution
   # 
   # Logging web service actions using using log4r with a
   # Rack::CommonLogger tie-in.  The log output is roughly
-  # that of Apache's common log format.
+  # that of Apache's common log format.  
   #
   # Example use:
   #
@@ -19,19 +19,28 @@ module XmlResolution
   #  include XmlResolution
   #  
   #  Logger.filename = "myfile.log"
-  #  Logger.warn env, "can't create temporary file for request."
-  #  Logger.err  env, "the machine room appears to be on fire."
+  #  ...
+  #  get '/tmp' do
+  #     Logger.warn "can't create temporary file for request.", env
+  #     halt [ 400, {}, 'oops' ]
+  #  end
+  #  ...
+  #  get '/temp' do
+  #     Logger.err  "the machine room appears to be on fire.", env
+  #     "451 degrees Fahrenheit"
+  #  end
+  #
   #
   # This might produce in "myfile.log" the following:
   #
-  #   WARN XmlResolution: 127.0.0.1 - - [01/Mar/2010:15:24:43] "GET /tmp " can't create temporary file for request.
-  #  ERROR XmlResolution: 127.0.0.1 - - [01/Mar/2010:15:25:01] "GET /temp " the machine room appears to be on fire.
+  #   WARN XmlResolution: 127.0.0.1 - - [01/Mar/2010:15:24:43] "GET /tmp" can't create temporary file for request.
+  #  ERROR XmlResolution: 127.0.0.1 - - [01/Mar/2010:15:25:01] "GET /temp" the machine room appears to be on fire.
   #
   # The env variable is a hash, typically you'll use @env
   # from the sinatra environment.  Anything that provides the
-  # PEP 333 standard set of CGI environment variables will 
-  # work (HTTP_SERVER, PATH_INFO, etc).  An empty hash will work
-  # in a pinch.
+  # PEP 333 standard set of CGI environment variables is  
+  # best (HTTP_SERVER, PATH_INFO, etc), but an empty hash will work
+  # in a pinch (and is the default).
   #
   # You can use an object to redirect Rack::CommonLogger to logging
   # to your file:
@@ -41,7 +50,6 @@ module XmlResolution
   #  
   #  Logger.filename = "myfile.log"
   #  use Rack::CommonLogger, Logger.new
-  #
   
 
   class Logger
@@ -52,24 +60,66 @@ module XmlResolution
     @@initialized = false
 
     # We envision a number of ways to initialize this class before
-    # use: set up for logging to files, syslog, etc. At least one of
-    # them must be done.  The filename= method handles the file
-    # strategy: it registers the file named by the string FILEPATH for
-    # logging, creating the Log4r logging object if necessary.
+    # use. We can set up for logging to files, syslog, stderr, or any
+    # combination. At least one of them must be done.  The filename=
+    # method handles the file strategy: it registers the file named by
+    # the string FILEPATH for logging, creating the Log4r logging
+    # object if necessary.
 
 
     def Logger.filename= filepath
       Log4r::Logger.new 'XmlResolution' unless Log4r::Logger['XmlResolution']
-      Log4r::Logger['XmlResolution'].add Log4r::FileOutputter.new('XmlResolution', { :filename => filepath, :trunc => false })
+      Log4r::Logger['XmlResolution'].add Log4r::FileOutputter.new($0, { :filename => filepath, :trunc => false })
+      @@initialized = true
+    end
+    
+    # Initialize the logging to write to STDERR
+
+    def Logger.stderr
+      Log4r::Logger.new 'XmlResolution' unless Log4r::Logger['XmlResolution']
+      Log4r::Logger['XmlResolution'].add Log4r::StderrOutputter.new($0)
       @@initialized = true
     end
 
+    # Intialize the logging system to write to syslog, using the
+    # the symbol FACILTIY to specify the facility to use. Typically
+    # one uses one of the local facility codes:
+    #
+    #    :LOG_LOCAL0
+    #    :LOG_LOCAL1
+    #    :LOG_LOCAL2
+    #    :LOG_LOCAL3
+    #    :LOG_LOCAL4
+    #    :LOG_LOCAL5
+    #    :LOG_LOCAL6
+    #    :LOG_LOCAL7
+    #
+    # A typical syslog.conf entry using :LOG_LOCAL2 might look like this:
+    #
+    #    local2.error   /var/log/xmlresolution.error.log
+    #    local2.warn    /var/log/xmlresolution.warn.log
+    #    local2.info    /var/log/xmlresolution.info.log
+    # 
+    # In the case of Mac OSX Snow Leopard, the above syslog.conf entry
+    # means that a Logger.error(message) will get logged to
+    # xmlresolution.error.log, xmlresolution.warn.log, and
+    # xmlresolution.info.log.  Logger.warn(message) gets logged to
+    # xmlresolution.warn.log and xmlresolution.info.log. 
+    # Logger.info(message) will go to xmlresolution.info.log.  Other
+    # syslog deamons on other systems and alternative configurations 
+    # behave significantly differently.
+
+    def Logger.facility= facility
+      Log4r::Logger.new 'XmlResolution' unless Log4r::Logger['XmlResolution']
+      Log4r::Logger['XmlResolution'].add Log4r::SyslogOutputter.new($0, 'facility' => eval("Syslog::#{facility.to_s.upcase}"))
+      @@initialized = true
+    end
 
     # Write an error message MESSAGE, a string, to the log; The hash
     # ENV is typically the sinatra env object, but any hash with the
     # common PEP 333 keys could be used.
 
-    def Logger.err env, message
+    def Logger.err message, env = {}
       Log4r::Logger['XmlResolution'].error apache_common_prefix(env) + message
     end
 
@@ -77,7 +127,7 @@ module XmlResolution
     # ENV is typically the sinatra env object, but any hash with the
     # common PEP 333 keys could be used.
 
-    def Logger.warn env, message
+    def Logger.warn message, env = {}
       Log4r::Logger['XmlResolution'].warn  apache_common_prefix(env) + message
     end
 
@@ -85,7 +135,7 @@ module XmlResolution
     # ENV is typically the sinatra env object, but any hash with the
     # common PEP 333 keys could be used.
 
-    def Logger.info env, message
+    def Logger.info message, env = {}
       Log4r::Logger['XmlResolution'].info  apache_common_prefix(env) + message
     end
 
@@ -107,7 +157,6 @@ module XmlResolution
       Log4r::Logger['XmlResolution'].info message.chomp
     end
 
-
     private
 
     # For our class methods, we'd like to use the same format that the
@@ -117,14 +166,13 @@ module XmlResolution
 
     def Logger.apache_common_prefix env
 
-      sprintf('%s - %s [%s] "%s %s%s %s" ',
+      sprintf('%s - %s [%s] "%s %s%s" ',
               env['HTTP_X_FORWARDED_FOR'] || env["REMOTE_ADDR"] || "-",
               env["REMOTE_USER"] || "-",
               Time.now.strftime("%d/%b/%Y:%H:%M:%S"),
               env["REQUEST_METHOD"],
               env["PATH_INFO"],
-              (env["QUERY_STRING"].nil? or env["QUERY_STRING"].empty?) ? "" : "?" + env["QUERY_STRING"],
-              env["HTTP_VERSION"])
+              (env["QUERY_STRING"].nil? or env["QUERY_STRING"].empty?) ? "" : "?" + env["QUERY_STRING"])
     end
   end # of class
 end # of module
