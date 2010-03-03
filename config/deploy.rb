@@ -42,10 +42,10 @@ after "deploy:update", "deploy:layout", "deploy:rdoc", "deploy:restart"
        run "chmod -R ug+rwX #{realname}" 
      end
 
-     logdir = File.join(shared_path, 'logs')        # logs will be shared data
+     logdir = File.join(shared_path, 'logs')        # logs will be in shared data
      run "mkdir -p #{logdir}"
-     run "chmod -R ug+rwX #{logdir}" 
      run "ln -s #{logdir} #{current_path}"
+     run "chmod ug+rwX #{logdir}"                   # some of the logs are owned by the system, -R won't work
      
    end
    
