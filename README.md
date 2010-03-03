@@ -35,7 +35,8 @@ Quickstart
   2. Test the installation:  `% rake spec`
   3. Run under a web server.  I'm using passenger phusion under apache:
 	
-`	<VirtualHost>
+`	
+	<VirtualHost>
 	  ServerName xmlresolution.example.com
 	  DocumentRoot "/.../xmlresolution/public"
 	  SetEnv RACK_ENV development
