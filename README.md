@@ -32,9 +32,11 @@ Quickstart
 ----------
 
   1. Retrieve a copy of the xmlresolution service.  
-  2. Test the installation:  `% rake spec`
-  3. Run from rackup, specifying your environment: `% RESOLVER_PROXY=squid.example.com:3128  rackup config.ru` or
-run under a web server.  I'm using passenger phusion under apache:
+  2. Test the installation:  
+	`% rake spec`
+  3. Run from rackup, specifying your environment: 
+	`% RESOLVER_PROXY=squid.example.com:3128  rackup config.ru` 
+     or run under a web server.  I'm using passenger phusion under apache:
 	
 `
 	<VirtualHost>
