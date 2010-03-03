@@ -1,7 +1,7 @@
 XML Resolution Service
 ======================
 Consider a collection of XML documents.  You would like to gather up all of the schemas necessary
-to understand those documents.  This web service helps you do that, in three steps:
+to understand those documents.  This web service helps you do that, in three RESTful steps:
 
   1. Create a collection resource.
   2. POST some XML documents to the collection.
@@ -35,17 +35,17 @@ Quickstart
   2. Test the installation:  `% rake spec`
   3. Run under a web server.  I'm using passenger phusion under apache:
 	
-	VirtualHost
-	  ServerName xmlresolution.example.com
-	  DocumentRoot "/.../xmlresolution/public"
-	  SetEnv RACK_ENV development
-	  SetEnv RESOLVER_PROXY squid.example.com:3128
-	  SetEnv LOG_FACILITY LOG_LOCAL2
-	  Directory "/.../xmlresolution/public"
-	    Order allow,deny
-	    Allow from all
-	  /Directory
-	/VirtualHost
+`	<VirtualHost>`
+`	  ServerName xmlresolution.example.com`
+`	  DocumentRoot "/.../xmlresolution/public"`
+`	  SetEnv RACK_ENV development`
+`	  SetEnv RESOLVER_PROXY squid.example.com:3128`
+`	  SetEnv LOG_FACILITY LOG_LOCAL2`
+`	  <Directory "/.../xmlresolution/public">`
+`	    Order allow,deny`
+`	    Allow from all`
+`	  </Directory>`
+`	</VirtualHost>`
 
 or, 
 
