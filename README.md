@@ -3,17 +3,11 @@ XML Resolution Service
 Consider a collection of XML documents.  You would like to gather up all of the schemas necessary
 to understand those documents.  This web service helps you do that, in three steps:
 
-1) Create a collection resource.
-2) POST some XML documents to the collection.
-3) GET the collection, retrieving a tar file of the schemas and a manifest.
+  1) Create a collection resource.
+  2) POST some XML documents to the collection.
+  3) GET the collection, retrieving a tar file of the schemas and a manifest.
 
 The original XML documents are not kept nor returned in the tar file.
-
-Quickstart
-----------
-
-
-Note the environment setup.
 
 Envronment
 ----------
@@ -28,31 +22,29 @@ Requirements
 ------------
 Known to work with with ruby 1.8.7. The following packages (beyond the standards)
 
-    * sinatra & rack
-    * libxml-ruby & builder
-    * rake & rspec & cucumber
-    * log4r
-    * capistrano & railsless-deploy 
+  * sinatra & rack
+  * libxml-ruby & builder
+  * rake & rspec & cucumber
+  * log4r
+  * capistrano & railsless-deploy 
 
 Quickstart
 ----------
+
   1. Retrieve a copy of the xmlresolution service.  
-
   2. Test the installation:  % rake spec
-
   3. Run under a web server.  I'm using passenger phusion under apache:
-
-    <VirtualHost *:80>
-      ServerName xmlresolution.example.com
-      DocumentRoot "/.../xmlresolution/public"
-      SetEnv RACK_ENV development
-      SetEnv RESOLVER_PROXY squid.example.com:3128
-      SetEnv LOG_FACILITY LOG_LOCAL2
-      <Directory "/.../xmlresolution/public">
-	Order allow,deny
-	Allow from all
-      </Directory>
-    </VirtualHost>
+>    <VirtualHost *:80>
+>      ServerName xmlresolution.example.com
+>      DocumentRoot "/.../xmlresolution/public"
+>      SetEnv RACK_ENV development
+>      SetEnv RESOLVER_PROXY squid.example.com:3128
+>      SetEnv LOG_FACILITY LOG_LOCAL2
+>      <Directory "/.../xmlresolution/public">
+>	Order allow,deny
+>	Allow from all
+>      </Directory>
+>    </VirtualHost>
 
 
 Directory Structure
@@ -80,18 +72,18 @@ There are built-in test forms for exploring the system; see http://xmlresolution
 instructions.  The following models how your RESTful clients should access the service.
 
  * Create a collection (some versions of curl require you to use an empty document):
-
-   curl --upload-file /dev/null -X PUT http://xmlresolution.example.com/ieids/collection-1
-
+>
+>   curl --upload-file /dev/null -X PUT http://xmlresolution.example.com/ieids/collection-1
+>
  * Submit some XML documents to it (note trailing slash):
-
-   curl -F xmlfile=@myfile.xml http://xmlresolution.example.com/ieids/collection-1/
-   curl -F xmlfile=@myotherfile.xml http://xmlresolution.example.com/ieids/collection-1/
-
+>
+>   curl -F xmlfile=@myfile.xml http://xmlresolution.example.com/ieids/collection-1/
+>   curl -F xmlfile=@myotherfile.xml http://xmlresolution.example.com/ieids/collection-1/
+>
  * Get the tarfile of the associated schemas
-
-   curl http://xmlresolution.example.com/ieids/collection-1/
-   
+>
+>   curl http://xmlresolution.example.com/ieids/collection-1/
+>   
 
 
 Documentation
