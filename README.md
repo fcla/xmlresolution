@@ -35,21 +35,21 @@ Quickstart
   2. Test the installation:  `% rake spec`
   3. Run under a web server.  I'm using passenger phusion under apache:
 	
-	`<VirtualHost *:80>`
+	VirtualHost
 	  ServerName xmlresolution.example.com
 	  DocumentRoot "/.../xmlresolution/public"
 	  SetEnv RACK_ENV development
 	  SetEnv RESOLVER_PROXY squid.example.com:3128
 	  SetEnv LOG_FACILITY LOG_LOCAL2
-	  `<Directory "/.../xmlresolution/public">`
+	  Directory "/.../xmlresolution/public"
 	    Order allow,deny
 	    Allow from all
- 	  `</Directory>`
-	`</VirtualHost>`
+	  /Directory
+	/VirtualHost
 
 or, 
 
-  3. `% RESOLVER_PROXY=squid.example.com:3128  rackup config.ru`
+  3. Run from rackup, specifying your environment: `% RESOLVER_PROXY=squid.example.com:3128  rackup config.ru`
 
 
 Directory Structure
@@ -94,7 +94,6 @@ instructions.  The following models how your RESTful clients should access the s
 Documentation
 -------------
 See the root of the running webservice for instructions on use; there is
-a Rake task that will install the rdocs under public/rdoc, as well (the
-capistrano deployment will take care of that for you).
+a Rake task that will install the rdocs under public/rdoc.
 
 
