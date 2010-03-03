@@ -18,7 +18,7 @@ describe XmlResolution::Logger do
   end
 
   it "should throw an exception if it has not been initialized" do
-    lambda { XmlResolution::Logger.info env, 'testing...'  }.should raise_error
+    lambda { XmlResolution::Logger.info 'testing...', env  }.should raise_error
   end
 
   it "should allow initialization to a file" do
@@ -27,7 +27,7 @@ describe XmlResolution::Logger do
 
   it "should allow writing an informational message" do
     msg = "This is an informational test"
-    XmlResolution::Logger.info env, msg
+    XmlResolution::Logger.info msg, env
     (read_logfile =~ /^\s+INFO.*#{msg}/m).should_not == nil
   end
 
@@ -37,13 +37,13 @@ describe XmlResolution::Logger do
 
   it "should allow writing a warning message" do
     msg = "This is a warning test"
-    XmlResolution::Logger.warn env, msg
+    XmlResolution::Logger.warn msg, env
     (read_logfile =~ /^\s*WARN.*#{msg}/m).should_not == nil
   end
 
   it "should allow writing an error message" do
     msg = "This is an error test"
-    XmlResolution::Logger.err env, msg
+    XmlResolution::Logger.err msg, env
     (read_logfile =~ /^\s*ERR.*#{msg}/m).should_not == nil
   end
 
