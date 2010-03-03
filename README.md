@@ -82,8 +82,8 @@ instructions.  The following models how your RESTful clients should access the s
 	
  * Submit some XML documents to it (note trailing slash):
 	
-	`curl -F xmlfile=@myfile.xml http://xmlresolution.example.com/ieids/collection-1/	
-	curl -F xmlfile=@myotherfile.xml http://xmlresolution.example.com/ieids/collection-1/`
+	`curl -F xmlfile=@myfile.xml http://xmlresolution.example.com/ieids/collection-1/`
+	`curl -F xmlfile=@myotherfile.xml http://xmlresolution.example.com/ieids/collection-1/`
 	
  * Get the tarfile of the associated schemas
 	
