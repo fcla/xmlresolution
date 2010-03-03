@@ -12,7 +12,7 @@ The original XML documents are not kept nor returned in the tar file.
 Envronment
 ----------
 
-Your web server should set up some environment variable
+In your web server you should set up some environment variables:
 
   * SetEnv RACK_ENV development - still in beta
   * SetEnv RESOLVER_PROXY sake.fcla.edu:3128 - an optional squid caching proxy
@@ -35,17 +35,17 @@ Quickstart
   2. Test the installation:  `% rake spec`
   3. Run under a web server.  I'm using passenger phusion under apache:
 	
-	<VirtualHost *:80>
+	`<VirtualHost *:80>`
 	  ServerName xmlresolution.example.com
 	  DocumentRoot "/.../xmlresolution/public"
 	  SetEnv RACK_ENV development
 	  SetEnv RESOLVER_PROXY squid.example.com:3128
 	  SetEnv LOG_FACILITY LOG_LOCAL2
-	  <Directory "/.../xmlresolution/public">
+	  `<Directory "/.../xmlresolution/public">`
 	    Order allow,deny
 	    Allow from all
- 	  </Directory>
-	</VirtualHost>
+ 	  `</Directory>`
+	`</VirtualHost>`
 
 or, 
 
