@@ -35,6 +35,10 @@ module XmlResolution
 
     LOCK_TIMEOUT = 10
 
+    # Last-modified time after which we'll delete collections as being stale.
+
+    TOO_LONG_SINCE_LAST_MODIFIED = 14 * 24 * 60 * 60  # One fortnight
+
     # Subdirectory where the collections we create will live:
 
     COLLECTIONS = 'collections'
@@ -49,8 +53,8 @@ module XmlResolution
     # all of the persistent data for this class will be stored.  It
     # must be done before using any of the other class methods, except
     # perhaps the ResolverCollection.data_path accessor itself.
-    # Objects constructed after this point will keep a local copy of
-    # PATH.
+    # Objects constructed after this point will keep a copy of
+    # PATH in an instance variable.
 
     def self.data_path= path
       raise CollectionInitializationError, "ResolverCollection cannot find the directory '#{path}'."     unless File.directory? path
@@ -61,6 +65,8 @@ module XmlResolution
         raise CollectionInitializationError, "The path '#{p}' is not a directory." unless File.directory? p
         raise CollectionInitializationError, "The path '#{p}' is not writable."    unless File.writable? p
       end
+      age_out_collections File.join(@@data_path, COLLECTIONS)
+
     rescue => e
       raise CollectionInitializationError, "ResolverCollection couldn't initialize directory #{path}: '#{e.message}'."
     end
@@ -70,6 +76,7 @@ module XmlResolution
     def self.data_path
       @@data_path
     end
+
 
     # Return a list of all of the active collections stored at this data_path
 
@@ -106,7 +113,7 @@ module XmlResolution
 
     attr_reader :collection_path
 
-    # A collection is instantiated by its name, the string COLLECTION_NAME.  The string must be usable as a single filesystem path component.
+     # A collection is instantiated by its name, the string COLLECTION_NAME.  The string must be usable as a single filesystem path component.
     # New collections are created via this method; existing collections are retrieved as well.
 
     def initialize collection_name
@@ -123,6 +130,19 @@ module XmlResolution
     end
 
     private
+
+    # Delete a collection if hasn't been updated in a while.
+
+    def self.age_out_collections directory
+      Dir["#{directory}/*"].each do |dir|
+        next unless  File.directory? dir
+        next unless  collection_name_ok? File.split(dir)[-1]
+        if (Time.now - File::stat(dir).mtime) > TOO_LONG_SINCE_LAST_MODIFIED
+          FileUtils.rm_rf dir
+        end
+      end
+    end
+
 
     # Access the file FILEPATH in a shared manner.  Note that we have
     # two kinds of locks associated with files, read_locks and
@@ -166,7 +186,7 @@ module XmlResolution
     # of all of the schemas that were necessary to fully resolve it.
 
     def save_document_information xrez
-      path = File.expand_path(File.join(collection_path, xrez.digest))
+      path = File.join(collection_path, xrez.digest)
       xrez.local_uri = 'file://' + XmlResolution.hostname  + path
       write_lock (path) do |fd|
         fd.write xrez.dump
@@ -179,7 +199,7 @@ module XmlResolution
     def save_schema_information xrez
       xrez.schemas.each do |s|
         next unless s.status == :success
-        filepath = File.join schema_path, s.digest
+        filepath = cached_schema_pathname(s.digest)
         next if File.exists? filepath  and  File.mtime(filepath) == s.last_modified # don't bother rewriting
         write_lock (filepath) do |fd|
           fd.write s.body
@@ -202,8 +222,10 @@ module XmlResolution
     def for_resolutions
       Dir[ File.join(collection_path, '*') ].each do |filepath|
         next if File.directory? filepath
-        next unless filepath =~ /[a-z0-9]{32}/
-        yield  XmlResolverReloaded.new File.read(filepath)
+        next unless File.split(filepath)[-1] =~ /^[a-z0-9]{32}$/
+        read_lock(filepath) do
+          yield  XmlResolverReloaded.new File.read(filepath)
+        end
       end
     end
 
@@ -233,7 +255,6 @@ module XmlResolution
     # Sinatra's last_modified function will check respond_to? :httpdate.
 
     alias httpdate last_modified
-
 
     # manifest produces an xml report on the current state of our collection. When we produce a
     # tar file, a manifest.xml file is included.  This method yields a path to a newly created
@@ -291,9 +312,12 @@ module XmlResolution
       end
 
       for_schemas do |schema_info|
-        tarfile.write cached_schema_pathname(schema_info.digest), File.join(collection_name,  schema_info.location)
+        filepath = cached_schema_pathname(schema_info.digest)
+        read_lock(filepath) do
+          tarfile.write filepath, File.join(collection_name,  schema_info.location)
+        end
       end
-
+      
       tarfile.close
     end
 

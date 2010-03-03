@@ -11,7 +11,7 @@ module XmlResolution
   # 
   # Logging web service actions using using log4r with a
   # Rack::CommonLogger tie-in.  The log output is roughly
-  # that of Apache's common log format.  
+  # comparable to Apache's common log format.  
   #
   # Example use:
   #
@@ -21,12 +21,12 @@ module XmlResolution
   #  Logger.filename = "myfile.log"
   #  ...
   #  get '/tmp' do
-  #     Logger.warn "can't create temporary file for request.", env
+  #     Logger.warn "can't create temporary file for request.", @env
   #     halt [ 400, {}, 'oops' ]
   #  end
   #  ...
   #  get '/temp' do
-  #     Logger.err  "the machine room appears to be on fire.", env
+  #     Logger.err  "the machine room appears to be on fire.", @env
   #     "451 degrees Fahrenheit"
   #  end
   #
@@ -90,8 +90,8 @@ module XmlResolution
     # XmlResolution::Logger.facility = FACILITY
     #
     # Intialize the logging system to write to syslog, using the
-    # the symbol FACILTIY to specify the facility to use. Typically
-    # one uses one of the local facility codes:
+    # the symbol FACILTIY to specify the facility to use. Normally
+    # one uses a local facility code:
     #
     #    :LOG_LOCAL0
     #    :LOG_LOCAL1

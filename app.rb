@@ -1,27 +1,26 @@
 require 'tempfile'
 require 'xmlresolution.rb'
 
-# TODO: remove old collections on the fly (say, after a week...)
-# TODO: support HEAD, DELETE, etags and last-modified, accept headers
+# TODO: support HEAD, DELETE (for collection), etags and last-modified, accept headers
 
 include XmlResolution
 
-# ENV variables are set in apache configuration files.
+# ENV variables RESOLVER_PROXY and LOG_FACILITY are set up in the
+# apache configuration file for this virtual host.
 
 configure do
   $KCODE = 'UTF8'
+
   ResolverCollection.data_path = File.join(File.dirname(__FILE__), 'data')
+
+  set :proxy, ENV['RESOLVER_PROXY']
+
   Logger.filename = File.join(File.dirname(__FILE__), 'logs', 'xmlresolution.log')
   Logger.facility = ENV['LOG_FACILITY'] unless ENV['LOG_FACILITY'].nil?
-  set :proxy, ENV['RESOLVER_PROXY']
   use Rack::CommonLogger, Logger.new
 end
 
 helpers do
-
-  def service_name
-    'http://' + @env['SERVER_NAME'] + (@env['SERVER_PORT'] == '80' ? '' : ":#{@env['SERVER_PORT']}")
-  end
 
   def tar_up xrez
     tmp = Tempfile.new 'xmlrez-tar-'
@@ -29,6 +28,10 @@ helpers do
     tmp.open.read
   ensure 
     tmp.close
+  end
+
+  def service_name
+    'http://' + @env['SERVER_NAME'] + (@env['SERVER_PORT'] == '80' ? '' : ":#{@env['SERVER_PORT']}")
   end
 
 end # of helpers

@@ -54,7 +54,7 @@ module XmlResolution
 
     # The schemas attribute holds a list of ostructs, where
     # each has accessors defined as so:
-    
+    #
     #   * body            => [ string | nil ],         the schema text
     #   * digest          => [ md5-hex-string | nil ]  an md5 checksum of the body text
     #   * error_message   => [ string | nil ]          if status is :failure, an error message
