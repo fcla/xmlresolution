@@ -7,7 +7,7 @@ STDERR.puts "Expect the message \"Fatal error: Start tag expected, '<' not found
 describe XmlResolution::XmlResolver do
 
   before(:all) do 
-    STDERR.puts "Warning: no HTTP_PROXY environment variable found. Winging it." unless ENV['HTTP_PROXY']    
+    STDERR.puts "Warning: no RESOLVER_PROXY environment variable found. Winging it." unless ENV['RESOLVER_PROXY']    
   end
 
   @@mets_xres     = nil                           # we'll fill this in later

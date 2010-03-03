@@ -7,7 +7,7 @@ require 'xmlresolution/exceptions'
 describe XmlResolution::ResolverCollection do
 
   before(:all) do 
-    STDERR.puts "Warning: no HTTP_PROXY environment variable found. Winging it." unless ENV['HTTP_PROXY']    
+    STDERR.puts "Warning: no RESOLVER_PROXY environment variable found. Winging it." unless ENV['RESOLVER_PROXY']    
   end
 
   after(:all) do
