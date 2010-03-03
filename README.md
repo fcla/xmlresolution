@@ -78,16 +78,16 @@ instructions.  The following models how your RESTful clients should access the s
 
  * Create a collection (some versions of curl require you to use an empty document):
 	 
-	curl --upload-file /dev/null -X PUT http://xmlresolution.example.com/ieids/collection-1
+	 `curl --upload-file /dev/null -X PUT http://xmlresolution.example.com/ieids/collection-1`
 	
  * Submit some XML documents to it (note trailing slash):
 	
-	curl -F xmlfile=@myfile.xml http://xmlresolution.example.com/ieids/collection-1/	
-	curl -F xmlfile=@myotherfile.xml http://xmlresolution.example.com/ieids/collection-1/
+	`curl -F xmlfile=@myfile.xml http://xmlresolution.example.com/ieids/collection-1/	
+	curl -F xmlfile=@myotherfile.xml http://xmlresolution.example.com/ieids/collection-1/`
 	
  * Get the tarfile of the associated schemas
 	
-	curl http://xmlresolution.example.com/ieids/collection-1/
+	`curl http://xmlresolution.example.com/ieids/collection-1/`
 	
 
 
