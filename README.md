@@ -57,18 +57,18 @@ or run under a web server.  I'm using passenger phusion under apache:
 Directory Structure
 -------------------
 You can use the supplied Capfile and config/deploy.rb to set up. Adjust
-the top two lines in deploy.rb to match your installation.
+the top few lines in deploy.rb to match your installation.
 
  * config.ru & app.rb - the Sinatra setup
- * public/            - rdocs land in here via % rake rdoc
- * views/             - instructional erb pages
- * lib/               - root of xmlresolution libraries
+ * public/            - rdocs wiil land in here via % rake rdoc; otherwise empty
+ * views/             - instructional erb pages and forms
+ * lib/               - root of the xmlresolution libraries
  * config/            - capistrano deployment files
  * spec/              - tests
  * data/schemas       - where cached schemas live
  * data/collections   - where collections, and information about submitted documents for a collection, live
- * logs/              - you can point you web server here, or use the built in logging (uses logs/xmlresolution.log)
- * tmp/               - phusion writes the restart.txt file here.  Rake has a restart target for this, capistrano uses it. 
+ * logs/              - you can point your web server here, or use the built in logging (uses logs/xmlresolution.log)
+ * tmp/               - phusion writes the restart.txt file here.  Rake has a restart target for this, capistrano uses it 
 
 
 Usage
@@ -78,7 +78,7 @@ The following assumes you've a running server at xmlresolution.example.com.
 There are built-in test forms for exploring the system; see http://xmlresolution.example.com/ for
 instructions.  The following models how your RESTful clients should access the service.
 
- * Create a collection (some versions of curl require you to use an empty document):
+ * Create a collection (some versions of curl require you to use an empty document here):
 	 
 	 `curl --upload-file /dev/null -X PUT http://xmlresolution.example.com/ieids/collection-1`
 	
