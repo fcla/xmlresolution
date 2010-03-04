@@ -27,7 +27,7 @@ task :rdoc do
   # COMMAND = 'rdoc'
 
   begin
-     command = "#{COMMAND} ${DIAGRAM} --op #{File.join(HOME, 'public/rdoc')} --inline-source --all --title 'XML Resolution' #{Dir['*.rb'].join(' ')}  #{Dir['xmlresolution/*.rb'].join(' ')}"
+     command = "#{COMMAND} #{DIAGRAM} --op #{File.join(HOME, 'public/rdoc')} --inline-source --all --title 'XML Resolution' #{Dir['*.rb'].join(' ')}  #{Dir['xmlresolution/*.rb'].join(' ')}"
      puts command
      `#{command}`    
   rescue => e
