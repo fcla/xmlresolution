@@ -23,10 +23,11 @@ task :rdoc do
   chdir LIBDIR
 
   COMMAND = `which hanna`.empty? ? 'rdoc' : 'hanna'
+  DIAGRAM = `which dot`.empty?   ? '' : '--diagram'
   # COMMAND = 'rdoc'
 
   begin
-     command = "#{COMMAND} --op #{File.join(HOME, 'public/rdoc')} --inline-source --all --title 'XML Resolution' #{Dir['*.rb'].join(' ')}  #{Dir['xmlresolution/*.rb'].join(' ')}"
+     command = "#{COMMAND} ${DIAGRAM} --op #{File.join(HOME, 'public/rdoc')} --inline-source --all --title 'XML Resolution' #{Dir['*.rb'].join(' ')}  #{Dir['xmlresolution/*.rb'].join(' ')}"
      puts command
      `#{command}`    
   rescue => e
