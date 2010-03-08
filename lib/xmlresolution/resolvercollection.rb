@@ -186,7 +186,7 @@ module XmlResolution
     # of all of the schemas that were necessary to fully resolve it.
 
     def save_document_information xrez
-      path = File.join(collection_path, xrez.digest)
+      path = File.expand_path(File.join(collection_path, xrez.digest))
       xrez.local_uri = 'file://' + XmlResolution.hostname  + path
       write_lock (path) do |fd|
         fd.write xrez.dump
