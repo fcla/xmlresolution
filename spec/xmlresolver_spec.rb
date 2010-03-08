@@ -157,7 +157,7 @@ describe XmlResolution::XmlResolver do
   # The following is lame.  But how far should we go? Use Schematron to check?
 
   it "should produce a premis report of what it has done" do
-    premis = XmlResolution.xml_resolver_report @@mets_xres, 'http://xmlresolution.dev.flca.edu/'
+    premis = XmlResolution.xml_resolver_report @@mets_xres
     (premis =~ /<premis.*>.*<\/premis>$/mi).should_not == nil
   end
 

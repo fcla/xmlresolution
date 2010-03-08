@@ -1,13 +1,16 @@
 XML Resolution Service
 ======================
-Consider a collection of XML documents.  You would like to gather up all of the schemas necessary
-to understand those documents.  This web service helps you do that, in three RESTful steps:
+Consider a collection of XML documents.  You would like to gather up
+all of the schemas necessary to understand those documents.  This web
+service helps you do that, in three RESTful steps:
 
   1. Create a collection resource.
   2. POST some XML documents to the collection.
   3. GET the collection, retrieving a tar file of the schemas and a manifest.
 
-The original XML documents are not kept nor returned in the tar file.
+The original XML documents are not kept nor are they returned in the
+tar file.  It is recommended that you use this with a caching proxy
+such as squid.
 
 Envronment
 ----------
@@ -20,7 +23,8 @@ In your web server you should set up some environment variables:
 
 Requirements
 ------------
-Known to work with with ruby 1.8.7. The following packages (beyond the standards)
+Known to work with with ruby 1.8.7. The following packages (beyond the
+standards)
 
   * sinatra & rack
   * libxml-ruby & builder

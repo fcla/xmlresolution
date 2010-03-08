@@ -1,9 +1,22 @@
 require 'uri'
 require 'socket'
+require 'ostruct'
 require 'xmlresolution/exceptions'
 
 
 module XmlResolution
+
+  # Return a struct giving all sorts of good information on the version of this
+  # service.  TODO: get the good information.
+
+  def self.version
+    version_label = '0.9.1'
+    OpenStruct.new("label"   => version_label,
+                   "uri"     => "info:fcla/daitss/xmlresolution/#{version_label}",
+                   "note"    => "we'll put additional version information here"
+                   )
+  end
+
 
   # Given a list of strings, first URI escape them, then join them with a space and
   # return the constructed string.
@@ -43,7 +56,7 @@ module XmlResolution
   # along the line if we are going to write this kind of PREMIS
   # report.
 
-  def self.xml_resolver_report xrez, agent
+  def self.xml_resolver_report xrez
 
     $KCODE =~ /UTF8/ or raise ResolverError, "Ruby $KCODE == #{$KCODE}, but it must be UTF-8"
     xrez.filename    or raise MissingFilenameError, "Can't find submittor's assigned filename when attempting to write the PREMIS resolution report for a submitted XML document."
@@ -86,7 +99,7 @@ module XmlResolution
         }
         xml.linkingAgentIdentifier {
           xml.linkingAgentIdentifierType('URI')
-          xml.linkingAgentIdentifierValue(agent)
+          xml.linkingAgentIdentifierValue(version.uri)
         }
         xml.linkingObjectIdentifier {
           xml.linkingObjectIdentifierType('URI')
@@ -96,12 +109,13 @@ module XmlResolution
       xml.agent {
         xml.agentIdentifer {
           xml.agentIdentiferType('URI')
-          xml.agentIdentiferType(agent)
+          xml.agentIdentiferValue(version.uri)    # info uri that includes version
         }
         xml.agentName {
           xml.agentName('XML Resolution Service')
           xml.agentType('Web Service')
         }
+        xml.agentNote(version.note)               # details associated with the info version
       }
     }
     xml.target!

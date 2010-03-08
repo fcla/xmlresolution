@@ -9,7 +9,6 @@ def read_capistrano_revision
 end
 
 module XmlResolution
-
   REVISION = read_capistrano_revision
 
   require 'xmlresolution/utils'
@@ -18,6 +17,5 @@ module XmlResolution
   require 'xmlresolution/tarwriter'
   require 'xmlresolution/xmlresolver'
   require 'xmlresolution/logger'
-
 end
 
