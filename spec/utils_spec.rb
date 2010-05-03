@@ -6,6 +6,10 @@ describe XmlResolution do
     (XmlResolution.version.label =~ %r{^\d+\.\d+\.\d+$}).should == 0
   end
 
+  it "should provide a to_s method on version that matches the version label information" do
+    XmlResolution.version.label.should == "#{XmlResolution.version}"
+  end
+
   it "should provide version uri information" do
     (XmlResolution.version.uri =~ %r{^info:fcla/daitss/xmlresolution}).should == 0
   end
@@ -19,6 +23,7 @@ describe XmlResolution do
   end
 
   it "should unescape a string into an array" do
+    XmlResolution.unescape('th%20is is a test').length.should == 4
     XmlResolution.unescape('th%20is is a test')[0].should == 'th is'
   end
 

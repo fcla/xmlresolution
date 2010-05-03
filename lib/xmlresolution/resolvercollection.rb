@@ -261,7 +261,7 @@ module XmlResolution
     # manifest.xml file.
 
     def manifest
-      $KCODE =~ /UTF8/ or raise ResolverError, "When creating manifest for #{collection_name}, ruby $KCODE was '#{$KCODE}', but it must be 'UTF-8'"
+      $KCODE =~ /UTF8/ or raise ResolverError, "When creating manifest for #{collection_name}, ruby $KCODE was '#{$KCODE}', but it must be 'UTF8'"
 
       xml = Builder::XmlMarkup.new(:indent => 2)
       xml.instruct!(:xml, :encoding => 'UTF-8')

@@ -6,7 +6,7 @@ require 'xmlresolution.rb'
 include XmlResolution
 
 # ENV variables RESOLVER_PROXY and LOG_FACILITY are set up in the
-# apache configuration file for this virtual host.
+# apache configuration file for this virtual host, or set in the config.ru file.
 
 configure do
   $KCODE = 'UTF8'
@@ -51,11 +51,7 @@ get '/ieids/:collection_id' do |collection_id|
   redirect "/ieids/#{collection_id}/", 301
 end
 
-get '/rdoc' do
-  redirect '/rdoc/index.html', 301
-end
-
-get '/rdoc/' do
+get '/rdoc/?' do
   redirect '/rdoc/index.html', 301
 end
 

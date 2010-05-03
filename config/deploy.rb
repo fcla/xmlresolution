@@ -2,7 +2,7 @@
  set :domain,            "xmlresolution.dev.fcla.edu"
  set :repository,        "git@github.com:daitss/xmlresolution.git"   # thanks to Franco, we've got a clean sane system.
  set :use_sudo,          false
- set :deploy_to,         "/opt/web-services/#{application}"
+ set :deploy_to,         "/opt/web-services/sites/#{application}"
  set :scm,               "git"
 
  role :app, domain

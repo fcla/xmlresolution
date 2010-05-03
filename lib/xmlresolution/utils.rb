@@ -10,11 +10,15 @@ module XmlResolution
   # service.  TODO: get the good information.
 
   def self.version
-    version_label = '0.9.1'
-    OpenStruct.new("label"   => version_label,
-                   "uri"     => "info:fcla/daitss/xmlresolution/#{version_label}",
-                   "note"    => "we'll put additional version information here"
-                   )
+    version_label = '0.9.2'
+    os = OpenStruct.new("label"   => version_label,
+                        "uri"     => "info:fcla/daitss/xmlresolution/#{version_label}",
+                        "note"    => "we'll put additional version information here"
+                        )
+    def os.to_s
+      self.label
+    end
+    os
   end
 
 
@@ -90,11 +94,13 @@ module XmlResolution
         }                                          # and will be re-written.
         xml.eventType('XML Resolution')
         xml.eventDateTime(xrez.datetime.xmlschema)
-        xml.eventOutcomeInformation { xml.eventOutcome(outcome) }
-        xml.eventOutcomeDetail {
-          xml.eventOutcomeDetailExtension {
-            xrez.schemas.each { |s| xml.broken_link(s.location) unless s.status == :success } # note only schemas that can't be downloaded
-            xrez.unresolved_namespaces.each { |ns| xml.unresolved_namespace(ns) }
+        xml.eventOutcomeInformation { 
+          xml.eventOutcome(outcome) 
+          xml.eventOutcomeDetail {
+            xml.eventOutcomeDetailExtension {
+              xrez.schemas.each { |s| xml.broken_link(s.location) unless s.status == :success } # note only schemas that can't be downloaded
+              xrez.unresolved_namespaces.each { |ns| xml.unresolved_namespace(ns) }
+            }
           }
         }
         xml.linkingAgentIdentifier {
@@ -111,10 +117,8 @@ module XmlResolution
           xml.agentIdentiferType('URI')
           xml.agentIdentiferValue(version.uri)    # info uri that includes version
         }
-        xml.agentName {
-          xml.agentName('XML Resolution Service')
-          xml.agentType('Web Service')
-        }
+        xml.agentName('XML Resolution Service')
+        xml.agentType('Web Service')
         xml.agentNote(version.note)               # details associated with the info version
       }
     }

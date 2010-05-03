@@ -72,8 +72,8 @@ module XmlResolution
     attr_reader :proxy_addr
 
     # proxy_port is the port of the caching proxy server, if a proxy
-    # server was specified in the constructor.  If not explicitly set,
-    # it defaults to 3128.
+    # server was specified in the constructor.  If not explicitly mentioned
+    # in the constructor it defaults to 3128.
 
     attr_reader :proxy_port
 
