@@ -1,0 +1,52 @@
+body { 
+	font: 75% georgia, sans-serif;
+	line-height: 1.5;
+	color: #000;
+	background: #fee;
+	margin: 5; 
+	padding: 5;
+	}
+h1 { 
+	font: italic normal 1.4em georgia, sans-serif;
+	letter-spacing: 1px; 
+	margin-bottom: 1; 
+	font-weight: bold;
+	color: #000;
+	}
+
+h2 { 
+	font: italic normal 1.2em georgia, sans-serif;
+	letter-spacing: 1px; 
+	margin-bottom: 1; 
+	font-weight: bold;
+	color: #000;
+	}
+
+a:link { 
+	font-weight: bold; 
+	text-decoration: none; 
+	color: #622;
+	}
+
+a:visited { 
+	font-weight: bold; 
+	text-decoration: none; 
+	color: #844;
+	}
+
+a:hover, a:active { 
+	text-decoration: underline; 
+	color: #844;
+	}
+
+table, td, th {
+    border: none;
+    }
+
+td {
+   padding: 0.35em;
+   }
+
+th {
+   font: italic bold 1.0em georgia, sans-serif;
+}
