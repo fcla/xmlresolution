@@ -1,16 +1,19 @@
 <html>
 <head>
+  <style type="text/css" media="screen">
+    @import "/std.css";
+  </style>
  <title>Test submission page for collection <%= collection_id %></title>
 </head>
 <body>
-<h3>Test page for submitting an XML file to the <%= collection_id %> collection</h3>
+<h1>Test page for submitting an XML file to the <%= collection_id %> collection</h1>
 
 <form action="/ieids/<%= collection_id %>/" enctype="multipart/form-data" method="post">
 <p>
 Note: this form doesn't work with safari - use firefox until this issue is resolved.
 </p>
 <p>
-  Please specify an xml file:  <input type="file" name="xmlfile" size="32">
+  Select an XML file: <input type="file" name="xmlfile" size="32">
 </p>
 <div>
 <input type="submit" value="Send">

@@ -3,16 +3,19 @@
   <title>
     Welcome to the XMLresolver service
   </title>
+  <style type="text/css" media="screen">
+    @import "/std.css";
+  </style>
 </head>
 
 <body>
-<h2>A Guide to the XMLresolver Service on <%= @env['SERVER_NAME'] %></h2>
+<h1>A Guide to the XML Resolver Service on <%= @env['SERVER_NAME'] %></h1>
 
-<h3>Introduction</h3>
+<h2>Introduction</h2>
 
 <p>
   Consider a set of XML documents.  We would like a collection of all of the schema
-  and DTDs associated with those documents.  Such a function is provided by
+  and (eventually) DTDs associated with those documents.  Such a function is provided by
   the xmlresolver service.
 </p>
 
@@ -41,7 +44,7 @@
 
 </p>
 
-<h3>Details on <b>PUT</b></h3>
+<h2>Details on <b>PUT</b></h2>
 
 <p>
 The first step to using this service is to create a container resource that is named by a collection id.  We use
@@ -62,7 +65,7 @@ Note the lack of a trailing slash. Some versions of curl may require an empty fi
 </p>
 
 
-<h3>Details on <b>POST</b></h3>
+<h2>Details on <b>POST</b></h2>
 
 <p>
 We use the enctype=multipart/form-data for posts, with the xml file
@@ -120,7 +123,7 @@ There is a <a href="/test">test form</a> which will allow you to select an exist
 </p>
 
 
-<h3>Additional Information</h3>
+<h2>Additional Information</h2>
 
 <p>
 See the <a href="/rdoc/">rdoc</a> information for the DAITSS 2 libraries used.
@@ -131,7 +134,7 @@ See the <a href="/rdoc/">rdoc</a> information for the DAITSS 2 libraries used.
 Revision: <%= revision %> 
 </p>
 
-<h3>To Do</h3>
+<h2>To Do</h2>
 
 <p>
 Add <b>DELETE</b> and <b>HEAD</b> methods where appropriate.  Support DTDs. Expose the schemas downloaded for QA testing.

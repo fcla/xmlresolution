@@ -1,9 +1,17 @@
 <html>
 <head>
+  <style type="text/css" media="screen">
+    @import "/std.css";
+  </style>
+  <title>Select a Collection to Download</title>
 </head>
 <body>
+ <h1>Select a Collection to Download</h1>
+
+<p>
  <% collections.each do |ieid| %>
-   <a href="<%= ieid %>/"><%= ieid %></a><br/>
-<% end %>
+    <a href="<%= ieid %>/"><%= ieid %>.tar</a>  <a href="<%= ieid %>/manifest.xml">(manifest)</a><br/>
+ <% end %>
+</p>
 </body>
 </html>
