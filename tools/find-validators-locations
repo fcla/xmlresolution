@@ -20,12 +20,19 @@ proxy_host, proxy_port = proxy.split(':')
 jarfile = 'xmlvalidator.jar'
 jarpath = File.join(File.dirname(__FILE__), jarfile)
 
+
 if not File.exists? jarpath
   STDERR.puts "Can't find #{jarfile} (checked #{File.dirname(__FILE__)})"
   exit
 end
 
 file = ARGV[0]
+
+if (file.nil?) 
+  STDERR.puts "No file specified: enter a file name on the command line.\n";
+  exit
+end
+
 if (not File.exists? file) 
   STDERR.puts "File #{file} does not exist: enter file name on the command line\n";
   exit
