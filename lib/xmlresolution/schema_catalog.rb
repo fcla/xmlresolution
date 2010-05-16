@@ -11,6 +11,11 @@ require 'xmlresolution/utils'       # ResolverUtils.*
 
 class SchemaCatalog
 
+  # Be sure to keep the following more or less in sync with the Struct::SchemaReloaded used in the XmlResolverReloaded class;
+  # it is the data structure that we maintain in the SchemaCatalog.
+
+  Struct.new("Schema", :location, :namespace, :last_modified, :digest, :localpath, :retrieval_status, :error_message, :redirected_location)
+
   # If a proxy has been given, @proxy_addr is its address, either as a DNS name or IP Address,.
 
   @proxy_addr = nil
@@ -53,10 +58,6 @@ class SchemaCatalog
 
     ResolverUtils.check_directory "The schema storage directory", @data_root
 
-    # Be sure to keep the following more or less in sync with the Struct::SchemaReloaded used in the XmlResolverReloaded class.
-
-    Struct.new("Schema", :location, :namespace, :last_modified, :digest, :localpath, :retrieval_status, :error_message, :redirected_location)
-    
     @schema_dictionary = []
     merge namespace_locations
   end

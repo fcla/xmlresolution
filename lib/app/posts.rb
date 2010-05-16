@@ -17,10 +17,29 @@ post '/ieids/:collection_id/' do |collection_id|
       raise Http400, "Collection #{collection_id} doesn't exist: use PUT #{service_name}/ieids/#{collection_id} first to create it"
     end
 
-    res = XmlResolver.new(tempfile.open.read, "file://#{@env['REMOTE_ADDR']}/#{filename.gsub(%r(^/+), '')}", 
-                          settings.data_path, settings.proxy)
+    file_url = "file://#{@env['REMOTE_ADDR']}/#{filename.gsub(%r(^/+), '')}"
+
+    Logger.info "Handling uploaded document #{file_url}.", @env
+
+    res = XmlResolver.new(tempfile.open.read, file_url, settings.data_path, settings.proxy)
+
     res.process
     res.save collection_id
+
+    # Some extra logging:
+
+    failures  = [];  redirects = [];  successes = []
+
+    res.schema_dictionary.map do |record|  
+      case record.retrieval_status
+        when :failure;  failures.push  record.location
+        when :redirect; redirects.push record.location
+        when :success;  successes.push record.location
+      end
+    end
+
+    failures.each { |location| Logger.err "Failed retrieving #{location} for document #{file_url}.", @env }
+    res.unresolved_namespaces.each { |ns|  Logger.warn "Unresolved namespace #{ns} for document #{file_url}.", @env }
 
     status 201
     content_type 'application/xml'

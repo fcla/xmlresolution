@@ -22,8 +22,6 @@ module XmlResolution
   require 'xmlresolution/xml_processors'
   require 'xmlresolution/xml_resolver'
 
-# require 'xmlresolution/tarwriter'
-
   def self.version
     os = OpenStruct.new("label"   => "Version #{VERSION}, Revision #{REVISION}",
                         "uri"     => "info:fcla/daitss/xmlresolution/#{VERSION}",

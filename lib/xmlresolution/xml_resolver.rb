@@ -145,7 +145,6 @@ module XmlResolution
     # a caching proxy to be used.
 
     def initialize document_text, document_uri, data_root, proxy = nil
-
       
       @document_text        = document_text
       @document_identifier  = Digest::MD5.hexdigest(document_text)
