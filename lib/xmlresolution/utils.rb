@@ -1,127 +1,137 @@
+require 'timeout'
 require 'uri'
-require 'socket'
-require 'ostruct'
 require 'xmlresolution/exceptions'
 
+module ResolverUtils
 
-module XmlResolution
+  # Timeout in seconds for the read_lock and write_lock methods.
 
-  # Return a struct giving all sorts of good information on the version of this
-  # service.  TODO: get the good information.
+  LOCK_TIMEOUT = 10
 
-  def self.version
-    version_label = '0.9.2'
-    os = OpenStruct.new("label"   => version_label,
-                        "uri"     => "info:fcla/daitss/xmlresolution/#{version_label}",
-                        "note"    => "we'll put additional version information here"
-                        )
-    def os.to_s
-      self.label
+  # user [ PATHNAME ]
+  #
+  # Without argument, return the name (a string) of the user running
+  # this process.  With argument PATHNAME (a string) naming an
+  # existing, readable file, return the user name who owns it.
+
+  def ResolverUtils.user pathname = nil
+    if pathname.nil?
+      Etc.getpwuid(Process.uid).name
+    else
+      Etc.getpwuid(File.stat(pathname).uid).name
     end
-    os
   end
 
+  # group [ PATHNAME ]
+  #
+  # Without argument, return the group name (a string) of the user
+  # running this process.  With argument PATHNAME (a string) naming an
+  # existing readable file, return its group name.
 
-  # Given a list of strings, first URI escape them, then join them with a space and
+  def ResolverUtils.group pathname = nil
+    if pathname.nil?
+      Etc.getgrgid(Process.gid).name
+    else
+      Etc.getgrgid(File.stat(pathname).uid).name
+    end
+  end
+
+  # check_directory PHRASE, DIRECTORY
+  #
+  # Carefully check that DIRECTORY is writable, and if not, throwing an XmlResolution::ConfigurationError
+  # with a helpful, descriptive message, preceded by PHRASE (e.g. "The FooBar storage directory")
+
+  def ResolverUtils.check_directory phrase, directory
+
+    if not File.exists? directory
+      raise XmlResolution::ConfigurationError, "#{phrase} #{directory} doesn't exist or is unreadble by this user (#{ResolverUtils.user}) and group (#{ResolverUtils.group})."
+    end
+
+    if not File.directory? directory
+      raise XmlResolution::ConfigurationError, "#{phrase} #{directory} isn't a directory."
+    end
+
+    if not File.readable? directory
+      raise XmlResolution::ConfigurationError, "#{phrase} #{directory} isn't readable by this user (#{ResolverUtils.user}) or group (#{ResolverUtils.group})."
+    end
+
+    if not File.writable? directory
+      raise XmlResolution::ConfigurationError, "#{phrase} #{directory} isn't writable by this user (#{ResolverUtils.user}) or group (#{ResolverUtils.group})."
+    end
+  end
+
+  # write_lock FILEPATH
+  #
+  # Access the file FILEPATH exclusively. Times out after LOCK_TIMEOUT
+  # seconds, raising a LockError exception.  On successfully obtaining
+  # a lock we truncate the file, and yield a file descriptor ready for
+  # writing.  On return the file is properly closed. See the
+  # description of write_lock for more details on how these kinds of
+  # lock work.
+
+  def ResolverUtils.write_lock filepath
+    open(filepath, 'w') do |fd|
+      Timeout.timeout(LOCK_TIMEOUT) { fd.flock(File::LOCK_EX) }
+      yield fd
+    end
+  rescue Timeout::Error => e
+    raise XmlResolution::LockError, "Timed out waiting #{LOCK_TIMEOUT} seconds for write lock to #{filepath}: #{e.message}"
+  end
+
+  # read_lock FILEPATH
+  #
+  # Access the file FILEPATH in a shared manner.  Note that we have
+  # two kinds of locks associated with a given file, read_locks and
+  # write_locks.  There may be 0, 1 or many locks active at any
+  # time. There may exist many active read_locks at once, but if there
+  # is an active write_lock, it is the only lock of any kind in
+  # existance at that time.  Requests for locks may block for up to
+  # LOCK_TIMEOUT seconds, after which a LockError exception is raised.
+  #
+  # On success, we yield a file desciptor positioned at the
+  # beginning of the file and ready to read from.  On return, the
+  # file is properly closed.
+
+  def ResolverUtils.read_lock filepath
+    open(filepath, 'r') do |fd|
+      Timeout.timeout(LOCK_TIMEOUT) { fd.flock(File::LOCK_SH) }
+      yield fd
+    end
+  rescue Timeout::Error => e
+    raise XmlResolution::LockError, "Timed out waiting #{LOCK_TIMEOUT} seconds for read lock to #{filepath}: #{e.message}"
+  end
+
+  # escape *LIST
+  #
+  # Given the arugment list LIST of strings, first URI escape them, then join them with a space and
   # return the constructed string.
 
-  def self.escape(*list)
+  def ResolverUtils.escape *list
     list.map{ |elt| URI.escape(elt) }.join(' ')
   end
 
+  # unescape STRING 
+  #
   # Perform the inverse of the escape method.
 
-  def self.unescape(string)
+  def ResolverUtils.unescape string
     data = string.split(/\s+/)
     data.map{ |elt| URI.unescape(elt) }
   end
 
-  # utf8 ensures we won't smash the current value of KCODE
+  # collection_name_ok? COLLECTION_ID
+  #
+  # A boolean to determine if the string COLLECTION_ID is a valid
+  # collection id. It has to fit into the filesystem as a directory,
+  # so must be a single path component.
+  #
+  # Note that the top-level routes can be more restrictive about
+  # collection names - for instance, a UUID or IEID.
 
-  def self.utf8
-    the_value_formerly_known_as_kcode = $KCODE
-    $KCODE = 'UTF8'
-    yield
-  ensure
-    $KCODE = the_value_formerly_known_as_kcode
+  def ResolverUtils.collection_name_ok? collection_id
+    not (collection_id =~ /\// or collection_id != URI.escape(collection_id))
   end
 
-  # Our hostname. Or one of them, at least.
+end # of module
 
-  def self.hostname
-    Socket::gethostname.downcase
-  end
 
-  # Given an XmlResolver (or XmlResolverReloaded) object XREZ, and an
-  # URI AGENT, make a PREMIS style event report for the outcome of the
-  # resolution of one XML document.  While XmlResolver#filename and
-  # XmlResolver#local_uri are not required to be set by the
-  # XmlResolver object, we do require them to have been set somewhere
-  # along the line if we are going to write this kind of PREMIS
-  # report.
-
-  def self.xml_resolver_report xrez
-
-    $KCODE =~ /UTF8/ or raise ResolverError, "Ruby $KCODE == #{$KCODE}, but it must be UTF-8"
-    xrez.filename    or raise MissingFilenameError, "Can't find submittor's assigned filename when attempting to write the PREMIS resolution report for a submitted XML document."
-    xrez.local_uri   or raise ResolverError, "Can't determing the local file URI for the submitted XML document #{xrez.filename} when attempting to write the PREMIS resolution report."
-
-    successes = failures = 0
-    xrez.schemas.each do |s|
-      successes += 1 if s.status == :success
-      failures  += 1 if s.status != :success
-    end
-
-    if (successes > 0 and failures > 0)
-      outcome = 'mixed'
-    elsif failures > 0
-      outcome = 'failure'
-    else
-      outcome = 'success'  # vacuous case is success
-    end
-
-    xml = Builder::XmlMarkup.new(:indent => 2)
-
-    xml.instruct!(:xml, :encoding => 'UTF-8')  # well, if $KCODE  was set correctly
-
-    xml.premis('xmlns'     => 'info:lc/xmlns/premis-v2',
-               'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
-               'version'   => '2.0') {
-      xml.event {
-        xml.eventIdentifier {
-          xml.eventIdentifierType('URI')
-          xml.eventIdentifierValue(xrez.local_uri) # typically this is only used as a placeholder
-        }                                          # and will be re-written.
-        xml.eventType('XML Resolution')
-        xml.eventDateTime(xrez.datetime.xmlschema)
-        xml.eventOutcomeInformation { 
-          xml.eventOutcome(outcome) 
-          xml.eventOutcomeDetail {
-            xml.eventOutcomeDetailExtension {
-              xrez.schemas.each { |s| xml.broken_link(s.location) unless s.status == :success } # note only schemas that can't be downloaded
-              xrez.unresolved_namespaces.each { |ns| xml.unresolved_namespace(ns) }
-            }
-          }
-        }
-        xml.linkingAgentIdentifier {
-          xml.linkingAgentIdentifierType('URI')
-          xml.linkingAgentIdentifierValue(version.uri)
-        }
-        xml.linkingObjectIdentifier {
-          xml.linkingObjectIdentifierType('URI')
-          xml.linkingObjectIdentifierValue(xrez.filename)
-        }
-      }
-      xml.agent {
-        xml.agentIdentifer {
-          xml.agentIdentiferType('URI')
-          xml.agentIdentiferValue(version.uri)    # info uri that includes version
-        }
-        xml.agentName('XML Resolution Service')
-        xml.agentType('Web Service')
-        xml.agentNote(version.note)               # details associated with the info version
-      }
-    }
-    xml.target!
-  end
-end

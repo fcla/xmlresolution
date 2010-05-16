@@ -1,8 +1,8 @@
-require 'fileutils'
-require 'uri'
 require 'builder'
-require 'time'
+require 'fileutils'
 require 'tempfile'
+require 'time'
+require 'uri'
 require 'xmlresolution'
 
 module XmlResolution
@@ -11,280 +11,292 @@ module XmlResolution
   #
   # This class stores and retrieves information for XmlResolution
   # service.  It maintains a set of collection identifiers supplied by
-  # the calling program, and uses the XmlResolution::XmlResolver class
+  # the client, and uses the XmlResolution::XmlResolver class
   # to associate documents and the schemas necessary to validate them
-  # with a given collection identifier. All of the schemas can be
-  # retrieved in a per-collection tarfile.
+  # with a given collection identifier. All of a document's resolved
+  # schemas can be retrieved in a per-collection tarfile.
   #
-  # Example usage:
+  # Example usage: write a mainfest file for the collection 'foo'
+  # for the collections stored under '/var/data'
   #
-  #   XmlResolution::ResolverCollection.data_path = "/service/path/data"
-  #   rc = XmlResolution::ResolverCollection.new('mycollection')
+  #  collection = ResovlerCollection.new '/var/data', 'foo'
+  #  File.open("foo.xml", "w")  { |f| collection.manifest }
   #
-  #   xrez = XmlResolution::XmlResolver.new(xml_text, proxy)
-  #   xrez.filename = its_filename
-  #   rc.add xrez
+  # Example usage: write tar files for all the collections we
+  # have, stored under '/var/data'
   #
-  #    ... add some more resolved xml over time ...
-  #
-  #   rc.tar(STDOUT)
+  #  root = '/var/data'
+  #  ResolverCollection.collections(root).each do |collection_name|
+  #    collection = ResolverCollection.new root, collection_name
+  #    File.open("#{collection_name}.tar", "w") do |f| 
+  #      collection.tar do |io|
+  #        f.write io.read
+  #      end
+  #    end
+  #  end
+  #  
 
   class ResolverCollection
-
-    # Timeout in seconds for the read_lock and write_lock methods.
-
-    LOCK_TIMEOUT = 10
 
     # Last-modified time after which we'll delete collections as being stale.
 
     TOO_LONG_SINCE_LAST_MODIFIED = 14 * 24 * 60 * 60  # One fortnight
 
-    # Subdirectory where the collections we create will live:
-
-    COLLECTIONS = 'collections'
-
-    # Subdirectory where all schema information will be placed
-
-    SCHEMAS     = 'schemas'
-
-    @@data_path = nil
-
-    # ResolverCollection.data_path= PATH sets the root directory where
-    # all of the persistent data for this class will be stored.  It
-    # must be done before using any of the other class methods, except
-    # perhaps the ResolverCollection.data_path accessor itself.
-    # Objects constructed after this point will keep a copy of
-    # PATH in an instance variable.
-
-    def self.data_path= path
-      raise CollectionInitializationError, "ResolverCollection cannot find the directory '#{path}'."     unless File.directory? path
-      raise CollectionInitializationError, "ResolverCollection cannot write to the directory '#{path}'." unless File.writable? path
-      @@data_path = path
-      [ File.join(path, COLLECTIONS), File.join(path, SCHEMAS) ].each do |p|
-        FileUtils.mkdir_p p
-        raise CollectionInitializationError, "The path '#{p}' is not a directory." unless File.directory? p
-        raise CollectionInitializationError, "The path '#{p}' is not writable."    unless File.writable? p
-      end
-      age_out_collections File.join(@@data_path, COLLECTIONS)
-
-    rescue => e
-      raise CollectionInitializationError, "ResolverCollection couldn't initialize directory #{path}: '#{e.message}'."
-    end
-
-    # Return the current data_path that will be used for created objects.
-
-    def self.data_path
-      @@data_path
-    end
-
-
-    # Return a list of all of the active collections stored at this data_path
-
-    def self.collections
-      raise CollectionInitializationError, "The ResolverCollection system has not been told what directory to use yet." unless ResolverCollection.data_path
-      Dir[File.join(data_path, COLLECTIONS, '*')].map { |path| File.split(path)[-1] }.sort
-    end
-
-    # A boolean to determine if the collection named by  COLLECTION_ID is active.
-
-    def self.collection_exists? collection_id
-      ResolverCollection.collections.include? collection_id
-    end
-
-    # A boolean to determine if the string COLLECTION_ID is a valid collection id. It has to fit into the filesystem, so must be a valid single directory name.
-
-    def self.collection_name_ok? collection_id
-      not (collection_id =~ /\// or collection_id != URI.escape(collection_id))
-    end
-
-    # The name of the collection.
+    # The client-supplied id for grouping a collection of XML documents.
 
     attr_reader :collection_name
 
-    # The filesystem path where our data is stored.
+    # data_path is the topmost path we need to concern ourselves with,
+    # where schemas and collections all live. Say it is named
+    # "...data_root"; then the heirarchy looks like this:
+    #
+    # ...data_root/collections
+    #
+    # ...data_root/collections/E20010101_CEEBEE                                    # a collection
+    # ...data_root/collections/E20010101_CEEBEE/74e5729189a158f105eb113be42a123a   # a document record
+    # ...data_root/collections/E20010101_CEEBEE/d25504bfb5986db329e02b2d447cc4e7
+    #
+    # ...data_root/collections/E20010101_DEADER                                    # another collection
+    # ...data_root/collections/E20010101_DEADER/e6720c9ea7e7f2a70d8dd20b1af84020   # its document records
+    # ...data_root/collections/E20010101_DEADER/e68ac0fe9f938ccf339afe4a76bfd26b
+    # ...data_root/collections/E20010101_DEADER/ee209b5a6c70b495a130cad8d20eb779
+    #
+    # ...data_root/schemas                                                         # where the schemas live
+    # ...data_root/schemas/005aead63fe2e6a13152ecad7e702a21                        # a dowmloaded schema
+    # ...data_root/schemas/02592d8f2bb29d7f4f8e413fdb22c3e0
+    # ...data_root/schemas/0bfe4d177184c3e01c674951481be6af
+    # ...data_root/schemas/15fa7e3aedef6801c565bfbf621fdc5b
+    # ...data_root/schemas/1ad7d28cc5587a80cfde5e47b3265e39
+    #
+    #     ...lots more schemas...
 
     attr_reader :data_path
 
-    # The filesystem path where retrieved schemas are are stored.
+    # The top-level path where we store collections information; collection_name will be
+    # a subdirectory of this.
 
-    attr_reader :schema_path
+    attr_reader :collections_path
 
-    # The filesystem path were data about files submitted to this collection are stored.
+    # The top-level path where we store downloaded schemas.
 
-    attr_reader :collection_path
+    attr_reader :schemas_path
 
-     # A collection is instantiated by its name, the string COLLECTION_NAME.  The string must be usable as a single filesystem path component.
-    # New collections are created via this method; existing collections are retrieved as well.
+    # ResolverCollection.collections pathname
+    #
+    # This class method returns a list of collection names currently
+    # present on the system. The top-level collections directory
+    # exists as a subdirectory under PATHNAME, a string. This is
+    # equivalent to the data_path used by the constructor.
 
-    def initialize collection_name
+    def ResolverCollection.collections pathname
+      collections_pathname = File.join(pathname, 'collections')
+      ResolverUtils.check_directory "The directory for storing the collections",  collections_pathname
+      ResolverCollection.age_out_collections collections_pathname
+      Dir[File.join(collections_pathname, '*')].map { |path| File.split(path)[-1] }.sort
+    end
 
-      raise CollectionInitializationError, "Must initialize this class with the data_path method before it can be used" unless ResolverCollection.data_path
-      raise CollectionNameError, "'#{collection_name}' is a bad name for a collection" unless ResolverCollection.collection_name_ok? collection_name
+    # ResolverCollection.new PATHNAME, COLLECTION_NAME
+    #
+    # Create a new ResolverCollection object associated with the
+    # persistent object store (files) at PATHNAME, known by
+    # COLLECTION_NAME (both strings).
+    #
+    # It will, as a side effect, create a directory COLLECTION_NAME
+    # under PATHNAME if it doesn't alreday exists and if
+    # COLLECTION_NAME is well-formed.  If you don't want that, you'd
+    # want to do a check in your app along the lines of:
+    #
+    # if ResolverCollection.collections(data_root).include? Users_Collection_Name
+    #    collection = ResolverCollection.new(data_root, Users_Collection_Name) 
+    #    ...
+    # else
+    #    Boom!
+    # end
+
+    def initialize pathname, collection_name
 
       @collection_name  = collection_name
-      @data_path        = ResolverCollection.data_path
-      @schema_path      = File.join(@data_path, SCHEMAS)
-      @collection_path  = File.join(@data_path, COLLECTIONS, collection_name)
+      @data_path        = pathname
 
-      FileUtils.mkdir_p  File.join(collection_path)
+      if not ResolverUtils.collection_name_ok? collection_name
+        raise XmlResolution::BadCollectionID, "Bad collection name '#{collection_name}' - it has to be a simple string with no spaces or special characters"
+      end
+
+      @schemas_path       = File.join(data_path, 'schemas')
+      @collections_path   = File.join(data_path, 'collections')
+
+      ResolverUtils.check_directory "The directory for storing schemas",            @schemas_path
+      ResolverUtils.check_directory "The directory for storing XML document data",  @collections_path
+
+      FileUtils.mkdir_p  File.join(collection_documents_path)  
+    end
+
+    # manifest [ COLLECTION_RESOLUTIONS ]
+    #
+    # Create and return the XML manifest document for this collection.
+    # If COLLECTION_RESOLTIONS, an array of XmlResolver objects
+    # associated with this collection, is provided, use that.
+    # Otherwise, create it ourselves. (We do this because manifest is
+    # used within the tar method, which already has created the array
+    # of XmlResolver objects for its own use).
+    # 
+    #  Annotated portions of an example manifest document:
+    #
+    #  <?xml version="1.0" encoding="UTF-8"?>
+    #
+    #  <resolutions collection="E20100524_AAACAB">
+    #
+    #   A 'resolution' refers to one document, characterized as follows:
+    #
+    #    <resolution time="2010-05-15T01:20:23-04:00" 
+    #                 md5="74e5729189a158f105eb113be42a123a" 
+    #                name="file://127.0.0.1/UF00028295_00729.xml">
+    #
+    #   The successfully retrieved schemas:
+    #
+    #      <schema last_modified="2010-04-21T11:44:40-04:00"/      
+    #                     status="success" 
+    #                        md5="15fa7e3aedef6801c565bfbf621fdc5b" 
+    #                  namespace="http://www.fcla.edu/dls/md/daitss/"
+    #                   location="http://www.fcla.edu/dls/md/daitss/daitss.xsd">
+    #
+    #      <schema last_modified="2010-04-21T11:44:40-04:00"/
+    #                     status="success" 
+    #                        md5="1e07ae0bf17cb5ef171f087f2155f038" 
+    #                   location="http://www.fcla.edu/dls/md/daitss/daitssAccount.xsd" 
+    #                  namespace="http://www.fcla.edu/dls/md/daitss/">
+    #
+    #      <schema last_modified="2010-04-21T11:44:40-04:00"/
+    #                     status="success" 
+    #                        md5="e3b452af1c0b4c9c3b696cf1bf3fdb19" 
+    #                   location="http://www.fcla.edu/dls/md/daitss/daitssAccountProject.xsd" 
+    #                  namespace="http://www.fcla.edu/dls/md/daitss/">
+    #
+    #      <schema last_modified="2010-04-21T11:44:40-04:00"/
+    #                     status="success" 
+    #                        md5="56ac338a8916c7099b8c5563721db9bd" 
+    #                   location="http://www.fcla.edu/dls/md/daitss/daitssActionPlan.xsd" 
+    #                  namespace="http://www.fcla.edu/dls/md/daitss/">
+    #
+    #  Redirected schemas:
+    #
+    #      <schema      status="redirect" 
+    #                 location="http://www.loc.gov/mods/v3/mods-3-3.xsd" 
+    #                namespace="http://www.loc.gov/mods/v3" 
+    #                   actual="http://www.loc.gov/standards/mods/v3/mods-3-3.xsd"/>
+    #
+    #      <schema      status="redirect" 
+    #                 location="http://www.loc.gov/mods/v3/mods-3-3.xsd" 
+    #                namespace="http://www.loc.gov/mods/v3" 
+    #                  actual="http://www.loc.gov/standards/mods/v3/mods-3-3.xsd"/>
+    #
+    #  Unresolved:
+    #
+    #      <schema     status="unresolved" 
+    #               namespace="http://www.w3.org/1999/xhtml"/>
+    #
+    #      <schema    status="unresolved" 
+    #               namespace="http://www.w3.org/2001/XMLSchema-hasFacetAndProperty"/>
+    #    </resolution>
+    #
+    #  More resolutions:
+    #    
+    #    <resolution time="2010-05-14T00:46:56-04:00" 
+    #                 md5="d25504bfb5986db329e02b2d447cc4e7" 
+    #                 name="file://127.0.0.1/example.xml">
+    #      ....
+    #
+    #    </resolution>
+    # </resolutions>
+    
+    def manifest collection_resolutions = nil
+      collection_resolutions ||= resolutions()  
+
+      $KCODE == 'UTF8' or raise XmlResolution::ConfigurationError, "Ruby $KCODE == #{$KCODE}, but it must be UTF8"
+      
+      xml = Builder::XmlMarkup.new(:indent => 2)
+      xml.instruct!(:xml, :encoding => 'UTF-8')
+      xml.resolutions(:collection => collection_name) {
+        collection_resolutions.each do |res|
+          xml.resolution(:name => res.document_uri, :md5 => res.document_identifier, :time => res.resolution_time.iso8601) {       
+            res.schema_dictionary.each do |s|
+              next unless s.retrieval_status == :success
+              xml.schema(:status => 'success', :location => s.location, :namespace => s.namespace, :md5 => s.digest, :last_modified => s.last_modified.iso8601)
+            end
+            res.schema_dictionary.each do |s|
+              next unless s.retrieval_status == :failure
+              xml.schema(:status => 'failure', :location => s.location, :namespace => s.namespace, :message => s.error_message)
+            end
+            res.schema_dictionary.each do |s|
+              next unless s.retrieval_status == :redirect
+              xml.schema(:status => 'redirect', :location => s.location, :namespace => s.namespace, :actual => s.redirected_location)
+            end
+            res.unresolved_namespaces.each { |ns| xml.schema(:status => 'unresolved', :namespace => ns) }
+          }
+        end
+      }
+      xml.target!
+    end
+    
+    # tar
+    #
+    # Create a tar file of all the schemas we've found when resolving
+    # xml documents sent to this collection. We use the schema
+    # location as the filename in the tarfile.  We include a manifest
+    # of the results of performing the resolutions; each document is
+    # listed in a section of the manifest, with references to schemas
+    # included in the tarfile.  If the name of the collection is
+    # 'FOO', then the contents of the tarfile for the collection has
+    # the following layout:
+    #
+    #  FOO/manifest.xml
+    #  FOO/http://www.fcla.edu/dls/md/daitss/daitss.xsd
+    #  FOO/http://www.fcla.edu/dls/md/daitss/daitssAccount.xsd
+    #  FOO/http://www.fcla.edu/dls/md/daitss/daitssAccountProject.xsd
+    #  FOO/...more schemas...
+    #
+    # We yield an open tempfile containg the contents of the tarfile.
+    # The tempfile is deleted after exiting the tar block.
+    #
+    
+    def tar
+      io = Tempfile.new 'XmlResolution-TarFile-'
+      rs  = resolutions()
+
+      tarwriter = XmlResolution::TarWriter.new(io, { :uid => 80, :gid => 80, :username => 'daitss', :groupname => 'daitss' })
+      manifest_file(rs) { |path| tarwriter.write path, File.join(collection_name, 'manifest.xml') }
+      schemas(rs) { |localpath, url|  tarwriter.write localpath, File.join(collection_name, url) }
+
+      tarwriter.close  # closes io as side effect
+
+      io.open.rewind
+      yield io
+    ensure
+      io.close
+      io.unlink
+    end
+
+
+    # resolutions
+    #
+    # Return an array of XmlResolver objects, one associated with each
+    # of the documents that have been successfully submitted to this
+    # collection.
+
+    def resolutions
+      collection_documents.map { |id|  XmlResolverReloaded.new(data_path, collection_name, id) }
     end
 
     private
 
-    # Delete a collection if hasn't been updated in a while.
-
-    def self.age_out_collections directory
-      Dir["#{directory}/*"].each do |dir|
-        next unless  File.directory? dir
-        next unless  collection_name_ok? File.split(dir)[-1]
-        if (Time.now - File::stat(dir).mtime) > TOO_LONG_SINCE_LAST_MODIFIED
-          FileUtils.rm_rf dir
-        end
-      end
-    end
-
-
-    # Access the file FILEPATH in a shared manner.  Note that we have
-    # two kinds of locks associated with files, read_locks and
-    # write_locks.  There may be 0, 1 or many locks active at any
-    # time. There may exist many active read_locks at once, but if
-    # there is an active write_lock, it is the only lock of any kind.
-    # Requests for locks may block for up to LOCK_TIMEOUT seconds,
-    # after which a LockError exception is raised.
+    # manifest_file COLLECTION_RESOLUTIONS
     #
-    # On success, we yield a file desciptor positioned at the
-    # beginning of the file and ready to read from.  On return, the
-    # file is properly closed.
+    # Save the manifest report (an XML document) to a temporary file, and yield
+    # that files pathname. 
 
-    def read_lock(filepath)
-      open(filepath, 'r') do |fd|
-        Timeout.timeout(LOCK_TIMEOUT) { fd.flock(File::LOCK_SH) }
-        yield fd
-      end
-    rescue Timeout::Error => e
-      raise LockError, "Timed out waiting #{LOCK_TIMEOUT} seconds for read lock to #{filepath}: #{e.message}"
-    end
-
-    # Access the file FILEPATH exclusively. Times out after
-    # LOCK_TIMEOUT seconds, raising a LockError exception.  On
-    # successfully obtaining a lock we truncate the file, and yield a
-    # file descriptor ready for writing.  On return, the file is
-    # properly closed.
-
-    def write_lock(filepath)
-      open(filepath, 'w') do |fd|
-        Timeout.timeout(LOCK_TIMEOUT) { fd.flock(File::LOCK_EX) }
-        yield fd
-      end
-    rescue Timeout::Error => e
-      raise LockError, "Timed out waiting #{LOCK_TIMEOUT} seconds for write lock to #{filepath}: #{e.message}"
-    end
-
-    # Given an XmlResolution::XmlResolver object XREZ, save the
-    # information regarding the file that was analyzed.  That includes the
-    # original locations, namespaces, and names of the local copies
-    # of all of the schemas that were necessary to fully resolve it.
-
-    def save_document_information xrez
-      path = File.expand_path(File.join(collection_path, xrez.digest))
-      xrez.local_uri = 'file://' + XmlResolution.hostname  + path
-      write_lock (path) do |fd|
-        fd.write xrez.dump
-      end
-    end
-
-    # Given an XmlResolution::XmlResolver object XREZ, save the schema texts we've
-    # found.  We use the digest of the text as the filename.
-
-    def save_schema_information xrez
-      xrez.schemas.each do |s|
-        next unless s.status == :success
-        filepath = cached_schema_pathname(s.digest)
-        next if File.exists? filepath  and  File.mtime(filepath) == s.last_modified # don't bother rewriting
-        write_lock (filepath) do |fd|
-          fd.write s.body
-          fd.close
-          File.utime(File.atime(filepath), s.last_modified, filepath)
-        end
-      end
-    end
-
-    # We save schema files by naming them after the md5 digest of
-    # their contents; this returns the full pathname.
-
-    def cached_schema_pathname digest
-      File.join(schema_path, digest)
-    end
-
-    # Loops over all of the collections of saved resolution data for a collection,
-    # yielding each XmlResolverReloaded object in turn.
-
-    def for_resolutions
-      Dir[ File.join(collection_path, '*') ].each do |filepath|
-        next if File.directory? filepath
-        next unless File.split(filepath)[-1] =~ /^[a-z0-9]{32}$/
-        read_lock(filepath) do
-          yield  XmlResolverReloaded.new File.read(filepath)
-        end
-      end
-    end
-
-    # Loops over all of the schemas for all resolutions performed in this collection.
-    # The intent is to keep from repeating any schemas, sort the list of schemas
-    # by location, and yield each of the schema data-nuggets. Yum!
-
-    def for_schemas
-      schema_info = {}
-      for_resolutions do |xrez|
-        xrez.schemas.each do |s|
-          next unless s.status == :success
-          schema_info[s.location] = s
-        end
-      end
-      schema_info.keys.sort.each { |location| yield schema_info[location] }
-    end
-
-    public
-
-    # Return a time object for the last modified time of the collection
-
-    def last_modified
-      File::stat(collection_path).mtime
-    end
-
-    # Sinatra's last_modified function will check respond_to? :httpdate.
-
-    alias httpdate last_modified
-
-    # manifest produces an xml report on the current state of our collection. When we produce a
-    # tar file, a manifest.xml file is included.  This method yields a path to a newly created
-    # manifest.xml file.
-
-    def manifest
-      $KCODE =~ /UTF8/ or raise ResolverError, "When creating manifest for #{collection_name}, ruby $KCODE was '#{$KCODE}', but it must be 'UTF8'"
-
-      xml = Builder::XmlMarkup.new(:indent => 2)
-      xml.instruct!(:xml, :encoding => 'UTF-8')
-      xml.resolutions(:collection => collection_name) {
-        for_resolutions do |xrez|
-          xml.resolution(:name => xrez.filename, :id => xrez.local_uri, :md5 => xrez.digest, :time => xrez.datetime.xmlschema) {
-            xrez.schemas.each do |s|
-              next unless s.status == :success
-              xml.schema(:status => 'success', :location => s.location, :namespace => s.namespace, :md5 => s.digest, :last_modified => s.last_modified.xmlschema )
-            end
-            xrez.schemas.each do |s|
-              next if s.status == :success
-              xml.schema(:status => 'failure', :location => s.location, :namespace => s.namespace, :message => s.error_message)
-            end
-            xrez.unresolved_namespaces.each do |ns|
-              xml.schema(:status => 'unresolved', :namespace => ns)
-            end
-          }
-        end
-      }
-
-      Tempfile.open("manifest-#{collection_name}") do |tmp|
-        tmp.write(xml.target!)
+    def manifest_file collection_resolutions
+      Tempfile.open("manifest-#{collection_name}-xml-") do |tmp|
+        tmp.write manifest(collection_resolutions)
         tmp.close
         FileUtils.chmod(0644, tmp.path)
         yield tmp.path
@@ -292,33 +304,74 @@ module XmlResolution
       end
     end
 
-    # Add the information from the XmlResolver object XREZ to our collection.
-    # Note that XREZ is modified: its local_uri slot is updated to the file uri
-    # where it is saved.
+    # collection_documents_path
+    #
+    # The directory where we keep all of our documents for this
+    # particular collection.  See the documentation above on data_path
+    # for the overall filesystem layout.
 
-    def add xrez
-      save_schema_information xrez
-      save_document_information xrez
+    def collection_documents_path
+      File.join(collections_path, collection_name)
     end
 
-    # Create a tar file of all the schemas we've found when resolving xml documents sent
-    # to this collection. We use the schema location as the filename in the tarfile.
+    # age_out_collections COLLECTIONS_PATHNAME
+    #
+    # Check all of the collections under COLLECTIONS_PATHNAME,
+    # deleting those that haven't been updated in a while.
 
-    def tar io
-      tarfile = TarWriter.new(io, { :uid => 80, :gid => 80, :username => 'daitss', :groupname => 'daitss' })
-
-      manifest do |manpath|
-        tarfile.write  manpath, File.join(collection_name, 'manifest.xml')
-      end
-
-      for_schemas do |schema_info|
-        filepath = cached_schema_pathname(schema_info.digest)
-        read_lock(filepath) do
-          tarfile.write filepath, File.join(collection_name,  schema_info.location)
+    def ResolverCollection.age_out_collections  collections_pathname
+      Dir["#{collections_pathname}/*"].each do |dir|
+        next unless  File.directory? dir
+        next unless  ResolverUtils.collection_name_ok? File.split(dir)[-1]
+        if (Time.now - File::stat(dir).mtime) > TOO_LONG_SINCE_LAST_MODIFIED
+          FileUtils.rm_rf dir
         end
       end
-      
-      tarfile.close
+    end
+
+    # collection_documents
+    #
+    # Retun an array of all of the document identifiers associated
+    # with this collection.  The identifier is the MD5 digest of the
+    # original document contents; it is used as the filename of simple
+    # text file containg information about the original document.  See
+    # the documentation for data_path for information on the file
+    # layout that includes these files; see the XmlReslolver#dump
+    # method for documentation on its contents.
+
+    def collection_documents
+      ResolverCollection.age_out_collections collections_path
+      ResolverUtils.check_directory "The document directory for #{collection_name}", collection_documents_path
+      ids = []
+      Dir["#{collection_documents_path}/*"].each do |path|
+        next if File.directory? path 
+        filename = File.basename(path)
+        next unless filename =~ /^[a-f0-9]{32}$/
+        ids.push filename
+      end
+      ids.sort{ |a,b| a.downcase <=> b.downcase }
+    end
+
+    # schemas DOCUMENT_RESOLUTIONS
+    #
+    # Given the array of XmlResolver objects, DOCUMENT_RESOLUTIONS,
+    # trundle through all of the successfully retrieved schemas for
+    # this collection.
+    #
+    # Yields the unique list of the schemas; for each one, yield the
+    # path to the local copy we have of them, and their original URLs.
+    # Duplicates are weeded out.
+
+    def schemas document_resolutions
+      seen = {}      
+      resolutions.each do |res|
+        res.schema_dictionary.each do |record|
+          next unless record.retrieval_status == :success
+          next if seen[record.location]
+          yield record.localpath, record.location
+          seen[record.location] = true
+        end
+      end
     end
 
   end # of class

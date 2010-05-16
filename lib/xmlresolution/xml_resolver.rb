@@ -1,13 +1,17 @@
-require 'digest/md5'
-require 'libxml'
-require 'net/http'
-require 'uri'
-require 'time'      # brings in parse method, iso8601, xmlschema
-require 'ostruct'
 require 'builder'
-require 'xmlresolution'
+require 'digest/md5'
+require 'nokogiri'
+require 'socket'
+require 'time'
+require 'xmlresolution/exceptions'
+require 'xmlresolution/schema_catalog'
+require 'xmlresolution/utils'
+require 'xmlresolution/xml_processors'
 
-include LibXML
+# The XmlResolver class resolves an XML document by finding the schemas it depends on for interpretation
+# and validation, recursively finding all the used schemas.  Once analyzed, a PREMIS document describing
+# the outcome of the analysis can be generated.  All the relevant information can be dumped and later 
+# loaded from a file.
 
 module XmlResolution
 
@@ -21,23 +25,31 @@ module XmlResolution
   #
   # Example usage:
   #
-  #   xrez = XmlResolution::XmlResolver.new(File.read("F20060215_AAAAHL.xml"), "satyagraha.sacred.net:3128")
-  #   xrez.schemas.each do |rec|
-  #     next unless rec.status == :success
-  #     puts "#{rec.namespace}  => #{rec.location}\n"
+  #  xrez = XmlResolution::XmlResolver.new(File.read("F20060215_AAAAHL.xml"), "file://mydoc.xml",
+  #                                         "/var/resolver-files/", "satyagraha.sacred.net:3128")
+  #   xrez.process
+  #   xrez.schemas_each.each do |rec|
+  #      next unless rec.retrieval_status == :success
+  #      puts "#{rec.namespace} => #{rec.location}\n"
   #   end
   #   puts "\nUnresolved: " + xrez.unresolved_namespaces.join(", ")
   #
-  # which might return
+  # which returns
   #
-  #  http://www.loc.gov/METS/ => http://www.loc.gov/standards/mets/mets.xsd
-  #  http://www.fcla.edu/dls/md/daitss/ => http://www.fcla.edu/dls/md/daitss/daitss.xsd
-  #  http://www.fcla.edu/dls/md/palmm/ => http://www.fcla.edu/dls/md/palmm.xsd
-  #  http://www.fcla.edu/dls/md/techmd/ => http://www.fcla.edu/dls/md/techmd.xsd
-  #  http://www.fcla.edu/dls/md/rightsmd/ => http://www.fcla.edu/dls/md/rightsmd.xsd
-  #  http://purl.org/dc/elements/1.1/ => http://dublincore.org/schemas/xmls/simpledc20021212.xsd
+  # http://www.fcla.edu/dls/md/daitss/ => http://www.fcla.edu/dls/md/daitss/daitss.xsd
+  # http://www.fcla.edu/dls/md/daitss/ => http://www.fcla.edu/dls/md/daitss/daitssAccount.xsd
+  # http://www.fcla.edu/dls/md/daitss/ => http://www.fcla.edu/dls/md/daitss/daitssAccountProject.xsd
+  #  ...
+  # http://www.fcla.edu/dls/md/daitss/ => http://www.fcla.edu/dls/md/daitss/daitssWaveFile.xsd
+  # http://www.loc.gov/METS/ => http://www.loc.gov/standards/mets/mets.xsd
+  # http://www.loc.gov/mods/v3 => http://www.loc.gov/standards/mods/v3/mods-3-3.xsd
+  # http://www.w3.org/XML/1998/namespace => http://www.loc.gov/standards/mods/xml.xsd
+  # http://www.w3.org/1999/xlink => http://www.loc.gov/standards/xlink/xlink.xsd
+  # http://www.uflib.ufl.edu/digital/metadata/ufdc2/ => http://www.uflib.ufl.edu/digital/metadata/ufdc2/ufdc2.xsd
+  # http://www.w3.org/XML/1998/namespace => http://www.w3.org/2001/xml.xsd
+  # http://www.w3.org/2001/XMLSchema => http://www.w3.org/2001/XMLSchema.xsd
   #
-  #  Unresolved: http://www.w3.org/1999/xlink, http://www.w3.org/2001/XMLSchema-instance
+  # Unresolved: http://www.w3.org/1999/xlink, http://www.w3.org/2001/XMLSchema-instance
   #
   # Two notes on squid caching proxies: at least by default, redirects
   # are not cached (even 301 "moved permanently") so that there will
@@ -50,341 +62,541 @@ module XmlResolution
   # caching/expiration information associated with it. These kinds of
   # issues slow us down somewhat.
 
+
+  # TODO: pending team review, uncomment out the namespace stop list.
+
+  # Some namepsaces schema processors 'just know', and do not have
+  # associated locations.  We do not want to report them as unresolved
+  # namespaces.  These are their namespaces:
+
+  NAMESPACE_STOP_LIST =  [ 
+                          # 'http://www.w3.org/1999/xhtml',
+                          # 'http://www.w3.org/2001/XMLSchema',
+
+                          # 'http://www.w3.org/2001/XMLSchema-hasFacetAndProperty',  
+                          # 'http://www.w3.org/2001/XMLSchema-instance',
+                         ]
+
   class XmlResolver
+    
+    # A writable directory for storing retrieved schema documents.
+    
+    attr_reader :schemas_storage_directory
+    
+    # A writable directory for storing information about a collection of XML documents
+    
+    attr_reader :collections_storage_directory
+    
+    # The text of the XML document we'll resolve.
+    
+    attr_reader :document_text
+    
+    # A unique identifer for the document text. It is the MD5 hex digest of the document.
+    
+    attr_reader :document_identifier
+    
+    # The length of the document
+    
+    attr_reader :document_size
+    
+    # A file URL constructed from the original filename of the document.
+    
+    attr_reader :document_uri
+    
+    # The proxy to use when gathering schemas. If nil, go directly to the source.
+    
+    attr_reader :proxy
+    
+    # Processed: a boolean that lets us know the method process has been called.
+    
+    attr_reader :processed
+    
+    # used_namespaces is meant to be used as a list of unique
+    # namespaces that have been directly used by an XML document or
+    # one of its schemas.  It is a hash where the values are
+    # irrelevant; only the keys are important.
+    
+    attr_reader :used_namespaces
+    
+    # schema_dictionary is a array of Structs that provides data about schemas.  See
+    # documentation for XmlResolution::SchemaCatalog.  
+    
+    attr_reader :schema_dictionary
+    
+    # resolution_time shows the time we began to process the XML document.
+    
+    attr_reader :resolution_time
 
-    # The schemas attribute holds a list of ostructs, where
-    # each has accessors defined as so:
+
+    # Be sure to keep the following somewhat in sync with the Sruct::Schema used in the SchemaCatalog.
+
+    Struct.new("SchemaReloaded", :location, :namespace, :last_modified, :digest, :localpath, 
+                                 :retrieval_status, :error_message, :redirected_location)
+
+    
+    # new DOCUMENT_TEXT, DOCUMENT_URI, DATA_ROOT, [ PROXY ]
     #
-    #   * body            => [ string | nil ],         the schema text
-    #   * digest          => [ md5-hex-string | nil ]  an md5 checksum of the body text
-    #   * error_message   => [ string | nil ]          if status is :failure, an error message
-    #   * last_modified   => DateTime                  the modification time of the retrieved schema
-    #   * location        => url-string                where we got the schema from
-    #   * namespace       => urn-string                its associated namespace
-    #   * status          => [ :success | :failure ]
+    # Create a new XmlResolver object. The XML document is provided
+    # as the string DOCUMENT_TEXT, an externally-supplied identifier
+    # as the string DOCUMENT_URI (normally a file URL).  DATA_ROOT, a
+    # string, provides the path to the parent directory where schemas
+    # and collections of information about the resolved DOCUMENT_TEXT
+    # will be stored.  PROXY, if supplied, points to a proxy, to allow
+    # a caching proxy to be used.
 
-    attr_reader :schemas
+    def initialize document_text, document_uri, data_root, proxy = nil
 
-    # proxy_address is the address part of the caching proxy server,
-    # if one was specified in the constructor, nil otherwise. Either a
-    # hostname or an IP address can be used.
+      
+      @document_text        = document_text
+      @document_identifier  = Digest::MD5.hexdigest(document_text)
+      @document_uri         = document_uri
+      @proxy                = proxy
+      @document_size        = document_text.length
+      
+      @used_namespaces      = {}
+      @schema_dictionary    = []
+      
+      @schemas_storage_directory     = File.join(data_root, 'schemas')
+      @collections_storage_directory = File.join(data_root, 'collections')
+      
+      ResolverUtils.check_directory "The schemas storage directory",     schemas_storage_directory  # raise ConfigurationError if issue
+      ResolverUtils.check_directory "The document collection directory", collections_storage_directory
+      
+      raise InadequateDataError, "XML document was empty" if document_size == 0
+    end
 
-    attr_reader :proxy_addr
+    # process
+    #
+    # Process the document, recursively downloading schemas and re
+    
+    def process
+      
+      raise "The process method may not be called twice on the document #{document_identifier}." if processed
+      
+      @resolution_time = Time.now
+      
+      instance_document   = analyze_xml_document(document_text)
 
-    # proxy_port is the port of the caching proxy server, if a proxy
-    # server was specified in the constructor.  If not explicitly mentioned
-    # in the constructor it defaults to 3128.
-
-    attr_reader :proxy_port
-
-    # Calling programs may want to decorate this object with the original filename (we get only
-    # the xml document text as a string),  we'll save this if we have it.
-
-    attr_accessor :filename
-
-    # Like the filename accessor above, local_uri allows calling programs
-    # to save the hostname and the file to which is the file containing
-    # information about this xml document; this is mostly to serve as a unique
-    # id for people that want to create xml documents based on this
-    # object. The intent is to use a filename URI.
-
-    attr_accessor :local_uri
-
-    # Time that we started processing this xml document.
-
-    attr_accessor :datetime
-
-    # We'll want to record the digest fingerprint for the data for the xml document
-
-    attr_reader :digest
-
-    # Create an XML resolver object given an xml docment in the string
-    # XML_TEXT. Optionally provide the string CACHING_HTTP_PROXY, naming
-    # a caching proxy to use when retrieving schemas or DTDs (format
-    # "hostname:port",  port defaults to 3128).
-
-    def initialize xml_text, caching_http_proxy = nil
-      @namespaces_found = {}
-
-      @filename = nil
-      @proxy_port = @proxy_addr = nil   # possible to have no proxy - then we'll contact locations directly
-
-      if caching_http_proxy
-        @proxy_addr, @proxy_port = caching_http_proxy.split(':', 2)
-        if @proxy_port.nil?
-          @proxy_port = 3128
-        else
-          @proxy_port = @proxy_port.to_i
-        end
+      if instance_document.version != '1.0'
+        raise XmlResolution::BadXmlVersion, "This service only supports XML Version 1.0. This document is XML Version #{instance_document.version}"
       end
 
-      @digest   = Digest::MD5.hexdigest xml_text
-      @schemas  = get_schemas xml_text
-      @datetime = Time.now
+      namespace_locations = instance_document.namespace_locations   # a hash of Location-URL => Namespace-URN pairs
+      @used_namespaces    = instance_document.used_namespaces       # a hash of Namespace-URN => 'true' pairs 
+
+      # TODO: pending team review - be strict, or try to get some information?
+      #
+      # if instance_document.errors.count > 0
+
+      if (instance_document.errors.count > 0) and namespace_locations.empty? and @used_namespaces.empty?
+        raise XmlResolution::BadBadXmlDocument, "The XML document #{document_uri} had too many errors: " + instance_document.errors.join('; ')
+      end
+      
+      catalog = SchemaCatalog.new(namespace_locations, schemas_storage_directory, proxy)
+      
+      catalog.schemas do |schema_record|
+        next if schema_record.retrieval_status != :success
+        schema_document = analyze_schema_document(schema_record.location, File.read(schema_record.localpath), @used_namespaces)
+        catalog.merge schema_document.namespace_locations
+      end
+      
+      @schema_dictionary = catalog.schemas   # only those actually required, that is, in used_namespaces
+      @processed = true
+    end
+    
+    # unresolved_namespaces
+    #
+    # Return an array of all of the namesapces that we have not been able to resolve.
+    
+    def unresolved_namespaces   
+      (@used_namespaces.keys.sort - schema_dictionary.map{ |s| s.namespace } - NAMESPACE_STOP_LIST).sort { |a,b| a.downcase <=> b.downcase }
     end
 
+    # premis_report
+    #
+    # Returns an XML report describing the outcome of resolving this document. An example document:
+    #
+    #   <?xml version="1.0" encoding="UTF-8"?>
+    #   <premis xsi:schemaLocation="info:lc/xmlns/premis-v2 http://www.loc.gov/standards/premis/premis.xsd" 
+    #           version="2.0" 
+    #           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    #           xmlns="info:lc/xmlns/premis-v2">
+    #
+    #   <object xsi:type="file">
+    #     <objectIdentifier>
+    #       <objectIdentifierType>URI</objectIdentifierType>
+    #       <objectIdentifierValue>file://romeo-foxtrot.local/Users/fischer/WorkProjects/daitss2/xmlresolution/spike/random-xml/F20060402_AAAAAB_NORM.xml</objectIdentifierValue>
+    #     </objectIdentifier>
+    #     <objectCharacteristics>
+    #       <compositionLevel>0</compositionLevel>
+    #       <fixity>
+    #         <messageDigestAlgorithm>MD5</messageDigestAlgorithm>
+    #         <messageDigest>e6720c9ea7e7f2a70d8dd20b1af84020</messageDigest>
+    #       </fixity>
+    #       <size>29752</size>
+    #       <format>
+    #         <formatDesignation>
+    #           <formatName>XML</formatName>
+    #           <formatVersion>1.0</formatVersion>
+    #         </formatDesignation>
+    #         <formatRegistry>
+    #           <formatRegistryName>http://www.nationalarchives.gov.uk/pronom</formatRegistryName>
+    #           <formatRegistryKey>fmt/101</formatRegistryKey>
+    #         </formatRegistry>
+    #       </format>
+    #     </objectCharacteristics>
+    #     <linkingEventIdentifier>
+    #       <linkingEventIdentifierType>URI</linkingEventIdentifierType>
+    #       <linkingEventIdentifierValue>file://romeo-foxtrot.local/xmlresolution/events/e6720c9ea7e7f2a70d8dd20b1af84020-a23406</linkingEventIdentifierValue>
+    #     </linkingEventIdentifier>
+    #   </object>
+    #
+    #   <event>
+    #     <eventIdentifier>
+    #       <eventIdentifierType>URI</eventIdentifierType>
+    #       <eventIdentifierValue>file://romeo-foxtrot.local/xmlresolution/events/e6720c9ea7e7f2a70d8dd20b1af84020-a23406</eventIdentifierValue>
+    #     </eventIdentifier>
+    #     <eventType>XML Resolution</eventType>
+    #     <eventDateTime>2010-05-13T17:54:08-04:00</eventDateTime>
+    #     <eventOutcomeInformation>
+    #       <eventOutcome>success</eventOutcome>
+    #       <eventOutcomeDetail>
+    #         <eventOutcomeDetailExtension>
+    #           <unresolved_namespace>http://www.w3.org/2001/XMLSchema</unresolved_namespace>
+    #           <unresolved_namespace>http://www.w3.org/2001/XMLSchema-instance</unresolved_namespace>
+    #           <unresolved_namespace>http://www.w3.org/XML/1998/namespace</unresolved_namespace>
+    #         </eventOutcomeDetailExtension>
+    #       </eventOutcomeDetail>
+    #     </eventOutcomeInformation>
+    #     <linkingAgentIdentifier>
+    #       <linkingAgentIdentifierType>URI</linkingAgentIdentifierType>
+    #       <linkingAgentIdentifierValue>info:fcla/daitss/xmlresolution/1.0.0</linkingAgentIdentifierValue>
+    #     </linkingAgentIdentifier>
+    #     <linkingObjectIdentifier>
+    #       <linkingObjectIdentifierType>URI</linkingObjectIdentifierType>
+    #       <linkingObjectIdentifierValue>file://romeo-foxtrot.local/Users/fischer/WorkProjects/daitss2/xmlresolution/spike/random-xml/F20060402_AAAAAB_NORM.xml</linkingObjectIdentifierValue>
+    #     </linkingObjectIdentifier>
+    #   </event>
+    #
+    #   <agent>
+    #     <agentIdentifier>
+    #       <agentIdentifierType>URI</agentIdentifierType>
+    #       <agentIdentifierValue>info:fcla/daitss/xmlresolution/1.0.0</agentIdentifierValue>
+    #     </agentIdentifier>
+    #     <agentName>XML Resolution Service</agentName>
+    #     <agentType>Web Service</agentType>
+    #   </agent>
+    # </premis>
 
 
-    # Return a list of namespaces that were encountered, but never had a location associated with them.
+    def premis_report
+      raise "The resolution data can't be reported for #{document_identifier}; it hasn't been processed yet." unless processed
 
-    def unresolved_namespaces
-      @namespaces_found.collect { |namespace, located| namespace if not located }.compact.sort
+      $KCODE == 'UTF8' or raise ConfigurationError, "Ruby $KCODE == #{$KCODE}, but it must be UTF8"
+      
+      successes = failures = 0
+      
+      schema_dictionary.each do |s|
+        case s.retrieval_status
+        when :failure            ;  failures  += 1
+        when :success, :redirect ;  successes += 1
+        end
+      end
+      
+      if (successes > 0 and failures > 0)
+        outcome = 'mixed'
+      elsif failures > 0
+        outcome = 'failure'
+      else
+        outcome = 'success'  # Vacuous case will be a success.
+      end
+      
+      broken_links = schema_dictionary.map { |s| s.location if s.retrieval_status == :failure }.compact
+      event_id = mint_event_id
+      
+      xml = Builder::XmlMarkup.new(:indent => 2)
+      
+      xml.instruct!(:xml, :encoding => 'UTF-8')
+
+      xml.premis('xmlns'              => 'info:lc/xmlns/premis-v2',
+                 'xmlns:xsi'          => 'http://www.w3.org/2001/XMLSchema-instance',
+                 'xsi:schemaLocation' => 'info:lc/xmlns/premis-v2 http://www.loc.gov/standards/premis/premis.xsd',
+                 'version'            => '2.0') {
+
+        # The object portion, strictly speaking, is not needed by DAITSS 2, it will be replaced.
+        # However, it turns out to be useful validating the output, and may be useful in other
+        # contexts.
+
+        xml.object('xsi:type' => 'file') {
+          xml.objectIdentifier {
+            xml.objectIdentifierType('URI')
+            xml.objectIdentifierValue(document_uri)
+          }
+          xml.objectCharacteristics {
+            xml.compositionLevel('0')
+            xml.fixity {
+              xml.messageDigestAlgorithm('MD5')
+              xml.messageDigest(document_identifier)
+            }
+            xml.size(document_size)
+            xml.format {
+              xml.formatDesignation {
+                xml.formatName('XML')
+                xml.formatVersion('1.0')
+              }
+              xml.formatRegistry {
+                xml.formatRegistryName('http://www.nationalarchives.gov.uk/pronom')
+                xml.formatRegistryKey('fmt/101')
+              }
+            }
+          }
+          xml.linkingEventIdentifier {
+            xml.linkingEventIdentifierType('URI')
+            xml.linkingEventIdentifierValue(event_id)
+          }
+        }
+
+        xml.event {
+          xml.eventIdentifier {
+            xml.eventIdentifierType('URI')
+            xml.eventIdentifierValue(event_id)   # Typically this is only used as a placeholder
+          }                                      # and will be re-written.
+          xml.eventType('XML Resolution')
+          xml.eventDateTime(@resolution_time.iso8601)
+          xml.eventOutcomeInformation { 
+            xml.eventOutcome(outcome) 
+            if (unresolved_namespaces.count > 0) or (broken_links.count > 0)
+              xml.eventOutcomeDetail {
+                xml.eventOutcomeDetailExtension {
+                  broken_links.each { |loc| xml.broke_link(loc) }
+                  unresolved_namespaces.each { |ns| xml.unresolved_namespace(ns) }
+                }
+              }
+            end
+          }
+          xml.linkingAgentIdentifier {
+            xml.linkingAgentIdentifierType('URI')
+            xml.linkingAgentIdentifierValue(XmlResolution.version.uri)
+          }
+          xml.linkingObjectIdentifier {
+            xml.linkingObjectIdentifierType('URI')
+            xml.linkingObjectIdentifierValue(document_uri)
+          }
+        }
+
+        xml.agent {
+          xml.agentIdentifier {
+            xml.agentIdentifierType('URI')
+            xml.agentIdentifierValue(XmlResolution.version.uri)
+          }
+          xml.agentName('XML Resolution Service')
+          xml.agentType('Web Service')
+        }
+      }
+      xml.target!
     end
 
+    # save COLLECTION_ID
+    #
+    # Serialize the data we've collected for the XML document, saving
+    # the information in a format we can easily reread.  It is saved
+    # in the directory named .../collections/COLLECTION_ID/; for the
+    # filename of the data we use the MD5 checksum of the XML
+    # document.
+    
+    def save collection_id
+
+      raise XmlResolution::BadCollectionID, "Invalid collection identifier '#{collection_id}'" unless ResolverUtils.collection_name_ok? collection_id
+      raise "The resolution data can't be saved for #{document_identifier}; it hasn't been processed yet." unless processed
+
+      record_file = File.join(collections_storage_directory, collection_id, document_identifier)
+
+      begin
+        ResolverUtils.check_directory "", File.join(collections_storage_directory, collection_id)
+      rescue
+        raise XmlResolution::BadCollectionID, "The collection identifier '#{collection_id}' hasn't been created yet. Use PUT to create it first"
+      end
+
+      ResolverUtils.write_lock(record_file) do |fd|
+        fd.write dump
+      end
+    end
+    
+    private
+
+    def mint_event_id
+      'file://' + Socket::gethostname  + File::SEPARATOR + File.join('xmlresolution', 'events', document_identifier + '-' + Digest::MD5.hexdigest(rand(1_000_000_000_000).to_s)[0..5])
+    end
+
+    def analyze_xml_document text
+      document = PlainXmlDocument.new
+      Nokogiri::XML::SAX::Parser.new(document).parse(text)
+      return document
+    end
+    
+    def analyze_schema_document schema_location, schema_text, namespaces
+      document = SchemaDocument.new(schema_location, namespaces)
+      Nokogiri::XML::SAX::Parser.new(document).parse(schema_text)
+      return document
+    end
+
+    # dump
+    #
     # Return a string representation of our analysis of an xml document, along the lines of:
     #
+    #  FILE_NAME url
     #  DIGEST md5
+    #  SIZE fixnum
     #  DATE_TIME time
     #  SCHEMA md5 modification location namespace
     #  SCHEMA md5 modification location namespace
     #  SCHEMA md5 modification location namespace
     #  SCHEMA md5 modification location namespace
     #   ....
-    #  UNRESOLVED_NAMESPACES namespace namespace namespace ....
     #  BROKEN_SCHEMA location namespace error_message
-    #
-    # optionally, we may have:
-    #
-    #  FILE_NAME externally-supplied-filename
-    #  LOCAL_URI file-uri
+    #  BROKEN_SCHEMA location namespace error_message
+    #   ....
+    #  REDIRECT_SCHEMA location namespace redirected_locaton
+    #  REDIRECT_SCHEMA location namespace redirected_locaton
+    #   ...
+    #  UNRESOLVED_NAMESPACES namespace namespace namespace ....
     #
     # Each 'phrase' is URL-escaped, so embeded whitespace won't cause parsing problems.
 
     def dump
       str = ''
+      str += ResolverUtils.escape("FILE_NAME", document_uri)            + "\n"
+      str += ResolverUtils.escape("DATE_TIME", resolution_time.iso8601) + "\n"
+      str += ResolverUtils.escape("DIGEST",    document_identifier)     + "\n"
+      str += ResolverUtils.escape("LENGTH",    document_size.to_s)      + "\n"
 
-      str += XmlResolution.escape("FILE_NAME", filename)         + "\n" if filename
-      str += XmlResolution.escape("LOCAL_URI", local_uri)        + "\n" if local_uri
-
-      str += XmlResolution.escape("DATE_TIME", datetime.iso8601) + "\n"
-      str += XmlResolution.escape("DIGEST",   digest)           + "\n"
-
-      schemas.each do |s|
-        next unless s.status == :success
-        str += XmlResolution.escape("SCHEMA", s.digest, s.last_modified.iso8601, s.location, s.namespace)   + "\n"
+      schema_dictionary.each do |s|
+        next unless s.retrieval_status == :success
+        str += ResolverUtils.escape("SCHEMA", s.digest, s.last_modified.iso8601, s.location, s.namespace)   + "\n"
       end
 
-      str += XmlResolution.escape("UNRESOLVED_NAMESPACES", *unresolved_namespaces) + "\n"
-
-      schemas.each do |s|
-        next if s.status == :success
-        str += XmlResolution.escape("BROKEN_SCHEMA", s.location, s.namespace, s.error_message) + "\n"
+      schema_dictionary.each do |s|
+        next unless s.retrieval_status == :failure
+        str += ResolverUtils.escape("BROKEN_SCHEMA", s.location, s.namespace, s.error_message) + "\n"
       end
 
-      str
+      schema_dictionary.each do |s|
+        next unless s.retrieval_status == :redirect
+        str += ResolverUtils.escape("REDIRECTED_SCHEMA", s.location, s.namespace, s.redirected_location) + "\n"
+      end
+
+      str += ResolverUtils.escape("UNRESOLVED_NAMESPACES", *unresolved_namespaces) + "\n"
+    end # of def
+  end # of class XmlResolver
+
+
+  # XmlResolverReloaded provides a subset of the capabilities of the XmlResolver class; it
+  # reloads the data that is dumped via XmlResolver#dump.  In particular, we can get:
+  #
+  #  * those successfully retrieved schemas needed for understanding the analyzed document
+  #  * a list of unretrievable and redirected schemas 
+  #  * the unresolved namespaces
+  #  * basic information about the document analyzed: checksum, size, original filename.
+  #
+  # The original document text is no longer available, however.
+
+  class XmlResolverReloaded < XmlResolver
+
+    def initialize data_root, collection_id, document_identifier
+
+      @document_text       = nil
+      @proxy               = nil
+      @document_size       = nil
+      @collection_id       = collection_id
+      
+      @used_namespaces     = {}
+      @schema_dictionary   = []
+      
+      @schemas_storage_directory     = File.join(data_root, 'schemas')
+      @collections_storage_directory = File.join(data_root, 'collections')
+
+      ResolverUtils.check_directory "The schemas storage directory",     schemas_storage_directory  # raise ConfigurationError if issue
+      ResolverUtils.check_directory "The document collection directory", collections_storage_directory
+      
+      # Load up @resolution_time, @document_identifier, @document_uri, @schema_dictionary, @used_namespaces:
+      
+      filename = File.join(@collections_storage_directory, @collection_id, document_identifier)
+      
+      if not File.exists? filename
+        raise ConfigurationError, "Can't find the data file #{document_identifier} for the collection #{collection_id} to read in schema info (looking in #{@collections_storage_directory})"
+      end
+
+      if not File.readable? filename
+        raise ConfigurationError, "Can't read the data file #{document_identifier} for the collection #{collection_id} to read in schema info (looking in #{@collections_storage_directory})"
+      end
+
+      load File.read filename
+
+      @processed = true
     end
 
     private
 
-    # Extract referenced schemas from the provided string TEXT, an XML
-    # document.  If the string SCHEMA_LOCATION, a url, is provided, it
-    # indicates that the document is a schema and identifies the
-    # source of the document. This method will also analyze plain XML
-    # instance documents: in that case, SCHEMA_LOCATION will be nil.
+    # load TEXT
     #
-    # Returns a hash mapping locations to namespaces.
+    # Given the data that dump produces, read it in and recreate most of objects that dump dumps.
+    # See the parent's XmlResolver.dump method for the details
 
-    def find_schema_references text, schema_location=nil
+    def load text
 
-      # TODO: on error, this outputs to STDERR.  That won't do!  We'd
-      # better dup STDERR to /dev/null around this.
-
-      doc = XML::Parser.string(text).parse
-
-      # Get a list of namespaces from the document - initially we
-      # don't have a location for any of them.
-
-      doc.find("//*").each do |node|
-        node.namespaces.each { |ns|  @namespaces_found[ns.href] = false unless @namespaces_found[ns.href] }
-      end
-
-      location_namespaces = {}
-
-      # Find any schema locations.
-
-      doc.find('//@xsi:schemaLocation', 'xsi' => 'http://www.w3.org/2001/XMLSchema-instance').each do |sl|
-        sl.value.strip.split.each_slice(2) do |ns, url|
-          location_namespaces[url] = ns
-          @namespaces_found[ns]    = true
-        end
-      end
-
-      if schema_location   # we're analyzing a schema and we have a location for it; otherwise we're analyzing an XML instance document
-
-        home = schema_location.gsub(/[^\/]*$/, '')
-        target_ns = doc.find('//@targetNamespace').first.value    # TODO: bug - not all schemas have targetNamespaces
-
-        doc.find("//xsd:include[@schemaLocation]", 'xsd' => 'http://www.w3.org/2001/XMLSchema').each do |inc|
-
-          url = inc['schemaLocation'] =~ /^http/i ? inc['schemaLocation'] : home + inc['schemaLocation']
-
-          location_namespaces[url]     =  target_ns
-          @namespaces_found[target_ns] = true
-        end
-      end
-
-      location_namespaces
-
-    rescue LibXML::XML::Error => e
-      raise XmlParseError, "The XML file could not be parsed: #{e.message}" # TODO: note potential information leakage here and next.
-    rescue => e
-      raise ResolverError, e.message # Some generic issue - my fault.
-    end
-
-    # Attempt to recursively retrieve all of the schemas used for the
-    # string TEXT, an XML Document.  This method is used to populate
-    # the schemas attribute.
-
-    def get_schemas text
-
-      location_namespaces = find_schema_references(text)
-      directory           = []
-      locations_found     = []
-
-      get_schemas_helper directory, location_namespaces, locations_found
-
-      # sort directory by namespace - that set the order of XmlResolver#schemas
-
-      by_location = {}
-      directory.each { |s| by_location[s.location] = s }  # is location a unique key for us? or can an xml instance doc point to the same location for two different namespaces?
-      directory = []
-      by_location.keys.sort.each { |k| directory.push by_location[k] }
-      return directory
-    end
-
-    # Recursive helper for get_schemas.  Collects and analyzes
-    # schemas.  Recurse on newly extracted schemas.  Returns a list
-    # of information about the recovered schemas.  A particular
-    # schema will be marked as failed and provided with an error
-    # message if there was a problem retrieving or parsing it.
-
-
-    def get_schemas_helper directory, location_namespaces_to_check, locations_checked
-
-      next_to_check = {}
-      location_namespaces_to_check.each do |location, namespace|
-
-        next if locations_checked.member? location
-        begin
-          response = fetch location
-
-          next_to_check.merge! find_schema_references(response.body, location)
-
-          directory.push OpenStruct.new("body"            => response.body,
-                                        "digest"          => Digest::MD5.hexdigest(response.body),
-                                        "error_message"   => nil,
-                                        "last_modified"   => response['Last-Modified'] ? Time.parse(response['Last-Modified']) : Time.now,
-                                        "location"        => location,
-                                        "namespace"       => namespace,
-                                        "status"          => :success
-                                        )
-        rescue => e
-          directory.push OpenStruct.new("body"            => nil,
-                                        "digest"          => nil,
-                                        "error_message"   => e.message,
-                                        "last_modified"   => nil,
-                                        "location"        => location,
-                                        "namespace"       => namespace,
-                                        "status"          => :failure
-                                        )
-        ensure
-          locations_checked.push location
-          locations_checked.each { |already_seen| next_to_check.delete(already_seen) }
-        end
-      end
-
-      unless next_to_check.empty?
-        get_schemas_helper directory, next_to_check, locations_checked
-      end
-    end
-
-    # Fetch the schema document from the given the string LOCATION, a
-    # URL. Returns a Net::HTTP response object.  The number of
-    # followed redirects is limited to 5. Raises a variety of
-    # exceptions, which are generally handled within this class (an
-    # error message for this particular schema is recorded and the
-    # status is marked as a failure, and we move on).
-
-    def fetch location, limit = 5
-
-      uri = URI.parse location
-
-      raise LocationError, "#{uri.scheme} is not a supported protocol - #{location} not retrieved."  unless uri.scheme == 'http'
-      raise LocationError, "#{location} can't be retrieved, there were too many redirects."          if limit < 1
-
-      # TODO: We plan to run this under Sinatra, but Net::HTTP::Proxy isn't thread safe.  Fix me!
-
-      # Note: if proxy_addr & proxy_port are nil,  Net::HTTP::Proxy is equivalent to Net::HTTP
-
-      Net::HTTP::Proxy(proxy_addr, proxy_port).start(uri.host, uri.port) do |http|
-        response  = http.get(uri.path)
-        case response
-        when Net::HTTPSuccess     then response
-        when Net::HTTPRedirection then fetch response['location'], limit - 1
-        else
-          response.error!
-        end
-      end
-    end # of fetch
-  end # of class XmlResolver
-
-  # The XmlResolverReloaded class lets us duck type as much of
-  # XmlResolver as we can from its dump output, which is what we use
-  # (as a string) in its constructor. See the docs for
-  # XmlResolver#dump above for the details on the dump format, which
-  # is a simple text file.
-
-  class XmlResolverReloaded
-
-    # The schemas method provides a list of information about the
-    # schemas needed to analyze a document
-
-    attr_reader :schemas
-    attr_reader :filename
-    attr_reader :digest
-    attr_reader :unresolved_namespaces
-    attr_reader :datetime
-    attr_reader :local_uri
-
-    def initialize  text
-
-      @schemas               = []
-      @unresolved_namespaces = []
-      @filename              = nil
-      @digest                = nil
+      unresolved = []
 
       text.split("\n").each do |line|
-        data = XmlResolution.unescape line
+        data = ResolverUtils.unescape line
 
         case data.shift
 
-        when 'DATE_TIME' then @datetime  = Time.parse data.shift
-        when 'DIGEST'    then @digest    = data.shift
-        when 'FILE_NAME' then @filename  = data.shift
-        when 'LOCAL_URI' then @local_uri = data.shift
-
-        when 'UNRESOLVED_NAMESPACES' then @unresolved_namespaces = data
+        when 'DATE_TIME'             then @resolution_time       = Time.parse data.shift
+        when 'DIGEST'                then @document_identifier   = data.shift
+        when 'FILE_NAME'             then @document_uri          = data.shift
+        when 'LENGTH'                then @document_size         = data.shift.to_i
+        when 'UNRESOLVED_NAMESPACES' then unresolved = data.dup
 
         when 'SCHEMA'
-          @schemas.push OpenStruct.new("body"            => nil,
-                                       "digest"          => data.shift,
-                                       "last_modified"   => Time.parse(data.shift),
-                                       "location"        => data.shift,
-                                       "namespace"       => data.shift,
-                                       "status"          => :success,
-                                       "error_message"   => nil)
+          s = Struct::SchemaReloaded.new
+
+          s.digest           = data.shift
+          s.last_modified    = Time.parse(data.shift)
+          s.location         = data.shift
+          s.namespace        = data.shift
+          s.retrieval_status = :success
+          s.localpath        = File.join(@schemas_storage_directory, s.digest)
+
+          @schema_dictionary.push s
 
         when 'BROKEN_SCHEMA'
-          @schemas.push OpenStruct.new("body"            => nil,
-                                       "digest"          => nil,
-                                       "last_modified"   => nil,
-                                       "location"        => data.shift,
-                                       "namespace"       => data.shift,
-                                       "status"          => :failure,
-                                       "error_message"   => data.shift)
+          s = Struct::SchemaReloaded.new
+
+          s.location         = data.shift
+          s.namespace        = data.shift
+          s.error_message    = data.shift
+          s.retrieval_status = :failure
+
+          @schema_dictionary.push s
+
+        when 'REDIRECTED_SCHEMA'
+          s = Struct::SchemaReloaded.new
+
+          s.location            = data.shift
+          s.namespace           = data.shift
+          s.redirected_location = data.shift
+          s.retrieval_status    = :redirect
+
+          @schema_dictionary.push s
+
         end # of case
-      end # of split
+      end # of split loop
+
+      # record all the namespaces we've re-read as of interest.
+
+      unresolved.each { |ns| @used_namespaces[ns] = true }
+      @schema_dictionary.each { |s| @used_namespaces[s.namespace] = true }
+
     end # of def
-  end # of class XmlResolverReloaded
-end # of module XmlResolution
-# ha!
+  end # of class
+end # of module
