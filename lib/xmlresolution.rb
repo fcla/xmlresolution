@@ -1,3 +1,4 @@
+require 'ostruct'
 
 def read_capistrano_revision
   revision_file = File.expand_path(File.join(File.dirname(__FILE__), '..', 'REVISION'))
@@ -10,12 +11,29 @@ end
 
 module XmlResolution
   REVISION = read_capistrano_revision
+  VERSION  = '1.0.0'
 
-  require 'xmlresolution/utils'
   require 'xmlresolution/exceptions'
-  require 'xmlresolution/resolvercollection'
-  require 'xmlresolution/tarwriter'
-  require 'xmlresolution/xmlresolver'
   require 'xmlresolution/logger'
+  require 'xmlresolution/resolver_collection'
+  require 'xmlresolution/schema_catalog'
+  require 'xmlresolution/tar_writer'
+  require 'xmlresolution/utils'
+  require 'xmlresolution/xml_processors'
+  require 'xmlresolution/xml_resolver'
+
+# require 'xmlresolution/tarwriter'
+
+  def self.version
+    os = OpenStruct.new("label"   => "Version #{VERSION}, Revision #{REVISION}",
+                        "uri"     => "info:fcla/daitss/xmlresolution/#{VERSION}",
+                        "note"    => "We'll put additional version information here")
+    def os.to_s
+      self.label
+    end
+    os
+  end
+
 end
+
 
