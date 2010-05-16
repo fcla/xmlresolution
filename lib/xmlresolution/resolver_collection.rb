@@ -89,6 +89,7 @@ module XmlResolution
     # equivalent to the data_path used by the constructor.
 
     def ResolverCollection.collections pathname
+      raise XmlResolution::ConfigurationError, "The root data path has not been set" unless pathname
       collections_pathname = File.join(pathname, 'collections')
       ResolverUtils.check_directory "The directory for storing the collections",  collections_pathname
       ResolverCollection.age_out_collections collections_pathname
@@ -275,7 +276,6 @@ module XmlResolution
       io.close
       io.unlink
     end
-
 
     # resolutions
     #
