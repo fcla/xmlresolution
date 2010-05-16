@@ -1,0 +1,54 @@
+#!/usr/bin/env ruby
+
+# Given a file, run a proxied validator over it, collecting, from the
+# proxy log files, those locations that it gathered to validate it.
+# We do this as part of a test to compare its results with our
+# resolver's locations.
+
+require 'socket'
+
+proxy = case Socket.gethostname
+        when /sacred.net/        ; 'satyagraha.sacred.net:3128'
+        when /fcla.edu/, /local/ ; 'sake.fcla.edu:3128'
+        else
+          STDERR.puts "Can't figure out how to assign a proxy - on an unsupported network."
+          exit
+        end
+
+proxy_host, proxy_port = proxy.split(':')
+
+jarfile = 'xmlvalidator.jar'
+jarpath = File.join(File.dirname(__FILE__), jarfile)
+
+if not File.exists? jarpath
+  STDERR.puts "Can't find #{jarfile} (checked #{File.dirname(__FILE__)})"
+  exit
+end
+
+file = ARGV[0]
+if (not File.exists? file) 
+  STDERR.puts "File #{file} does not exist: enter file name on the command line\n";
+  exit
+end
+
+`ssh #{proxy_host} cat /var/log/squid/access.log > /tmp/fv`
+
+cmd = "java -Dhttp.proxyHost=#{proxy_host} -Dhttp.proxyPort=#{proxy_port} -Dfile='#{file}' -jar '#{jarpath}'"
+
+STDERR.puts `#{cmd}`
+
+`ssh #{proxy_host} cat /var/log/squid/access.log > /tmp/access`
+
+locations = {}
+IO.popen("fgrep -vf /tmp/fv /tmp/access") do |fd|
+  while not fd.eof?
+    line = fd.gets.chomp
+    line =~ /GET (.*?)\s+/
+    locations[$1] = true
+  end
+end
+
+puts locations.keys.sort.join("\n") unless locations.keys.empty?
+
+
+

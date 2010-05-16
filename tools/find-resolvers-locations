@@ -1,0 +1,45 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
+
+require 'xmlresolution'
+require 'fileutils'
+
+# Given an XML file, get a list of the resolved schema files for it.
+# We do this as part of a test to compare its results with an
+# independent validator's results.
+
+require 'socket'
+
+proxy = case Socket.gethostname
+        when /sacred.net/        ; 'satyagraha.sacred.net:3128'
+        when /fcla.edu/, /local/ ; 'sake.fcla.edu:3128'
+        else
+          STDERR.puts "Can't figure out how to assign a proxy - on an unsupported network."
+          exit
+        end
+
+file = ARGV[0]
+
+
+if (file.nil?) 
+  STDERR.puts "No file specified: enter a file name on the command line.\n";
+  exit
+end
+
+if (not File.exists? file) 
+  STDERR.puts "The specified file #{file} does not exist.\n";
+  exit
+end
+
+root = "/tmp/resolver-tests"
+
+FileUtils.mkdir_p [ root, "#{root}/schemas", "#{root}/collections" ]
+
+resolver = XmlResolution::XmlResolver.new(File.read(file), "file://localhost/#{file.gsub(%r{^/+}, '')}",
+                                          root, proxy)
+resolver.process
+
+locations = resolver.schema_dictionary.map { |record|  record.location unless record.retrieval_status == :failure }.compact
+
+puts locations.sort.join("\n") unless locations.empty?
