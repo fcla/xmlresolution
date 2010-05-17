@@ -31,6 +31,7 @@ get '/ieids/:collection_id/' do |collection_id|
   end
 end
 
+# Just the manifest xml file from a collection.
 
 get '/ieids/:collection_id/manifest.xml' do |collection_id|
   raise Http404, "No such IEID #{collection_id}" unless ResolverCollection.collections(options.data_path).include? collection_id 
@@ -57,15 +58,4 @@ end
 
 get '/test-form/:collection_id/' do |collection_id|
   erb :'test-form', :locals => { :collection_id => collection_id }
-end
-
-# Think of the programmers!
-
-get '/env/?' do
-  str = ''
-  @env.keys.sort.each do |k|
-    str += "#{k} => #{@env[k]}\n"
-  end
-  content_type 'text/plain'
-  str
 end

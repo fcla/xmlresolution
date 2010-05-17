@@ -1,9 +1,10 @@
-# POST an xmlfile to a resolution collection.
+# POST an XML file to a resolution collection.
 #
 # We expect Content-Type of enctype=multipart/form-data, which is used
-# in your basic file upload form.  It expects behavior produced as the
-# form input having type="file" name="xmlfile".  Additionally, we
-# require that the content disposition must supply a filename.
+# in your basic file upload form.  It expects the same behavior as
+# produced by the form input having type="file" name="xmlfile".
+# Additionally, we require that the content disposition must supply a
+# filename.
 
 
 post '/ieids/:collection_id/' do |collection_id|
@@ -17,7 +18,9 @@ post '/ieids/:collection_id/' do |collection_id|
       raise Http400, "Collection #{collection_id} doesn't exist: use PUT #{service_name}/ieids/#{collection_id} first to create it"
     end
 
-    file_url = "file://#{@env['REMOTE_ADDR']}/#{filename.gsub(%r(^/+), '')}"
+    client = ResolverUtils.remote_name env['REMOTE_ADDR']
+
+    file_url = "file://#{client}/#{filename.gsub(%r(^/+), '')}"
 
     Logger.info "Handling uploaded document #{file_url}.", @env
 
@@ -26,7 +29,7 @@ post '/ieids/:collection_id/' do |collection_id|
     res.process
     res.save collection_id
 
-    # Some extra logging:
+    # Additional logging:
 
     failures  = [];  redirects = [];  successes = []
 
@@ -38,7 +41,10 @@ post '/ieids/:collection_id/' do |collection_id|
       end
     end
 
-    failures.each { |location| Logger.err "Failed retrieving #{location} for document #{file_url}.", @env }
+    redirects.sort.each  { |location| Logger.info "#{location} redirected when processing document #{file_url}.", @env }
+    successes.sort.each  { |location| Logger.info "Retrieved #{location} for document #{file_url}.", @env }
+    failures.sort.each   { |location| Logger.err  "Failed retrieving #{location} for document #{file_url}.", @env }
+
     res.unresolved_namespaces.each { |ns|  Logger.warn "Unresolved namespace #{ns} for document #{file_url}.", @env }
 
     status 201

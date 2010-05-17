@@ -19,8 +19,8 @@ error do
   end
 end
 
-# Urg.  The not_found RACK/sinatra method grabs *my* ( [ halt(404), ... ], a Bad
-# We repeat the code above for this special case.
+# Urg. The not_found RACK/sinatra method grabs *my* handled 404's [ halt(404), ... ] 
+# in Sinatra 1.0.  We have to repeat the code above for this special case.
 
 not_found  do
   message = if @env['sinatra.error'].is_a? XmlResolution::Http404 
