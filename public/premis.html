@@ -1,0 +1,90 @@
+<html>
+<head>
+  <title>
+    An example premis.xml document
+  </title>
+  <style type="text/css" media="screen">
+    @import "/std.css";
+  </style>
+</head>
+
+<body>
+<h1>An Example PREMIS XML Document</h1>
+
+<p>
+When an XML document is uploaded for a particular collection, a PREMIS XML document is
+returned with details of the analysis of the document.  It should validate correctly,
+though it is expected only certain parts of it will be of value to the client, which
+may extract parts of it. The elements <code>object</code>,  <code>event</code>, and 
+<code>agents</code> are included.
+</p>
+
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;premis xsi:schemaLocation="info:lc/xmlns/premis-v2 http://www.loc.gov/standards/premis/premis.xsd" version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="info:lc/xmlns/premis-v2"&gt;
+  &lt;object xsi:type="file"&gt;
+    &lt;objectIdentifier&gt;
+      &lt;objectIdentifierType&gt;URI&lt;/objectIdentifierType&gt;
+      &lt;objectIdentifierValue&gt;file://10.228.22.22/E20090705_AAAAUK-0176.xml&lt;/objectIdentifierValue&gt;
+    &lt;/objectIdentifier&gt;
+    &lt;objectCharacteristics&gt;
+      &lt;compositionLevel&gt;0&lt;/compositionLevel&gt;
+      &lt;fixity&gt;
+        &lt;messageDigestAlgorithm&gt;MD5&lt;/messageDigestAlgorithm&gt;
+        &lt;messageDigest&gt;df6912619ff3041a8d6f4a5e9964b6f2&lt;/messageDigest&gt;
+      &lt;/fixity&gt;
+      &lt;size&gt;764546&lt;/size&gt;
+      &lt;format&gt;
+        &lt;formatDesignation&gt;
+          &lt;formatName&gt;XML&lt;/formatName&gt;
+          &lt;formatVersion&gt;1.0&lt;/formatVersion&gt;
+        &lt;/formatDesignation&gt;
+        &lt;formatRegistry&gt;
+          &lt;formatRegistryName&gt;http://www.nationalarchives.gov.uk/pronom&lt;/formatRegistryName&gt;
+          &lt;formatRegistryKey&gt;fmt/101&lt;/formatRegistryKey&gt;
+        &lt;/formatRegistry&gt;
+      &lt;/format&gt;
+    &lt;/objectCharacteristics&gt;
+    &lt;linkingEventIdentifier&gt;
+      &lt;linkingEventIdentifierType&gt;URI&lt;/linkingEventIdentifierType&gt;
+      &lt;linkingEventIdentifierValue&gt;file://retsina.fcla.edu/xmlresolution/events/df6912619ff3041a8d6f4a5e9964b6f2-f130f9&lt;/linkingEventIdentifierValue&gt;
+    &lt;/linkingEventIdentifier&gt;
+  &lt;/object&gt;
+  &lt;event&gt;
+    &lt;eventIdentifier&gt;
+      &lt;eventIdentifierType&gt;URI&lt;/eventIdentifierType&gt;
+      &lt;eventIdentifierValue&gt;file://retsina.fcla.edu/xmlresolution/events/df6912619ff3041a8d6f4a5e9964b6f2-f130f9&lt;/eventIdentifierValue&gt;
+    &lt;/eventIdentifier&gt;
+    &lt;eventType&gt;XML Resolution&lt;/eventType&gt;
+    &lt;eventDateTime&gt;2010-05-16T14:05:03-04:00&lt;/eventDateTime&gt;
+    &lt;eventOutcomeInformation&gt;
+      &lt;eventOutcome&gt;success&lt;/eventOutcome&gt;
+      &lt;eventOutcomeDetail&gt;
+        &lt;eventOutcomeDetailExtension&gt;
+          &lt;unresolved_namespace&gt;http://schema.ccs-gmbh.com/ALTO&lt;/unresolved_namespace&gt;
+          &lt;unresolved_namespace&gt;http://www.w3.org/1999/xlink&lt;/unresolved_namespace&gt;
+        &lt;/eventOutcomeDetailExtension&gt;
+      &lt;/eventOutcomeDetail&gt;
+    &lt;/eventOutcomeInformation&gt;
+    &lt;linkingAgentIdentifier&gt;
+      &lt;linkingAgentIdentifierType&gt;URI&lt;/linkingAgentIdentifierType&gt;
+      &lt;linkingAgentIdentifierValue&gt;info:fcla/daitss/xmlresolution/1.0.0&lt;/linkingAgentIdentifierValue&gt;
+    &lt;/linkingAgentIdentifier&gt;
+    &lt;linkingObjectIdentifier&gt;
+      &lt;linkingObjectIdentifierType&gt;URI&lt;/linkingObjectIdentifierType&gt;
+      &lt;linkingObjectIdentifierValue&gt;file://10.228.22.22/E20090705_AAAAUK-0176.xml&lt;/linkingObjectIdentifierValue&gt;
+    &lt;/linkingObjectIdentifier&gt;
+  &lt;/event&gt;
+  &lt;agent&gt;
+    &lt;agentIdentifier&gt;
+      &lt;agentIdentifierType&gt;URI&lt;/agentIdentifierType&gt;
+      &lt;agentIdentifierValue&gt;info:fcla/daitss/xmlresolution/1.0.0&lt;/agentIdentifierValue&gt;
+    &lt;/agentIdentifier&gt;
+    &lt;agentName&gt;XML Resolution Service&lt;/agentName&gt;
+    &lt;agentType&gt;Web Service&lt;/agentType&gt;
+  &lt;/agent&gt;
+&lt;/premis&gt;
+
+</pre>
+</body>
+</html>

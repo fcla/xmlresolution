@@ -68,6 +68,16 @@ Note the lack of a trailing slash. Some versions of curl may require an empty fi
 <h2>Details on <b>POST</b></h2>
 
 <p>
+ The next step in using this service is to submit XML documents to the service,
+associated with the collection.
+</p>
+
+<p>
+On a successful POST, a <a href="/premis.html">PREMIS XML document</a> is returned detailing the analysis of the uploaded document.
+</p>
+
+
+<p>
 We use the enctype=multipart/form-data for posts, with the xml file
 submitted with the <b>name</b> parameter <b>xmlfile</b>, as a typical
 browser would submit for the following:
@@ -122,6 +132,114 @@ the POSTed file.
 There is a <a href="/test">test form</a> which will allow you to select an existing collection and perform the above action.
 </p>
 
+<h2>Details on <b>GET</b></h2>
+
+<p>
+The final step, after all XML documents of interest have been submitted to a collection, is to
+request the collection information.  A <b>GET</b> request for the collection resource will
+return a TAR file of all the resolved schemas, as well as a <a href="/manifest.html">manifest XML document</a>
+associating the schemas with the submitted XML documents.
+</p>
+
+<p>
+For our example, a command that retrieves the tar file and lists its table of contents are shown"
+</p>
+
+<pre>
+    curl -s  <%= base_url %>/ieids/E20010101_TESTIN/ | tar tvf -
+</pre>
+
+<p>
+The above command might result in displaying the following table of contents for the tar file:
+</p>
+
+<pre>
+    -rw-r--r--  0 daitss daitss  51553 May 16 20:51 <a href="/manifest.html">E20010101_TESTIN/manifest.xml</a>
+    -rw-r--r--  0 daitss daitss   9998 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitss.xsd
+    -rw-r--r--  0 daitss daitss   3029 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssAccount.xsd
+    -rw-r--r--  0 daitss daitss   1995 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssAccountProject.xsd
+    -rw-r--r--  0 daitss daitss   3840 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssActionPlan.xsd
+    -rw-r--r--  0 daitss daitss   1487 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssAdmin.xsd
+    -rw-r--r--  0 daitss daitss   1398 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssAgreementInfo.xsd
+    -rw-r--r--  0 daitss daitss   1542 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssArchiveLogic.xsd
+    -rw-r--r--  0 daitss daitss   1664 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssAviFile.xsd
+    -rw-r--r--  0 daitss daitss   1515 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssBilling.xsd
+    -rw-r--r--  0 daitss daitss   2720 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssBitstream.xsd
+    -rw-r--r--  0 daitss daitss   1188 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssBitstreamBsProfile.xsd
+    -rw-r--r--  0 daitss daitss   1223 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssBoolean.xsd
+    -rw-r--r--  0 daitss daitss   1822 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssBsAudio.xsd
+    -rw-r--r--  0 daitss daitss   1283 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssBsAudioWave.xsd
+    -rw-r--r--  0 daitss daitss   2870 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssBsImage.xsd
+    -rw-r--r--  0 daitss daitss   2033 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssBsImageJpeg.xsd
+    -rw-r--r--  0 daitss daitss   1575 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssBsImageJpeg2000.xsd
+    -rw-r--r--  0 daitss daitss   2445 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssBsImageTiff.xsd
+    -rw-r--r--  0 daitss daitss   2485 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssBsMarkup.xsd
+    -rw-r--r--  0 daitss daitss   1618 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssBsPdf.xsd
+    -rw-r--r--  0 daitss daitss   1160 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssBsPdfAction.xsd
+    -rw-r--r--  0 daitss daitss   1184 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssBsPdfAnnotation.xsd
+    -rw-r--r--  0 daitss daitss   1160 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssBsPdfFilter.xsd
+    -rw-r--r--  0 daitss daitss   1355 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssBsProfile.xsd
+    -rw-r--r--  0 daitss daitss   1368 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssBsTable.xsd
+    -rw-r--r--  0 daitss daitss   1437 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssBsText.xsd
+    -rw-r--r--  0 daitss daitss   1231 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssBsTextCSV.xsd
+    -rw-r--r--  0 daitss daitss   2233 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssBsVideo.xsd
+    -rw-r--r--  0 daitss daitss   1309 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssCompression.xsd
+    -rw-r--r--  0 daitss daitss   1684 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssContact.xsd
+    -rw-r--r--  0 daitss daitss   3370 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssDataFile.xsd
+    -rw-r--r--  0 daitss daitss   1248 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssDataFileFormatAttribute.xsd
+    -rw-r--r--  0 daitss daitss   1228 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssDataFileSevereElement.xsd
+    -rw-r--r--  0 daitss daitss   1225 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssDataTypes.xsd
+    -rw-r--r--  0 daitss daitss   1187 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssDate.xsd
+    -rw-r--r--  0 daitss daitss   1311 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssDistributed.xsd
+    -rw-r--r--  0 daitss daitss   2388 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssDocumentLocation.xsd
+    -rw-r--r--  0 daitss daitss   2591 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssEnum.xsd
+    -rw-r--r--  0 daitss daitss   2667 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssEvent.xsd
+    -rw-r--r--  0 daitss daitss   1626 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssFormat.xsd
+    -rw-r--r--  0 daitss daitss   1834 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssFormatAttribute.xsd
+    -rw-r--r--  0 daitss daitss   1925 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssFormatSpecification.xsd
+    -rw-r--r--  0 daitss daitss   1359 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssGlobalFile.xsd
+    -rw-r--r--  0 daitss daitss   1815 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssIntEntity.xsd
+    -rw-r--r--  0 daitss daitss   1191 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssIntEntityGlobalFile.xsd
+    -rw-r--r--  0 daitss daitss   1285 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssMediaType.xsd
+    -rw-r--r--  0 daitss daitss   1313 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssMessageDigest.xsd
+    -rw-r--r--  0 daitss daitss   1343 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssMessageDigestType.xsd
+    -rw-r--r--  0 daitss daitss   4743 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssNumber.xsd
+    -rw-r--r--  0 daitss daitss   3151 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssOutputRequest.xsd
+    -rw-r--r--  0 daitss daitss   1636 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssPdfAction.xsd
+    -rw-r--r--  0 daitss daitss   1269 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssPdfAnnotation.xsd
+    -rw-r--r--  0 daitss daitss   1259 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssPdfFilter.xsd
+    -rw-r--r--  0 daitss daitss   1715 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssProject.xsd
+    -rw-r--r--  0 daitss daitss   1384 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssQuickTimeFile.xsd
+    -rw-r--r--  0 daitss daitss   1624 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssRelationship.xsd
+    -rw-r--r--  0 daitss daitss   8679 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssReport.xsd
+    -rw-r--r--  0 daitss daitss   1949 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssSevereElement.xsd
+    -rw-r--r--  0 daitss daitss   1087 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssSeverity.xsd
+    -rw-r--r--  0 daitss daitss   2212 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssSpecification.xsd
+    -rw-r--r--  0 daitss daitss   1230 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssStorageDesc.xsd
+    -rw-r--r--  0 daitss daitss   1542 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssStorageDescPrep.xsd
+    -rw-r--r--  0 daitss daitss   1414 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssStorageInstance.xsd
+    -rw-r--r--  0 daitss daitss   1373 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssStoragePrep.xsd
+    -rw-r--r--  0 daitss daitss   2996 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssString.xsd
+    -rw-r--r--  0 daitss daitss   2217 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssSubAccount.xsd
+    -rw-r--r--  0 daitss daitss   1593 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssSupportingSpecification.xsd
+    -rw-r--r--  0 daitss daitss   1625 Apr 21 11:44 E20010101_TESTIN/http://www.fcla.edu/dls/md/daitss/daitssWaveFile.xsd
+    -rw-r--r--  0 daitss daitss 131598 Feb 22 11:35 E20010101_TESTIN/http://www.loc.gov/standards/mets/mets.xsd
+    -rw-r--r--  0 daitss daitss  46412 Feb 28  2008 E20010101_TESTIN/http://www.loc.gov/standards/mods/v3/mods-3-3.xsd
+    -rw-r--r--  0 daitss daitss   5840 Jan 10  2007 E20010101_TESTIN/http://www.loc.gov/standards/mods/xml.xsd
+    -rw-r--r--  0 daitss daitss   3180 Aug 23  2007 E20010101_TESTIN/http://www.loc.gov/standards/xlink/xlink.xsd
+    -rw-r--r--  0 daitss daitss  17666 Mar 24 05:50 E20010101_TESTIN/http://www.uflib.ufl.edu/digital/metadata/ufdc2/ufdc2.xsd
+    -rw-r--r--  0 daitss daitss   8836 Jan 21  2009 E20010101_TESTIN/http://www.w3.org/2001/xml.xsd
+    -rw-r--r--  0 daitss daitss  87677 Mar 20  2004 E20010101_TESTIN/http://www.w3.org/2001/XMLSchema.xsd
+    -rw-r--r--  0 daitss daitss  42115 Jun 21  2006 E20010101_TESTIN/http://www.loc.gov/mods/v3/mods-3-2.xsd
+    -rw-r--r--  0 daitss daitss   2917 May 12 08:33 E20010101_TESTIN/http://dublincore.org/schemas/xmls/simpledc20021212.xsd
+    -rw-r--r--  0 daitss daitss  11133 Jun 16  2006 E20010101_TESTIN/http://www.fcla.edu/dls/md/palmm.xsd
+    -rw-r--r--  0 daitss daitss   2243 Sep 29  2004 E20010101_TESTIN/http://www.fcla.edu/dls/md/rightsmd.xsd
+    -rw-r--r--  0 daitss daitss   8244 Sep 29  2004 E20010101_TESTIN/http://www.fcla.edu/dls/md/techmd.xsd
+    -rw-r--r--  0 daitss daitss  37025 Dec  5  2003 E20010101_TESTIN/http://www.loc.gov/standards/mods/v3/mods-3-0.xsd
+
+
+</pre>
+
 
 <h2>Additional Information</h2>
 
@@ -129,12 +247,11 @@ There is a <a href="/test">test form</a> which will allow you to select an exist
 See the <a href="/rdoc/">rdoc</a> information for the DAITSS 2 libraries used.
 </p>
 
-
 <p>
 Revision: <%= revision %> 
 </p>
 
-<h2>To Do</h2>
+<h2>Possibly To Do</h2>
 
 <p>
 Add <b>DELETE</b> and <b>HEAD</b> methods where appropriate.  Support DTDs. Expose the schemas downloaded for QA testing.
