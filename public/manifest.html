@@ -12,14 +12,18 @@
 <h1>An Example Manifest XML Document</h1>
 
 <p>
-A manifest file is constructed and returned with the tar file associated with the collection.  There is no
-schema associated with it.  The root element &lt;resolutions&gt; act as a container for individual 
-&lt;resolutions&gt; - these latter are associated with exactly one XML document, and list information
-about the schemas used to resolve that document.  The status associated with the schemas are one
-of success, redirect, unresolved, and failure.  These indicate, respectively, that the attempt to acquire the schema
-file resulted in a successful download; resulted in a redirect to another location; that there was not enough
-location information to retrieve a schema; or lastly, an error such as a nework problem interferred with 
-the schema retrieval.  An example follows:
+A manifest XML document is constructed and returned in the tar file of
+schemas associated with the collection.  There is no schema associated
+with the manifest document.  The root element &lt;resolutions&gt; act
+as a container for individual &lt;resolutions&gt; - these latter are
+associated with exactly one XML document, and list information about
+the schemas used to resolve that document.  The status associated with
+the schemas are one of success, redirect, unresolved, and failure.
+These indicate, respectively, that the attempt to acquire the schema
+file resulted in a successful download; resulted in a redirect to
+another location; that there was not enough location information to
+retrieve a schema; or lastly, an error such as a nework problem
+interferred with the schema retrieval.  An example follows:
 </p>
 
 <pre>

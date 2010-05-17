@@ -12,16 +12,22 @@
 <h1>An Example PREMIS XML Document</h1>
 
 <p>
-When an XML document is uploaded for a particular collection, a PREMIS XML document is
-returned with details of the analysis of the document.  It should validate correctly,
-though it is expected only certain parts of it will be of value to the client, which
-may extract parts of it. The elements <code>object</code>,  <code>event</code>, and 
-<code>agents</code> are included.
+When an XML document is uploaded for a particular collection the
+service responds with a PREMIS XML document summarizing the analysis
+of the document.  The returned XML document should validate correctly,
+though it is expected only certain parts of it will be of value to the
+client, which commonly extracts parts of the document. The
+elements <code>object</code>, <code>event</code>, and
+<code>agents</code> are included as immediate children of the root node.
 </p>
 
 <pre>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;premis xsi:schemaLocation="info:lc/xmlns/premis-v2 http://www.loc.gov/standards/premis/premis.xsd" version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="info:lc/xmlns/premis-v2"&gt;
+&lt;premis version="2.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="info:lc/xmlns/premis-v2"
+        xsi:schemaLocation="info:lc/xmlns/premis-v2 http://www.loc.gov/standards/premis/premis.xsd"&gt;
+
   &lt;object xsi:type="file"&gt;
     &lt;objectIdentifier&gt;
       &lt;objectIdentifierType&gt;URI&lt;/objectIdentifierType&gt;
@@ -50,6 +56,7 @@ may extract parts of it. The elements <code>object</code>,  <code>event</code>, 
       &lt;linkingEventIdentifierValue&gt;file://retsina.fcla.edu/xmlresolution/events/df6912619ff3041a8d6f4a5e9964b6f2-f130f9&lt;/linkingEventIdentifierValue&gt;
     &lt;/linkingEventIdentifier&gt;
   &lt;/object&gt;
+
   &lt;event&gt;
     &lt;eventIdentifier&gt;
       &lt;eventIdentifierType&gt;URI&lt;/eventIdentifierType&gt;
@@ -75,6 +82,7 @@ may extract parts of it. The elements <code>object</code>,  <code>event</code>, 
       &lt;linkingObjectIdentifierValue&gt;file://10.228.22.22/E20090705_AAAAUK-0176.xml&lt;/linkingObjectIdentifierValue&gt;
     &lt;/linkingObjectIdentifier&gt;
   &lt;/event&gt;
+
   &lt;agent&gt;
     &lt;agentIdentifier&gt;
       &lt;agentIdentifierType&gt;URI&lt;/agentIdentifierType&gt;
@@ -83,8 +91,8 @@ may extract parts of it. The elements <code>object</code>,  <code>event</code>, 
     &lt;agentName&gt;XML Resolution Service&lt;/agentName&gt;
     &lt;agentType&gt;Web Service&lt;/agentType&gt;
   &lt;/agent&gt;
-&lt;/premis&gt;
 
+&lt;/premis&gt;
 </pre>
 </body>
 </html>

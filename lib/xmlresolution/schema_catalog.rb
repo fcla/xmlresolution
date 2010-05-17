@@ -6,15 +6,10 @@ require 'xmlresolution/exceptions'  #
 require 'xmlresolution/utils'       # ResolverUtils.*
 
 # Build up a catalog of schemas from a hash of { Location-URLs => Namespace-URIs }, downloading
-# the schemas. Only HTTP-schemed Location-URLs are supported.  A SchemaCatalog is associated for
+# the schemas. Only HTTP-schemed Location-URLs are supported.  A SchemaCatalog is associated with
 # exactly one XML document.
 
 class SchemaCatalog
-
-  # Be sure to keep the following more or less in sync with the Struct::SchemaReloaded used in the XmlResolverReloaded class;
-  # it is the data structure that we maintain in the SchemaCatalog.
-
-  Struct.new("Schema", :location, :namespace, :last_modified, :digest, :localpath, :retrieval_status, :error_message, :redirected_location)
 
   # If a proxy has been given, @proxy_addr is its address, either as a DNS name or IP Address,.
 
@@ -47,6 +42,33 @@ class SchemaCatalog
 
   @schema_dictionary = nil
 
+  # Be sure to keep the following more or less in sync with the Struct::SchemaReloaded used in the XmlResolverReloaded class;
+  # it is the data structure that we maintain in the SchemaCatalog.
+
+  Struct.new("Schema", :location, :namespace, :last_modified, :digest, :localpath, :retrieval_status, :error_message, :redirected_location)
+
+  
+  # SchemaCatalog.new(NAMESPACE_LOCATIONS, DATA_STORAGE_PATH, [ PROXY ])
+  #
+  # Create a catalog of schemas, normally for one document.
+  # DATA_STORAGE_PATH provides a path to where downloaded schemas can
+  # be saved. PROXY, if supplied, is the address and port of a caching
+  # web proxy, e.g. squid.example.com:3128.
+  #
+  # NAMESPACE_LOCATIONS is a hash of Location-URL/Namespace-URN key/value pairs
+  # of schemas that will downloaded; the SchemaCatalog provides a convenient
+  # data structure to recursively analyze a set of schemas:
+  #
+  #   catalog = SchemaCatalog.new(namespace_locations, '/tmp/')
+  #  
+  #   catalog.schemas do |schema_record|
+  #     more_namespace_locations =  analyze_schema(schema_record.localpath)
+  #     catalog.merge(more_namespace_locations)
+  #    end
+  #
+  # (What's happening above is that the iterator catalog.schemas is being augmented
+  # via the catalog.merge method, allowing us to recursively search the schemas.)
+
   def initialize namespace_locations, data_storage_path = '/tmp/', proxy = nil
 
     if proxy
@@ -71,11 +93,12 @@ class SchemaCatalog
   # It is expected that the catalog will be expanded through the merge
   # method while being iterated over, as in the following example:
   #
-  # catalog = SchemaCatalog.new(namespace_locations)
-  # catalog.schemas do |rec|
-  #   additional_locations = my_application(rec.location, File.read(rec.pathname))
-  #   catalog.merge additional_locations
-  # end
+  #   catalog = SchemaCatalog.new(namespace_locations)
+  #   catalog.schemas do |rec|
+  #     next if rec.retrieval_status != :success
+  #     additional_namespace_locations = my_application(rec.location, File.read(rec.pathname))
+  #     catalog.merge additional_namespace_locations
+  #   end
 
   def schemas
     if block_given?
