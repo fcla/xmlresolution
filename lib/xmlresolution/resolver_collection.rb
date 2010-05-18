@@ -198,6 +198,13 @@ module XmlResolution
     #
     #      <schema    status="unresolved" 
     #               namespace="http://www.w3.org/2001/XMLSchema-hasFacetAndProperty"/>
+    #
+    #  Error container if errors were reported for the instance document:
+    #
+    #      <errors>
+    #        <error>StartTag: invalid element name</error>
+    #      </errors>
+    #
     #    </resolution>
     #
     #  More resolutions:
@@ -233,6 +240,11 @@ module XmlResolution
               xml.schema(:status => 'redirect', :location => s.location, :namespace => s.namespace, :actual => s.redirected_location)
             end
             res.unresolved_namespaces.each { |ns| xml.schema(:status => 'unresolved', :namespace => ns) }
+            if not res.errors.empty?
+              xml.errors {
+                res.errors.each { |mess| xml.error(mess) }
+              }
+            end
           }
         end
       }
@@ -354,9 +366,9 @@ module XmlResolution
 
     # schemas DOCUMENT_RESOLUTIONS
     #
-    # Given the array of XmlResolver objects, DOCUMENT_RESOLUTIONS,
-    # trundle through all of the successfully retrieved schemas for
-    # this collection.
+    # Given the array of XmlResolver (or XmlResolverReloaded) objects,
+    # DOCUMENT_RESOLUTIONS, trundle through all of the successfully
+    # retrieved schemas for this collection.
     #
     # Yields the unique list of the schemas; for each one, yield the
     # path to the local copy we have of them, and their original URLs.

@@ -1,5 +1,10 @@
 require 'ostruct'
 
+# TODO: git revision might not be helpful enough since capistrano
+# checks out into it's own branch, it would be hard to pick this out
+# from a backup tape.  Maybe better to use would be the capistrano
+# release in the link tree, e.g. "20100517050854".
+
 def read_capistrano_revision
   revision_file = File.expand_path(File.join(File.dirname(__FILE__), '..', 'REVISION'))
   if File.exists? revision_file
@@ -23,11 +28,10 @@ module XmlResolution
   require 'xmlresolution/xml_resolver'
 
   def self.version
-    os = OpenStruct.new("label"   => "Version #{VERSION}, Revision #{REVISION}",
-                        "uri"     => "info:fcla/daitss/xmlresolution/#{VERSION}",
-                        "note"    => "We'll put additional version information here")
+    os = OpenStruct.new("rev"    => "Version #{VERSION}, Revision #{REVISION}")
+                        "uri"    => "info:fcla/daitss/xmlresolution/#{VERSION}")
     def os.to_s
-      self.label
+      "XML Resolution Service #{self.rev}"
     end
     os
   end

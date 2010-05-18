@@ -1,18 +1,10 @@
 #!/usr/bin/env ruby
-
 # Validate the files given on the command line with a java-based validator.
 
 require 'socket'
-
-proxy = case Socket.gethostname
-        when /sacred.net/          ; 'satyagraha.sacred.net:3128'
-        when /fcla.edu/, /local/   ; 'sake.fcla.edu:3128'
-        else
-          STDERR.puts "Can't figure out how to assign a proxy - on an unsupported network."
-          exit
-        end
-
-proxy_host, proxy_port = proxy.split(':')
+proxy_host = 'localhost'
+# proxy_host = 'satyagraha.sacred.net'
+proxy_port = '3128'
 
 jarfile = 'xmlvalidator.jar'
 jarpath = File.join(File.dirname(__FILE__), jarfile)
@@ -28,7 +20,7 @@ ARGV.each do |file|
     next;
   end
 
-  cmd = "java -Dhttp.proxyHost=#{proxy_host} -Dhttp.proxyPort=#{proxy_port} -Dfile='#{file}' -jar '#{jarfile}'"
+  cmd = "java -Dhttp.proxyHost=#{proxy_host} -Dhttp.proxyPort=#{proxy_port} -Dfile='#{file}' -jar '#{jarpath}'"
   puts cmd
   puts `#{cmd}`
 end

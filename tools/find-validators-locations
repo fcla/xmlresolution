@@ -7,19 +7,15 @@
 
 require 'socket'
 
-proxy = case Socket.gethostname
-        when /sacred.net/        ; 'satyagraha.sacred.net:3128'
-        when /fcla.edu/, /local/ ; 'sake.fcla.edu:3128'
-        else
-          STDERR.puts "Can't figure out how to assign a proxy - on an unsupported network."
-          exit
-        end
 
+VALIDATOR_OK = "Warnings: 0\nErrors: 0\nFatal Errors: 0\n"
+
+
+proxy = 'localhost:3128'
 proxy_host, proxy_port = proxy.split(':')
 
 jarfile = 'xmlvalidator.jar'
 jarpath = File.join(File.dirname(__FILE__), jarfile)
-
 
 if not File.exists? jarpath
   STDERR.puts "Can't find #{jarfile} (checked #{File.dirname(__FILE__)})"
@@ -38,19 +34,27 @@ if (not File.exists? file)
   exit
 end
 
-`ssh #{proxy_host} cat /var/log/squid/access.log > /tmp/fv`
+eof = nil
+open("/opt/local/var/squid/logs/access.log") do |fd|
+  fd.seek 0, IO::SEEK_END
+  eof = fd.tell 
+end
 
 cmd = "java -Dhttp.proxyHost=#{proxy_host} -Dhttp.proxyPort=#{proxy_port} -Dfile='#{file}' -jar '#{jarpath}'"
 
-STDERR.puts `#{cmd}`
+validator_output =  `#{cmd}`
 
-`ssh #{proxy_host} cat /var/log/squid/access.log > /tmp/access`
+if validator_output != VALIDATOR_OK
+  puts validator_output
+end
 
 locations = {}
-IO.popen("fgrep -vf /tmp/fv /tmp/access") do |fd|
+
+open("/opt/local/var/squid/logs/access.log") do |fd|
+  fd.seek eof, IO::SEEK_SET
   while not fd.eof?
     line = fd.gets.chomp
-    line =~ /GET (.*?)\s+/
+    line =~ /GET (.*?)\s+/    
     locations[$1] = true
   end
 end

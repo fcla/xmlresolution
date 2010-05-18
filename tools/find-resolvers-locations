@@ -11,16 +11,17 @@ require 'fileutils'
 
 require 'socket'
 
-proxy = case Socket.gethostname
-        when /sacred.net/        ; 'satyagraha.sacred.net:3128'
-        when /fcla.edu/, /local/ ; 'sake.fcla.edu:3128'
-        else
-          STDERR.puts "Can't figure out how to assign a proxy - on an unsupported network."
-          exit
-        end
+# proxy = case Socket.gethostname
+#         when /sacred.net/        ; 'satyagraha.sacred.net:3128'
+#         when /fcla.edu/, /local/ ; 'sake.fcla.edu:3128'
+#         else
+#           STDERR.puts "Can't figure out how to assign a proxy - on an unsupported network."
+#           exit
+#         end
+
+proxy = 'localhost:3128'
 
 file = ARGV[0]
-
 
 if (file.nil?) 
   STDERR.puts "No file specified: enter a file name on the command line.\n";

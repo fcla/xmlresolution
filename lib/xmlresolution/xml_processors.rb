@@ -2,12 +2,17 @@ require 'nokogiri'
 require 'time'
 require 'uri'
 
-
 # Class PlainXmlDocument subclasses a Nokogiri::XML::SAX::Document
-# with basic SAX event callbacks, namely:
+#
+# The purpose of this class is to work in concert with the 
+# Nokogiri SAX parser to analyze a submitted XML Document.
+# It accumulates information about namespaces and schema
+# locations in the XML Document.
+# 
+
+# It registers only a few of the basic SAX event callbacks, namely:
 #
 #   * start_element_namespace
-#   * end_element_namespace
 #   * error
 #   * warning
 #   * xml_decl
@@ -56,12 +61,11 @@ class PlainXmlDocument < Nokogiri::XML::SAX::Document
   # populated; see the XmlResolution::XMLResolver class.
 
   def initialize used_namespaces = {}
-    @used_namespaces = used_namespaces
+    @errors     = []
     @locations  = {}
-    @namespace_declarations_stack  = []
-    @warnings = []
-    @errors   = []
-    @version  = '1.0'
+    @version    = '1.0'
+    @warnings   = []
+    @used_namespaces = used_namespaces
     super()
   end
 
@@ -70,7 +74,7 @@ class PlainXmlDocument < Nokogiri::XML::SAX::Document
   # xmldecl  VERSION, ENCODING, STANDALONE
   #
   # Called when an XML declaration node is encountered; we record the XML version
-  # as the object attribute version, which defaults to '1.0'
+  # as the object attribute version, otherwise defaults to '1.0'
 
   def xmldecl version, encoding, standalone
     @version = version unless version.nil?
@@ -79,25 +83,18 @@ class PlainXmlDocument < Nokogiri::XML::SAX::Document
   # start_element_namespace ELEMENT_NAME, ATTRIBUTES, PREFIX, URI, NAMESPACE
   #
   # SAX calls this method as it encounters new elements.  We mine the
-  # elements and attributes for their namespace URIs; we also quick
+  # elements and attributes for their namespace URIs; we also
   # check for schemaLocation elements. Note that the namespace for
   # this element is included as the URI; NAMESPACE is an array all the
   # xmlns declarations for this node, whach may include namespaces not
   # actually used by the document.
 
   def start_element_namespace element_name, attributes = [], prefix = nil, uri = nil, namespace = []
-    @namespace_declarations_stack.push namespace
     @used_namespaces[uri] = true unless uri.nil?
-    attributes.each { |a| @used_namespaces[a.uri] = true unless a.uri.nil? }
+    attributes.each do |a| 
+      @used_namespaces[a.uri] = true unless a.uri.nil?
+    end
     check_for_locations attributes
-  end
-
-  # end_element_namespace ELEMENT_NAME, PREFIX, URI
-  #
-  # Used only to pop the namespace declarations stack.
-
-  def end_element_namespace element_name, prefix = nil, uri = nil
-    @namespace_declarations_stack.pop
   end
 
   # error STRING
@@ -113,7 +110,7 @@ class PlainXmlDocument < Nokogiri::XML::SAX::Document
   # warning STRING
   #
   # STRING provides a message encountered when a warning condition
-  # occurs during document processing we record the message on the
+  # occurs during document processing; we record the message on the
   # warnings attribute, an array of strings.
 
   def warning string
@@ -126,10 +123,8 @@ class PlainXmlDocument < Nokogiri::XML::SAX::Document
   # attribute information parsed by the SAX processor: only those
   # namespaces actually used by the XML document are recorded.  The
   # optional argument to the constructor is used if provided, and will
-  # reflect the addtional namespaces added in the course of SAX
-  # parsing.
+  # reflect the addtional namespaces added in the course of processing.
  
-
   def used_namespaces
     @used_namespaces
   end
@@ -140,7 +135,8 @@ class PlainXmlDocument < Nokogiri::XML::SAX::Document
   # where the use of a Namespace-URN has been encountered during element
   # and attribute parsing.
   #
-  # TODO: can <xsd:attributeGroup ref="xlink:simpleLink"/> occur with xlink having been resolved?
+  # TODO: can <xsd:attributeGroup ref="xlink:simpleLink"/> occur with
+  # xlink not having been already resolved?
 
   def namespace_locations
     used_locations = Hash.new
@@ -194,110 +190,73 @@ class PlainXmlDocument < Nokogiri::XML::SAX::Document
     end
   end
 
-  # TODO: no longer using the default_namespace method or @namespace_declarations_stack.
-  # Remove when sure there's no use case.
-
-  # default_namespace
-  #
-  # Determines the defaultNamespace in the current parsing context.
-  #
-  # A word on the @namespace_declarations_stack: we have need,
-  # occasionally to find the default namespace.  This stack lets us
-  # maintain the scope.  it is an array of array of arrays:
-  #
-  #   Stack:     [
-  #     First:     [  ["gesmes", "http://www.gesmes.org/xml/2002-08-01"], [nil, "http://www.ecb.int/vocabulary/2002-08-01/eurofxref"]  ]
-  #    Second:     [                                                                                            ]
-  #   End Stack: ]
-  #
-  # In the above we have the result of having parsed into the following document, at the point of the '***'
-  #
-  # <?xml version="1.0" encoding="UTF-8"?>
-  # <gesmes:Envelope xmlns:gesmes="http://www.gesmes.org/xml/2002-08-01"
-  #                  xmlns="http://www.ecb.int/vocabulary/2002-08-01/eurofxref">
-  #   <gesmes:subject>Reference rates</gesmes:subject>
-  #   <gesmes:Sender>
-  #   ***
-  #     <gesmes:name>European Central Bank</gesmes:name>
-  #     </gesmes:Sender>
-  #   <Cube>
-  #      <Cube time="2009-11-03">
-  #        <Cube currency="USD" rate="1.4658"/>
-  #        <Cube currency="JPY" rate="132.25"/>
-  #        <Cube currency="BGN" rate="1.9558"/>
-  #      </Cube>
-  #   </Cube>
-  # </gesmes:Envelope>
-  #
-  # The first stack element shows the "gesmes" prefix and its
-  # definition, as well as the default namespace declaration,
-  # indicated by the nil value. The second is turns out to be empty,
-  # but it must be there to maintain the context when we pop off.
-  #
-  # Now the Nokogiri SAX does do a great job of maintaining the
-  # current namespace for each element and attribute.  We maintain
-  # this stack, however to catch an edge case in schema processing, to
-  # get at the default namespace in an include [BLAH BLAH..make sure I
-  # know what I'm talking about here]
-
-  def default_namespace
-    @namespace_declarations_stack.reverse.each do |list_of_pairs|
-      list_of_pairs.each do |pair|
-        prefix, namespace = pair
-        return namespace if prefix.nil?
-      end
-    end
-    nil
-  end
-
 end # of class PlainXmlDocument
+
+
+# Class SchemaDocument subclasses PlainXmlDocument, which in turn is
+# a subclass of Nokogiri::XML::SAX::Document.
+#
+# It adds no additional callbacks to those established by PlainXmlDocument.
+# Instead, it adds specialized processing for schema documents, looking for
+# the following elements:
+#
+#   'http://www.w3.org/2001/XMLSchema':import  
+#   'http://www.w3.org/2001/XMLSchema':include 
+#   'http://www.w3.org/2001/XMLSchema':schema  
+#
+# Attributes for these elements are mined for additional schema
+# locations to process.
+
+
 
 class SchemaDocument < PlainXmlDocument
 
-
-  # # # @@indent = [ '' ]
-  # # # def indent *args                                                                                                                          
-  # # #   STDERR.puts  @@indent.join('. ') + args.join(' ')                                                                                              
-  # # # end                                                                                                                                       
+  # The URL for this schema.  Currently, only HTTP schemes are supported.
 
   @schema_location  = nil
+
+  # If a targetNamespace attribute is encountered, this will contain it. 
+
   @target_namespace = nil
  
+  # SchemaDocument.new LOCATION, USED_NAMESPACES
+  #
+  # As in PlainXmlDocument, USED_NAMESPACES is a hash of namespaces
+  # URNs where the values are not important. It is used in the
+  # constructor so that calling applications can reuse it for
+  # subsequent invocations: effectively, we inherit the parent's
+  # schema namespaces.
+  #
+  # Because schemaLocation declarations may include relative URLs, we
+  # must include the URL of the schema document, the string LOCATION.
+
   def initialize schema_location, used_namespaces
     raise "Schema location #{schema_location} must be an absoulte URI: it wasn't." unless URI.parse(schema_location).absolute?
     @schema_location = schema_location
     super(used_namespaces)
   end
 
+  # absolutize LOCATION
+  #
+  # Given the URL LOCATION, attempt to turn it into an absolute URL (relative
+  # to out object's schema_location instance variable).
+
   def absolutize location
     return location if URI.parse(location).absolute?
     return URI.join(@schema_location, location).to_s
   end
 
-  # Good old SAX: on entry to each element, the following callback is called back.
-  # 
+  # start_element_namespace ELEMENT_NAME, ATTRIBUTES, PREFIX, URI, NAMESPACE
+  #
+  # After the PlainXmlDocument superclass has it's way, check for schema-specific 
+  # attributes that may cause us to add additional schema locations.
 
-  def start_element_namespace name, attributes = [], prefix = nil, uri = nil, ns = []
+  def start_element_namespace element_name, attributes = [], prefix = nil, uri = nil, namespace = []
     super
-
-    # # # @@indent.push ''                                                                                                                                                                                                                                                                    
-    # # # indent 'Start', name, '(' + [prefix, uri].join(':') + ')'                                                                               
-    # # # attributes.each do |a|                                                                                                                  
-    # # #   indent '   attr:', a.inspect                                                                                                          
-    # # # end                                                                                                                                     
-    # # # ns.each  do |n|                                                                                                                         
-    # # #   indent '     ns:', n.inspect                                                                                                          
-    # # # end                                                                                                                                     
-
-    get_import_location  attributes if name == 'import'  and uri == 'http://www.w3.org/2001/XMLSchema'
-    get_include_location attributes if name == 'include' and uri == 'http://www.w3.org/2001/XMLSchema'
-    get_target_namespace attributes if name == 'schema'  and uri == 'http://www.w3.org/2001/XMLSchema'
+    get_import_location  attributes if element_name == 'import'  and uri == 'http://www.w3.org/2001/XMLSchema'
+    get_include_location attributes if element_name == 'include' and uri == 'http://www.w3.org/2001/XMLSchema'
+    get_target_namespace attributes if element_name == 'schema'  and uri == 'http://www.w3.org/2001/XMLSchema'
   end
-
-  # # # def end_element_namespace name, prefix = nil, uri = nil                                                                                   
-  # # #   indent 'End', name, '(' + [prefix, uri].join(':') + ')'                                                                                 
-  # # #   @@indent.pop                                                                                                                            
-  # # # end          
 
   # Assumes we're called from an element node named "http://www.w3.org/2001/XMLSchema:schema".
 
@@ -309,7 +268,9 @@ class SchemaDocument < PlainXmlDocument
     end
   end
 
-  # extract and add the namespace/location mapping for schema directives of the form:
+  # get_import_location ATTRIBUTES
+  #
+  # Extract and add the namespace/location mapping for schema directives of the form:
   #
   #   <"http://www.w3.org/2001/XMLSchema":import
   #          namespace="http://www.w3.org/XML/1998/namespace"
@@ -317,8 +278,12 @@ class SchemaDocument < PlainXmlDocument
   #
 
   def get_import_location attributes
+
     loc = nil
     ns  = nil
+    
+    # search through all attributes for those of interest; if we find both, record them.
+
     attributes.each do |attr|
       ns  = attr.value if attr.localname == 'namespace'
       loc = attr.value if attr.localname == 'schemaLocation'
@@ -330,12 +295,14 @@ class SchemaDocument < PlainXmlDocument
     end
   end
 
-  # get_include_location handles xsd:include directives.
+  # get_include_location 
+  # 
+  # Handle xsd:include directives.
   #
-  # <xsd:schema .... >
-  #    <xsd:include schemaLocation="daitssAccount.xsd"/>
-  #    <xsd:include schemaLocation="daitssAccountProject.xsd"/>
-  #     ....
+  #   <xsd:schema .... >
+  #       <xsd:include schemaLocation="daitssAccount.xsd"/>
+  #       <xsd:include schemaLocation="daitssAccountProject.xsd"/>
+  #        ....
   #
   # By definition, includes are for the targetNamespace.
 

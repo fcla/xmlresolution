@@ -29,21 +29,17 @@ post '/ieids/:collection_id/' do |collection_id|
     res.process
     res.save collection_id
 
-    # Additional logging:
-
-    failures  = [];  redirects = [];  successes = []
-
     res.schema_dictionary.map do |record|  
-      case record.retrieval_status
-        when :failure;  failures.push  record.location
-        when :redirect; redirects.push record.location
-        when :success;  successes.push record.location
+      if record.retrieval_status == :failure
+        Logger.err  "Failed retrieving #{record.location} for document #{file_url}, namespace #{record.namespace}, error #{record.error_message}.", @env
+      end
+      if record.retrieval_status == :success 
+        Logger.info "Retrieved #{record.location} for document #{file_url}, namespace #{record.namespace}.", @env
+      end
+      if record.retrieval_status == :redirect
+        Logger.info "Schema #{record.location} for document #{file_url}, was redirected to #{record.redirected_location}.", @env
       end
     end
-
-    redirects.sort.each  { |location| Logger.info "#{location} redirected when processing document #{file_url}.", @env }
-    successes.sort.each  { |location| Logger.info "Retrieved #{location} for document #{file_url}.", @env }
-    failures.sort.each   { |location| Logger.err  "Failed retrieving #{location} for document #{file_url}.", @env }
 
     res.unresolved_namespaces.each { |ns|  Logger.warn "Unresolved namespace #{ns} for document #{file_url}.", @env }
 
@@ -53,5 +49,4 @@ post '/ieids/:collection_id/' do |collection_id|
   ensure
     tempfile.unlink if tempfile.respond_to? 'unlink'
   end
-
 end

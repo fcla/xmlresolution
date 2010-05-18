@@ -63,19 +63,42 @@ module XmlResolution
   # issues slow us down somewhat.
 
 
-  # TODO: pending team review, uncomment out the namespace stop list.
 
-  # Some namepsaces schema processors 'just know', and do not have
-  # associated locations.  We do not want to report them as unresolved
-  # namespaces.  These are their namespaces:
+  # There exist basic namespaces that schema-processors 'just know
+  # about', and they are not normally downloaded when encountered
+  # (for instance, http://www.w3.org/2001/XMLSchema.xsd and
+  # http://www.w3.org/2001/xml.xsd).  We do, currently, download those.
+  #
+  # In other cases there are no actual schemas at all -
+  # schema-processors really do have to know about them.
+  #
+  # For this latter case we do not want to report them as unresolved
+  # namespaces. NAMESPACE_DONT_TELL is the place to list them.
+  #
+  # There's another interesting case: for some namespaces such as
+  # http://www.w3.org/XML/1998/namespace, a given application schema
+  # may associate a location with them via targetNamespace, but they
+  # will not normally appear otherwise.  I think we can safely ignore
+  # them.
 
-  NAMESPACE_STOP_LIST =  [ 
+  NAMESPACE_DONT_TELL =  [ 
+                          # 'http://www.w3.org/1999/xlink',   # not sure about these two yet
                           # 'http://www.w3.org/1999/xhtml',
-                          # 'http://www.w3.org/2001/XMLSchema',
-
-                          # 'http://www.w3.org/2001/XMLSchema-hasFacetAndProperty',  
-                          # 'http://www.w3.org/2001/XMLSchema-instance',
+                          'http://www.w3.org/2001/XMLSchema-hasFacetAndProperty',
+                          'http://www.w3.org/2001/XMLSchema-instance'
                          ]
+
+  # TODO: pending team review of above, uncomment out the namespace stop list.
+
+  
+  # Oddball namespaces:
+  #
+  # 'http://www.w3.org/XML/1998/namespace
+
+  # To avoid potential denial of service attacks (even if self-inflcited), limit the number
+  # of schemas we are willing to process for one XML instance document.
+
+  TOO_MANY_SCHEMAS  =  500
 
   class XmlResolver
     
@@ -128,6 +151,11 @@ module XmlResolution
     attr_reader :resolution_time
 
 
+    # errors is an array of errors encountered in processing the docment.
+    
+    attr_reader :errors
+
+
     # Be sure to keep the following somewhat in sync with the Sruct::Schema used in the SchemaCatalog.
 
     Struct.new("SchemaReloaded", :location, :namespace, :last_modified, :digest, :localpath, 
@@ -154,19 +182,21 @@ module XmlResolution
       
       @used_namespaces      = {}
       @schema_dictionary    = []
-      
+      @errors               = []   # only errors in the instance document
+
       @schemas_storage_directory     = File.join(data_root, 'schemas')
       @collections_storage_directory = File.join(data_root, 'collections')
       
       ResolverUtils.check_directory "The schemas storage directory",     schemas_storage_directory  # raise ConfigurationError if issue
       ResolverUtils.check_directory "The document collection directory", collections_storage_directory
       
-      raise InadequateDataError, "XML document was empty" if document_size == 0
+      raise InadequateDataError, "XML document #{document_uri} was empty" if document_size == 0
     end
 
     # process
     #
-    # Process the document, recursively downloading schemas and re
+    # Process the XML instance document, downloading the schemas it references, analyze the schemas, and 
+    # download the schemas *those* reference, and so on, until we're done.
     
     def process
       
@@ -183,20 +213,25 @@ module XmlResolution
       namespace_locations = instance_document.namespace_locations   # a hash of Location-URL => Namespace-URN pairs
       @used_namespaces    = instance_document.used_namespaces       # a hash of Namespace-URN => 'true' pairs 
 
+      @errors = instance_document.errors
+
       # TODO: pending team review - be strict, or try to get some information?
       #
-      # if instance_document.errors.count > 0
+      #  if instance_document.errors.count > 0  # strict?
 
       if (instance_document.errors.count > 0) and namespace_locations.empty? and @used_namespaces.empty?
         raise XmlResolution::BadBadXmlDocument, "The XML document #{document_uri} had too many errors: " + instance_document.errors.join('; ')
       end
       
       catalog = SchemaCatalog.new(namespace_locations, schemas_storage_directory, proxy)
-      
+
+      count = 0
       catalog.schemas do |schema_record|
+        count += 1
         next if schema_record.retrieval_status != :success
         schema_document = analyze_schema_document(schema_record.location, File.read(schema_record.localpath), @used_namespaces)
         catalog.merge schema_document.namespace_locations
+        raise XmlResolution::TooManyDarnSchemas,  "Too many schemas (#{count}) encountered for #{document_uri}." if count > TOO_MANY_SCHEMAS
       end
       
       @schema_dictionary = catalog.schemas   # only those actually required, that is, in used_namespaces
@@ -208,7 +243,7 @@ module XmlResolution
     # Return an array of all of the namesapces that we have not been able to resolve.
     
     def unresolved_namespaces   
-      (@used_namespaces.keys.sort - schema_dictionary.map{ |s| s.namespace } - NAMESPACE_STOP_LIST).sort { |a,b| a.downcase <=> b.downcase }
+      (@used_namespaces.keys.sort - schema_dictionary.map{ |s| s.namespace } - NAMESPACE_DONT_TELL).sort { |a,b| a.downcase <=> b.downcase }
     end
 
     # premis_report
@@ -390,6 +425,7 @@ module XmlResolution
           }
           xml.agentName('XML Resolution Service')
           xml.agentType('Web Service')
+          xml.agentNote(XmlResolution.version.rev)
         }
       }
       xml.target!
@@ -455,9 +491,12 @@ module XmlResolution
     #  BROKEN_SCHEMA location namespace error_message
     #  BROKEN_SCHEMA location namespace error_message
     #   ....
-    #  REDIRECT_SCHEMA location namespace redirected_locaton
-    #  REDIRECT_SCHEMA location namespace redirected_locaton
+    #  REDIRECTED_SCHEMA location namespace redirected_locaton
+    #  REDIRECTED_SCHEMA location namespace redirected_locaton
     #   ...
+    #  ERROR message
+    #  ERROR message
+    #  ....
     #  UNRESOLVED_NAMESPACES namespace namespace namespace ....
     #
     # Each 'phrase' is URL-escaped, so embeded whitespace won't cause parsing problems.
@@ -482,6 +521,10 @@ module XmlResolution
       schema_dictionary.each do |s|
         next unless s.retrieval_status == :redirect
         str += ResolverUtils.escape("REDIRECTED_SCHEMA", s.location, s.namespace, s.redirected_location) + "\n"
+      end
+
+      errors.each do |mess|
+        str += ResolverUtils.escape("ERROR", mess) + "\n"
       end
 
       str += ResolverUtils.escape("UNRESOLVED_NAMESPACES", *unresolved_namespaces) + "\n"
@@ -510,7 +553,7 @@ module XmlResolution
       
       @used_namespaces     = {}
       @schema_dictionary   = []
-      
+      @errors              = []
       @schemas_storage_directory     = File.join(data_root, 'schemas')
       @collections_storage_directory = File.join(data_root, 'collections')
 
@@ -554,7 +597,8 @@ module XmlResolution
         when 'DIGEST'                then @document_identifier   = data.shift
         when 'FILE_NAME'             then @document_uri          = data.shift
         when 'LENGTH'                then @document_size         = data.shift.to_i
-        when 'UNRESOLVED_NAMESPACES' then unresolved = data.dup
+        when 'UNRESOLVED_NAMESPACES' then unresolved = data
+        when 'ERROR'                 then @errors.push data
 
         when 'SCHEMA'
           s = Struct::SchemaReloaded.new
@@ -568,7 +612,7 @@ module XmlResolution
 
           @schema_dictionary.push s
 
-        when 'BROKEN_SCHEMA'
+        when 'BROKEN_SCHEMA'                   # misnomer: usually they are simply unretrievable, not broken.
           s = Struct::SchemaReloaded.new
 
           s.location         = data.shift

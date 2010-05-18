@@ -11,5 +11,5 @@ put '/ieids/:collection_id' do |collection_id|
     status 201
     "Collection #{collection_id} created.\n"
   end
-end
 
+end
