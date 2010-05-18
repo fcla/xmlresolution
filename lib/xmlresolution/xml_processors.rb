@@ -278,7 +278,6 @@ class SchemaDocument < PlainXmlDocument
   #
 
   def get_import_location attributes
-
     loc = nil
     ns  = nil
     

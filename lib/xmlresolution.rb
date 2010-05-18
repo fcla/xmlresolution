@@ -28,7 +28,7 @@ module XmlResolution
   require 'xmlresolution/xml_resolver'
 
   def self.version
-    os = OpenStruct.new("rev"    => "Version #{VERSION}, Revision #{REVISION}")
+    os = OpenStruct.new("rev"    => "Version #{VERSION}, Revision #{REVISION}",
                         "uri"    => "info:fcla/daitss/xmlresolution/#{VERSION}")
     def os.to_s
       "XML Resolution Service #{self.rev}"

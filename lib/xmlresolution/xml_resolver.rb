@@ -531,7 +531,6 @@ module XmlResolution
     end # of def
   end # of class XmlResolver
 
-
   # XmlResolverReloaded provides a subset of the capabilities of the XmlResolver class; it
   # reloads the data that is dumped via XmlResolver#dump.  In particular, we can get:
   #
