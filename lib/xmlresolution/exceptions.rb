@@ -115,8 +115,8 @@ module XmlResolution
 
   # Client's fault:
 
-  class BadXmlDocument      < Http400; end            # Instance document could not be parsed
-  class BadBadXmlDocument   < BadXmlDocument; end     # *really* could not be parsed
+  class BadXmlDocument      < Http400; end            # Instance document could not be parsed..
+  class BadBadXmlDocument   < BadXmlDocument; end     # ..it *really* could not be parsed
   class InadequateDataError < Http400; end            # Problem with uploaded data (e.g. length 0)
   class BadCollectionID     < Http400; end            # PUT of a Collection ID wasn't suitable
   class BadXmlVersion       < Http415; end            # Unsupported XML version (only 1.0)

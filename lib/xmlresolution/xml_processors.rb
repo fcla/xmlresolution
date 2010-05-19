@@ -2,15 +2,27 @@ require 'nokogiri'
 require 'time'
 require 'uri'
 
-# Class PlainXmlDocument subclasses a Nokogiri::XML::SAX::Document
+# TODO:
+# Is it worth it to handle xsi:noNamespaceSchemaLocation (includes?)
+
+
+# Class PlainXmlDocument subclasses Nokogiri::XML::SAX::Document
 #
-# The purpose of this class is to work in concert with the 
+# The purpose of PlainXmlDocument is to work in concert with the 
 # Nokogiri SAX parser to analyze a submitted XML Document.
 # It accumulates information about namespaces and schema
 # locations in the XML Document.
 # 
-
-# It registers only a few of the basic SAX event callbacks, namely:
+# The XML document text to be analyzed is not directly accessed
+# by the PlainXmlDocument object; rather, the XML document is used in concert
+# with the object and the SAX::Parser, as in the following example:
+#
+#      document = PlainXmlDocument.new
+#      Nokogiri::XML::SAX::Parser.new(document).parse(XML-DOCUMENT-TEXT)
+#      ... use document methods ...
+#
+# The PlainXmlDocument object registers callbacks with the SAX parser.
+# We register only a few of the basic SAX event callbacks, namely:
 #
 #   * start_element_namespace
 #   * error
@@ -18,21 +30,11 @@ require 'uri'
 #   * xml_decl
 #
 # Analysis of the elements provided by the first of these callbacks
-# allows us to record the namespaces that are actually used by elements
-# and their attributes.  Errors, warnings, and the XML declaration are
-# also collected in the course of the parsing.  Methods are added to
-# the PlainXmlDocument class to return these data.
-#
-# The XML document text to be analyzed is not directly provided to this 
-# object; rather, the XML document is used in concert with this class
-# and the SAX::PArser as so:
-#
-#      document = PlainXmlDocument.new
-#      Nokogiri::XML::SAX::Parser.new(document).parse(XML-DOCUMENT-TEXT)
-#      return document
-#
-# TODO:
-#   Is it worth it to handle xsi:noNamespaceSchemaLocation (includes?)
+# allows us to record the namespaces that are actually used by
+# elements and their attributes.  Errors, warnings, and the XML
+# declaration are also collected in the course of the parsing.
+# Methods are added to the PlainXmlDocument class to return these
+# data.
 
 class PlainXmlDocument < Nokogiri::XML::SAX::Document
 
@@ -51,11 +53,11 @@ class PlainXmlDocument < Nokogiri::XML::SAX::Document
 
   # DOC = PlainXmlDocument.new [ USED_NAMESPACES ]
   # 
-  # The purpose of this document class is to garner a list of
-  # namespaces actually used by a document.  The optional
-  # USED_NAMESPACE hash, if given, will be augmented by namespaces
-  # encountered in the document.  USED_NAMESPACES is a hash where only
-  # the keys (Namespace URNs) are important.
+  # The purpose of this object is to garner a list of namespaces
+  # actually used by a document.  The optional USED_NAMESPACE hash, if
+  # given, will be augmented by namespaces encountered in the
+  # document.  USED_NAMESPACES is a hash where only the keys
+  # (Namespace URNs) are important.
   #
   # DOC will eventually be passed to Nokogiri::XML::SAX::Parser to be
   # populated; see the XmlResolution::XMLResolver class.
@@ -83,11 +85,11 @@ class PlainXmlDocument < Nokogiri::XML::SAX::Document
   # start_element_namespace ELEMENT_NAME, ATTRIBUTES, PREFIX, URI, NAMESPACE
   #
   # SAX calls this method as it encounters new elements.  We mine the
-  # elements and attributes for their namespace URIs; we also
-  # check for schemaLocation elements. Note that the namespace for
-  # this element is included as the URI; NAMESPACE is an array all the
-  # xmlns declarations for this node, whach may include namespaces not
-  # actually used by the document.
+  # elements and attributes for their namespace URIs; we also check
+  # for schemaLocation elements. Note that the namespace for this
+  # element is included as the URI; NAMESPACE is an array  of
+  # the xmlns declarations for this node (if nay), which may
+  # include namespaces not actually used by the document.
 
   def start_element_namespace element_name, attributes = [], prefix = nil, uri = nil, namespace = []
     @used_namespaces[uri] = true unless uri.nil?
@@ -117,26 +119,26 @@ class PlainXmlDocument < Nokogiri::XML::SAX::Document
     warnings.push string.chomp
   end
 
-  # namespaces
+  # used_namespaces
   #
-  # Returns a hash of namespaces extracted from the element and
+  # Returns a hash of the namespaces extracted from the element and
   # attribute information parsed by the SAX processor: only those
-  # namespaces actually used by the XML document are recorded.  The
-  # optional argument to the constructor is used if provided, and will
-  # reflect the addtional namespaces added in the course of processing.
+  # namespaces actually used by the XML document are recorded.  This
+  # will be identical to the optional hash argument to our constructor
+  # if it was provided.
  
   def used_namespaces
     @used_namespaces
   end
 
-  # locations
+  # TODO: can <xsd:attributeGroup ref="xlink:simpleLink"/> occur with
+  # xlink not having been already resolved?
+
+  # namespace_locations
   #
   # Returns a hash of Location-URL/Namespace-URN key/value pairs 
   # where the use of a Namespace-URN has been encountered during element
   # and attribute parsing.
-  #
-  # TODO: can <xsd:attributeGroup ref="xlink:simpleLink"/> occur with
-  # xlink not having been already resolved?
 
   def namespace_locations
     used_locations = Hash.new
@@ -150,30 +152,32 @@ class PlainXmlDocument < Nokogiri::XML::SAX::Document
   #
   # Given the array ATTRIBUTES of the SAX-parsed attributes object
   # (which include the methods 'localname', 'prefix', 'uri' and
-  # 'value' such that where 'uri' is the namespace of the unprefixed
+  # 'value' such that 'uri' is the namespace of the unprefixed
   # attribute name 'localname'), check if it includes a schemaLocation 
   # and if so, parse its values, adding to the internal @locations hash.
   #
-  # Consider this piece of a METs instance document:
+  # Consider this fragment of a METs instance document:
   #
-  # <METS:mets xmlns:METS="http://www.loc.gov/METS/"
-  #            xmlns:daitss="http://www.fcla.edu/dls/md/daitss/"
-  #            xmlns:dc="http://purl.org/dc/elements/1.1/"
-  # 	       xmlns:mods="http://www.loc.gov/mods/v3"
-  #            xmlns:palmm="http://www.fcla.edu/dls/md/palmm/"
-  #            xmlns:rightsmd="http://www.fcla.edu/dls/md/rightsmd/"
-  #            xmlns:techmd="http://www.fcla.edu/dls/md/techmd/"
-  #            xmlns:xlink="http://www.w3.org/1999/xlink"
-  #            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  #            LABEL="Florida Chautauqua" OBJID="SN00000005"
-  #            TYPE="serial"
-  #            xsi:schemaLocation="http://www.loc.gov/METS/             http://www.loc.gov/standards/mets/mets.xsd
-  #                                http://purl.org/dc/elements/1.1/     http://dublincore.org/schemas/xmls/simpledc20021212.xsd
-  #                                http://www.loc.gov/mods/v3           http://www.loc.gov/standards/mods/v3/mods-3-0.xsd
-  #                                http://www.fcla.edu/dls/md/techmd/   http://www.fcla.edu/dls/md/techmd.xsd
-  #                                http://www.fcla.edu/dls/md/palmm/    http://www.fcla.edu/dls/md/palmm.xsd
-  #                                http://www.fcla.edu/dls/md/rightsmd/ http://www.fcla.edu/dls/md/rightsmd.xsd
-  #                                http://www.fcla.edu/dls/md/daitss/   http://www.fcla.edu/dls/md/daitss/daitss.xsd">
+  #    <METS:mets xmlns:METS="http://www.loc.gov/METS/"
+  #               xmlns:daitss="http://www.fcla.edu/dls/md/daitss/"
+  #               xmlns:dc="http://purl.org/dc/elements/1.1/"
+  # 	          xmlns:mods="http://www.loc.gov/mods/v3"
+  #               xmlns:palmm="http://www.fcla.edu/dls/md/palmm/"
+  #               xmlns:rightsmd="http://www.fcla.edu/dls/md/rightsmd/"
+  #               xmlns:techmd="http://www.fcla.edu/dls/md/techmd/"
+  #               xmlns:xlink="http://www.w3.org/1999/xlink"
+  #               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  #
+  #           LABEL="Florida Chautauqua" OBJID="SN00000005"
+  #           TYPE="serial"
+  #
+  #      xsi:schemaLocation="http://www.loc.gov/METS/             http://www.loc.gov/standards/mets/mets.xsd
+  #                          http://purl.org/dc/elements/1.1/     http://dublincore.org/schemas/xmls/simpledc20021212.xsd
+  #                          http://www.loc.gov/mods/v3           http://www.loc.gov/standards/mods/v3/mods-3-0.xsd
+  #                          http://www.fcla.edu/dls/md/techmd/   http://www.fcla.edu/dls/md/techmd.xsd
+  #                          http://www.fcla.edu/dls/md/palmm/    http://www.fcla.edu/dls/md/palmm.xsd
+  #                          http://www.fcla.edu/dls/md/rightsmd/ http://www.fcla.edu/dls/md/rightsmd.xsd
+  #                          http://www.fcla.edu/dls/md/daitss/   http://www.fcla.edu/dls/md/daitss/daitss.xsd">
   #
   # check_for_locations parses the "xsi:schemaLocation" attribute into namespace-uri/location-url pairs, and
   # enters them into the @locations hash, which maintains an association of locations and the namespace.
@@ -206,8 +210,6 @@ end # of class PlainXmlDocument
 #
 # Attributes for these elements are mined for additional schema
 # locations to process.
-
-
 
 class SchemaDocument < PlainXmlDocument
 
@@ -258,7 +260,12 @@ class SchemaDocument < PlainXmlDocument
     get_target_namespace attributes if element_name == 'schema'  and uri == 'http://www.w3.org/2001/XMLSchema'
   end
 
-  # Assumes we're called from an element node named "http://www.w3.org/2001/XMLSchema:schema".
+  # get_target_namespace ATTRIBUTES
+  #
+  # Extract the targeNamespace if found from ATTRIBUTES, an array of
+  # Nokogiri::XML::SAX::Parser::Attribute structs. We're called when
+  # an element node named "http://www.w3.org/2001/XMLSchema:schema" is
+  # encountered.
 
   def get_target_namespace attributes
     attributes.each do |attr|
@@ -270,7 +277,10 @@ class SchemaDocument < PlainXmlDocument
 
   # get_import_location ATTRIBUTES
   #
-  # Extract and add the namespace/location mapping for schema directives of the form:
+  # Search through ATTRIBUTES (essentially an array of
+  # Struct.new(:localname, :prefix, :uri, :value)). We extract the
+  # namespace/location mappings for schema import directives of the
+  # form:
   #
   #   <"http://www.w3.org/2001/XMLSchema":import
   #          namespace="http://www.w3.org/XML/1998/namespace"
@@ -281,7 +291,8 @@ class SchemaDocument < PlainXmlDocument
     loc = nil
     ns  = nil
     
-    # search through all attributes for those of interest; if we find both, record them.
+    # search through all attributes for those of interest; if we find both a namespace
+    # and schemaLocation record them.
 
     attributes.each do |attr|
       ns  = attr.value if attr.localname == 'namespace'
@@ -294,9 +305,12 @@ class SchemaDocument < PlainXmlDocument
     end
   end
 
-  # get_include_location 
+  # get_include_location ATTRIBUTES
   # 
-  # Handle xsd:include directives.
+  # Handle xsd:include directives, searching through the attributes
+  # associated with "http://www.w3.org/2001/XMLSchema":include 
+  # elements.   By definition, includes import into the target
+  # namespace.
   #
   #   <xsd:schema .... >
   #       <xsd:include schemaLocation="daitssAccount.xsd"/>
