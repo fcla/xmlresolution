@@ -36,20 +36,20 @@ module XmlResolution
   #
   # which returns
   #
-  # http://www.fcla.edu/dls/md/daitss/ => http://www.fcla.edu/dls/md/daitss/daitss.xsd
-  # http://www.fcla.edu/dls/md/daitss/ => http://www.fcla.edu/dls/md/daitss/daitssAccount.xsd
-  # http://www.fcla.edu/dls/md/daitss/ => http://www.fcla.edu/dls/md/daitss/daitssAccountProject.xsd
-  #  ...
-  # http://www.fcla.edu/dls/md/daitss/ => http://www.fcla.edu/dls/md/daitss/daitssWaveFile.xsd
-  # http://www.loc.gov/METS/ => http://www.loc.gov/standards/mets/mets.xsd
-  # http://www.loc.gov/mods/v3 => http://www.loc.gov/standards/mods/v3/mods-3-3.xsd
-  # http://www.w3.org/XML/1998/namespace => http://www.loc.gov/standards/mods/xml.xsd
-  # http://www.w3.org/1999/xlink => http://www.loc.gov/standards/xlink/xlink.xsd
-  # http://www.uflib.ufl.edu/digital/metadata/ufdc2/ => http://www.uflib.ufl.edu/digital/metadata/ufdc2/ufdc2.xsd
-  # http://www.w3.org/XML/1998/namespace => http://www.w3.org/2001/xml.xsd
-  # http://www.w3.org/2001/XMLSchema => http://www.w3.org/2001/XMLSchema.xsd
+  #   http://www.fcla.edu/dls/md/daitss/ => http://www.fcla.edu/dls/md/daitss/daitss.xsd
+  #   http://www.fcla.edu/dls/md/daitss/ => http://www.fcla.edu/dls/md/daitss/daitssAccount.xsd
+  #   http://www.fcla.edu/dls/md/daitss/ => http://www.fcla.edu/dls/md/daitss/daitssAccountProject.xsd
+  #    ...
+  #   http://www.fcla.edu/dls/md/daitss/ => http://www.fcla.edu/dls/md/daitss/daitssWaveFile.xsd
+  #   http://www.loc.gov/METS/ => http://www.loc.gov/standards/mets/mets.xsd
+  #   http://www.loc.gov/mods/v3 => http://www.loc.gov/standards/mods/v3/mods-3-3.xsd
+  #   http://www.w3.org/XML/1998/namespace => http://www.loc.gov/standards/mods/xml.xsd
+  #   http://www.w3.org/1999/xlink => http://www.loc.gov/standards/xlink/xlink.xsd
+  #   http://www.uflib.ufl.edu/digital/metadata/ufdc2/ => http://www.uflib.ufl.edu/digital/metadata/ufdc2/ufdc2.xsd
+  #   http://www.w3.org/XML/1998/namespace => http://www.w3.org/2001/xml.xsd
+  #   http://www.w3.org/2001/XMLSchema => http://www.w3.org/2001/XMLSchema.xsd
   #
-  # Unresolved: http://www.w3.org/1999/xlink, http://www.w3.org/2001/XMLSchema-instance
+  #   Unresolved: http://www.w3.org/1999/xlink, http://www.w3.org/2001/XMLSchema-instance
   #
   # Two notes on squid caching proxies: at least by default, redirects
   # are not cached (even 301 "moved permanently") so that there will
@@ -62,46 +62,44 @@ module XmlResolution
   # caching/expiration information associated with it. These kinds of
   # issues slow us down somewhat.
 
-
-
-  # There exist basic namespaces that schema-processors 'just know
-  # about', and they are not normally downloaded when encountered
-  # (for instance, http://www.w3.org/2001/XMLSchema.xsd and
-  # http://www.w3.org/2001/xml.xsd).  We do, currently, download those.
-  #
-  # In other cases there are no actual schemas at all -
-  # schema-processors really do have to know about them.
-  #
-  # For this latter case we do not want to report them as unresolved
-  # namespaces. NAMESPACE_DONT_TELL is the place to list them.
-  #
-  # There's another interesting case: for some namespaces such as
-  # http://www.w3.org/XML/1998/namespace, a given application schema
-  # may associate a location with them via targetNamespace, but they
-  # will not normally appear otherwise.  I think we can safely ignore
-  # them.
-
-  NAMESPACE_DONT_TELL =  [ 
-                          # 'http://www.w3.org/1999/xlink',   # not sure about these two yet
-                          # 'http://www.w3.org/1999/xhtml',
-                          'http://www.w3.org/2001/XMLSchema-hasFacetAndProperty',
-                          'http://www.w3.org/2001/XMLSchema-instance'
-                         ]
-
-  # TODO: pending team review of above, uncomment out the namespace stop list.
-
-  
-  # Oddball namespaces:
-  #
-  # 'http://www.w3.org/XML/1998/namespace
-
-  # To avoid potential denial of service attacks (even if self-inflcited), limit the number
-  # of schemas we are willing to process for one XML instance document.
-
-  TOO_MANY_SCHEMAS  =  500
-
   class XmlResolver
     
+    # There exist basic namespaces that schema-processors 'just know
+    # about', and they are not normally downloaded when encountered
+    # (for instance, http://www.w3.org/2001/XMLSchema.xsd and
+    # http://www.w3.org/2001/xml.xsd).  We, however, do currently
+    # download those.
+    #
+    # In other cases there are no actual schemas at all -
+    # schema-processors really do have to know about them.
+    #
+    # For this latter case we do not want to report them as unresolved
+    # namespaces. NAMESPACE_DONT_TELL is the place to list them.
+    #
+    # There's another interesting case: for some namespaces such as
+    # http://www.w3.org/XML/1998/namespace, a given application schema
+    # may associate a location with them via targetNamespace, but they
+    # will not normally appear otherwise.  I think we can safely ignore
+    # them.
+
+    NAMESPACE_DONT_TELL =  [
+                            # 'http://www.w3.org/1999/xlink',   # not sure about these two yet
+                            # 'http://www.w3.org/1999/xhtml',
+                            'http://www.w3.org/2001/XMLSchema-hasFacetAndProperty',
+                            'http://www.w3.org/2001/XMLSchema-instance'
+                           ]
+
+    # TODO: pending team review of above, uncomment out the namespace stop list.
+    #
+    # Oddball namespaces:
+    #
+    # 'http://www.w3.org/XML/1998/namespace
+
+    # To avoid potential denial of service attacks (even if self-inflcited), limit the number
+    # of schemas we are willing to process for one XML instance document.
+
+    TOO_MANY_SCHEMAS  =  500
+
     # A writable directory for storing retrieved schema documents.
     
     attr_reader :schemas_storage_directory
@@ -319,6 +317,9 @@ module XmlResolution
     #     </agentIdentifier>
     #     <agentName>XML Resolution Service</agentName>
     #     <agentType>Web Service</agentType>
+    #     <agentNote xmlns="info:lc/xmlns/premis-v2-beta">
+    #        Version 1.0.0, Git Revision 8160e74815a0b633af5f03ee3b629e335a42960f, Capistrano Release 20100517050854.
+    #     </agentNote>
     #   </agent>
     # </premis>
 
@@ -418,14 +419,14 @@ module XmlResolution
           }
         }
 
-        xml.agent {
+        xml.agent() {
           xml.agentIdentifier {
             xml.agentIdentifierType('URI')
             xml.agentIdentifierValue(XmlResolution.version.uri)
           }
           xml.agentName('XML Resolution Service')
           xml.agentType('Web Service')
-          xml.agentNote(XmlResolution.version.rev)
+          xml.agentNote(XmlResolution.version.rev, :xmlns => 'info:lc/xmlns/premis-v2-beta')
         }
       }
       xml.target!
@@ -530,6 +531,7 @@ module XmlResolution
       str += ResolverUtils.escape("UNRESOLVED_NAMESPACES", *unresolved_namespaces) + "\n"
     end # of def
   end # of class XmlResolver
+
 
   # XmlResolverReloaded provides a subset of the capabilities of the XmlResolver class; it
   # reloads the data that is dumped via XmlResolver#dump.  In particular, we can get:

@@ -50,25 +50,25 @@ module XmlResolution
     # where schemas and collections all live. Say it is named
     # "...data_root"; then the heirarchy looks like this:
     #
-    # ...data_root/collections
-    #
-    # ...data_root/collections/E20010101_CEEBEE                                    # a collection
-    # ...data_root/collections/E20010101_CEEBEE/74e5729189a158f105eb113be42a123a   # a document record
-    # ...data_root/collections/E20010101_CEEBEE/d25504bfb5986db329e02b2d447cc4e7
-    #
-    # ...data_root/collections/E20010101_DEADER                                    # another collection
-    # ...data_root/collections/E20010101_DEADER/e6720c9ea7e7f2a70d8dd20b1af84020   # its document records
-    # ...data_root/collections/E20010101_DEADER/e68ac0fe9f938ccf339afe4a76bfd26b
-    # ...data_root/collections/E20010101_DEADER/ee209b5a6c70b495a130cad8d20eb779
-    #
-    # ...data_root/schemas                                                         # where the schemas live
-    # ...data_root/schemas/005aead63fe2e6a13152ecad7e702a21                        # a dowmloaded schema
-    # ...data_root/schemas/02592d8f2bb29d7f4f8e413fdb22c3e0
-    # ...data_root/schemas/0bfe4d177184c3e01c674951481be6af
-    # ...data_root/schemas/15fa7e3aedef6801c565bfbf621fdc5b
-    # ...data_root/schemas/1ad7d28cc5587a80cfde5e47b3265e39
-    #
-    #     ...lots more schemas...
+    #   ...data_root/collections
+    #   ...
+    #   ...data_root/collections/E20010101_CEEBEE                                    # a collection
+    #   ...data_root/collections/E20010101_CEEBEE/74e5729189a158f105eb113be42a123a   # a document record
+    #   ...data_root/collections/E20010101_CEEBEE/d25504bfb5986db329e02b2d447cc4e7
+    #   ...
+    #   ...data_root/collections/E20010101_DEADER                                    # another collection
+    #   ...data_root/collections/E20010101_DEADER/e6720c9ea7e7f2a70d8dd20b1af84020   # its document records
+    #   ...data_root/collections/E20010101_DEADER/e68ac0fe9f938ccf339afe4a76bfd26b
+    #   ...data_root/collections/E20010101_DEADER/ee209b5a6c70b495a130cad8d20eb779
+    #   ...
+    #   ...data_root/schemas                                                         # where the schemas live
+    #   ...data_root/schemas/005aead63fe2e6a13152ecad7e702a21                        # a dowmloaded schema
+    #   ...data_root/schemas/02592d8f2bb29d7f4f8e413fdb22c3e0
+    #   ...data_root/schemas/0bfe4d177184c3e01c674951481be6af
+    #   ...data_root/schemas/15fa7e3aedef6801c565bfbf621fdc5b
+    #   ...data_root/schemas/1ad7d28cc5587a80cfde5e47b3265e39
+    #   ...
+    #       ...lots more schemas...
 
     attr_reader :data_path
 

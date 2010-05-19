@@ -1,7 +1,7 @@
 # This top page provides help and documentation:
 
 get '/' do
-  erb :site, :locals => { :base_url => service_name, :revision => REVISION }
+  erb :site, :locals => { :base_url => service_name, :revision => XmlResolution.version.rev }
 end
 
 # List the collections we've created

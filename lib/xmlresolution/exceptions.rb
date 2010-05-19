@@ -113,20 +113,44 @@ module XmlResolution
     def status_text; "HTTP Version Not Supported"; end
   end
 
-  # Client's fault:
+  
+  # Client's faullt: Instance document could not be parsed..
 
-  class BadXmlDocument      < Http400; end            # Instance document could not be parsed..
-  class BadBadXmlDocument   < BadXmlDocument; end     # ..it *really* could not be parsed
-  class InadequateDataError < Http400; end            # Problem with uploaded data (e.g. length 0)
-  class BadCollectionID     < Http400; end            # PUT of a Collection ID wasn't suitable
-  class BadXmlVersion       < Http415; end            # Unsupported XML version (only 1.0)
-  class TooManyDarnSchemas  < Http400; end            # Possible denial of service - infinite train of schemas
+  class BadXmlDocument      < Http400; end            
 
-  # Server's fault:
+  # Client's faullt: ..it *really* could not be parsed
 
-  class LockError           < Http500; end            # Timed out trying to get a locked file
-  class ConfigurationError  < Http500; end            # Something wasn't set up correctly
-  class ResolverError       < Http500; end            # Result of a programming error
+  class BadBadXmlDocument   < BadXmlDocument; end     
+
+  # Client's faullt: Problem with uploaded data (e.g. length 0)
+
+  class InadequateDataError < Http400; end            
+
+  # Client's faullt: PUT of a Collection ID wasn't suitable
+
+  class BadCollectionID     < Http400; end            
+
+  # Client's faullt: Unsupported XML version (only 1.0)
+
+  class BadXmlVersion       < Http415; end            
+
+  # Client's faullt: Possible denial of service - infinite train of schemas
+
+  class TooManyDarnSchemas  < Http400; end            
+
+
+
+  # Server's fault: Timed out trying to get a locked file
+
+  class LockError           < Http500; end            
+
+  # Server's fault: Something wasn't set up correctly
+
+  class ConfigurationError  < Http500; end            
+
+  # Server's fault: Result of a programming error
+
+  class ResolverError       < Http500; end            
 
   # LocationError is caught internally, and is used to indicate that
   # the fetch of a Schema could not be performed because the location

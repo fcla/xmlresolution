@@ -204,9 +204,9 @@ end # of class PlainXmlDocument
 # Instead, it adds specialized processing for schema documents, looking for
 # the following elements:
 #
-#   'http://www.w3.org/2001/XMLSchema':import  
-#   'http://www.w3.org/2001/XMLSchema':include 
-#   'http://www.w3.org/2001/XMLSchema':schema  
+#   'http://www.w3.org/2001/XMLSchema':import
+#   'http://www.w3.org/2001/XMLSchema':include
+#   'http://www.w3.org/2001/XMLSchema':schema 
 #
 # Attributes for these elements are mined for additional schema
 # locations to process.
@@ -255,16 +255,20 @@ class SchemaDocument < PlainXmlDocument
 
   def start_element_namespace element_name, attributes = [], prefix = nil, uri = nil, namespace = []
     super
-    get_import_location  attributes if element_name == 'import'  and uri == 'http://www.w3.org/2001/XMLSchema'
-    get_include_location attributes if element_name == 'include' and uri == 'http://www.w3.org/2001/XMLSchema'
-    get_target_namespace attributes if element_name == 'schema'  and uri == 'http://www.w3.org/2001/XMLSchema'
+    if uri == 'http://www.w3.org/2001/XMLSchema'
+      case element_name
+      when 'schema';   get_target_namespace attributes
+      when 'import';   get_import_location  attributes
+      when 'include';  get_include_location attributes
+      end
+    end
   end
 
   # get_target_namespace ATTRIBUTES
   #
-  # Extract the targeNamespace if found from ATTRIBUTES, an array of
+  # Extract the targeNamespace if found in ATTRIBUTES, an array of
   # Nokogiri::XML::SAX::Parser::Attribute structs. We're called when
-  # an element node named "http://www.w3.org/2001/XMLSchema:schema" is
+  # an element node named "http://www.w3.org/2001/XMLSchema":schema is
   # encountered.
 
   def get_target_namespace attributes
@@ -285,7 +289,7 @@ class SchemaDocument < PlainXmlDocument
   #   <"http://www.w3.org/2001/XMLSchema":import
   #          namespace="http://www.w3.org/XML/1998/namespace"
   #          schemaLocation="http://www.w3.org/2001/xml.xsd">
-  #
+
 
   def get_import_location attributes
     loc = nil
@@ -307,17 +311,15 @@ class SchemaDocument < PlainXmlDocument
 
   # get_include_location ATTRIBUTES
   # 
-  # Handle xsd:include directives, searching through the attributes
-  # associated with "http://www.w3.org/2001/XMLSchema":include 
-  # elements.   By definition, includes import into the target
+  # Handle schema include directives, searching through the attributes
+  # associated with "http://www.w3.org/2001/XMLSchema":include
+  # elements.  By definition, includes import into the target
   # namespace.
   #
   #   <xsd:schema .... >
   #       <xsd:include schemaLocation="daitssAccount.xsd"/>
   #       <xsd:include schemaLocation="daitssAccountProject.xsd"/>
   #        ....
-  #
-  # By definition, includes are for the targetNamespace.
 
   def get_include_location attributes
     attributes.each do |attr|
