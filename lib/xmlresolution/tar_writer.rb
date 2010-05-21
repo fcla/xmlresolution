@@ -35,12 +35,12 @@ module XmlResolution
 
   class TarWriter
 
-    # TODO: instead of an explicit file descriptor, why not yield up the tar file
-    # in larger chunks....
+    # TODO: instead of an explicit file descriptor, why not yield up
+    # the tar file in larger chunks....
 
-    # TODO: we could use a simpler tar format than the one I'm using - I modeled this on
-    # bsdtar 2.6.2 (mac os x) - use recent version of gnutar instead....
-
+    # TODO: perhaps we could use a simpler tar format than the one I'm
+    # using - I modeled this on bsdtar 2.6.2 (mac os x) - use recent
+    # version of gnutar instead....
 
     # A hash having keys :uid, :gid, :username, :groupname, used to set ownership for all
     # files included in the tar file we produce.

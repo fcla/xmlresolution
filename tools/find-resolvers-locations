@@ -41,6 +41,14 @@ resolver = XmlResolution::XmlResolver.new(File.read(file), "file://localhost/#{f
                                           root, proxy)
 resolver.process
 
-locations = resolver.schema_dictionary.map { |record|  record.location unless record.retrieval_status == :failure }.compact
+locations = resolver.schema_dictionary.map do |record|  
+  case record.retrieval_status
+  when :failure
+    STDERR.puts "#{record.location} not retreived: #{record.error_message}"
+  when :success, :redirect
+    record.location
+  end
+end
 
+# puts locations.inspect
 puts locations.sort.join("\n") unless locations.empty?

@@ -71,6 +71,38 @@ class PlainXmlDocument < Nokogiri::XML::SAX::Document
     super()
   end
 
+  # used_namespaces
+  #
+  # Returns a hash of the namespaces extracted from the element and
+  # attribute information parsed by the SAX processor: only those
+  # namespaces actually used by the XML document are recorded.  This
+  # will be identical to the optional hash argument to our constructor
+  # if it was provided.
+ 
+  def used_namespaces
+    @used_namespaces
+  end
+
+  # TODO: can <xsd:attributeGroup ref="xlink:simpleLink"/> occur with
+  # xlink not having been already resolved?
+
+  # namespace_locations
+  #
+  # Returns a hash of Location-URL/Namespace-URN key/value pairs 
+  # where the use of a Namespace-URN has been encountered during element
+  # and attribute parsing.
+
+  def namespace_locations
+    used_locations = Hash.new
+    @locations.keys.each do |loc|
+      used_locations[loc] =  @locations[loc] if @used_namespaces[@locations[loc]]
+    end
+    used_locations
+  end
+
+
+  private
+
   # Standard callbacks:
 
   # xmldecl  VERSION, ENCODING, STANDALONE
@@ -119,34 +151,6 @@ class PlainXmlDocument < Nokogiri::XML::SAX::Document
     warnings.push string.chomp
   end
 
-  # used_namespaces
-  #
-  # Returns a hash of the namespaces extracted from the element and
-  # attribute information parsed by the SAX processor: only those
-  # namespaces actually used by the XML document are recorded.  This
-  # will be identical to the optional hash argument to our constructor
-  # if it was provided.
- 
-  def used_namespaces
-    @used_namespaces
-  end
-
-  # TODO: can <xsd:attributeGroup ref="xlink:simpleLink"/> occur with
-  # xlink not having been already resolved?
-
-  # namespace_locations
-  #
-  # Returns a hash of Location-URL/Namespace-URN key/value pairs 
-  # where the use of a Namespace-URN has been encountered during element
-  # and attribute parsing.
-
-  def namespace_locations
-    used_locations = Hash.new
-    @locations.keys.each do |loc|
-      used_locations[loc] =  @locations[loc] if @used_namespaces[@locations[loc]]
-    end
-    used_locations
-  end
 
   # check_for_locations ATTRIBUTES
   #
@@ -237,6 +241,8 @@ class SchemaDocument < PlainXmlDocument
     @schema_location = schema_location
     super(used_namespaces)
   end
+
+  private
 
   # absolutize LOCATION
   #

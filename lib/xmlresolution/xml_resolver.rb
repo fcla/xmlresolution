@@ -204,6 +204,7 @@ module XmlResolution
       
       instance_document   = analyze_xml_document(document_text)
 
+
       if instance_document.version != '1.0'
         raise XmlResolution::BadXmlVersion, "This service only supports XML Version 1.0. This document is XML Version #{instance_document.version}"
       end
@@ -226,9 +227,11 @@ module XmlResolution
       count = 0
       catalog.schemas do |schema_record|
         count += 1
+
         next if schema_record.retrieval_status != :success
         schema_document = analyze_schema_document(schema_record.location, File.read(schema_record.localpath), @used_namespaces)
         catalog.merge schema_document.namespace_locations
+
         raise XmlResolution::TooManyDarnSchemas,  "Too many schemas (#{count}) encountered for #{document_uri}." if count > TOO_MANY_SCHEMAS
       end
       
@@ -426,7 +429,7 @@ module XmlResolution
           }
           xml.agentName('XML Resolution Service')
           xml.agentType('Web Service')
-          xml.agentNote(XmlResolution.version.rev, :xmlns => 'info:lc/xmlns/premis-v2-beta')
+          xml.agentNote(XmlResolution.version.rev, :xmlns => 'info:lc/xmlns/premis-v2-beta')  # xmlns won't work: marker for Franco's tests.
         }
       }
       xml.target!

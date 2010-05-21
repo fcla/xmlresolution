@@ -36,7 +36,7 @@ module ResolverUtils
     if pathname.nil?
       Etc.getgrgid(Process.gid).name
     else
-      Etc.getgrgid(File.stat(pathname).uid).name
+      Etc.getgrgid(File.stat(pathname).gid).name
     end
   end
 
@@ -66,25 +66,27 @@ module ResolverUtils
     end
   end
 
-  # write_lock FILEPATH
+  # write_lock FILEPATH [ WAIT_TIME = LOCK_TIMEOUT ]
   #
-  # Access the file named by FILEPATH exclusively. Times out after
-  # LOCK_TIMEOUT seconds, raising a LockError exception.  On
-  # successfully obtaining a lock we truncate the file, and yield a
-  # file descriptor ready for writing.  On return the file is properly
-  # closed. See the description of write_lock for more details on how
-  # these kinds of lock work.
+  # Access the file named by FILEPATH exclusively. FILEPATH does not
+  # have to exiust. Times out after LOCK_TIMEOUT (or the optional
+  # WAIT_TIME, if specified) seconds, raising a LockError exception.
+  # On successfully obtaining a lock we truncate the file, and yield a
+  # file descriptor ready for writing.  On exiting the block the file
+  # is properly closed and the lock released. See the description of
+  # read_lock for more details on how these kinds of lock work.
 
-  def ResolverUtils.write_lock filepath
-    open(filepath, 'w') do |fd|
-      Timeout.timeout(LOCK_TIMEOUT) { fd.flock(File::LOCK_EX) }
+  def ResolverUtils.write_lock filepath, wait_time = LOCK_TIMEOUT
+    open(filepath, 'a+') do |fd|                                # 'a+' followed by truncate in body; with just 'w' in
+      Timeout.timeout(wait_time) { fd.flock(File::LOCK_EX) }    #  open we truncate w/o getting a lock!
+      fd.truncate(0)
       yield fd
     end
   rescue Timeout::Error => e
-    raise XmlResolution::LockError, "Timed out waiting #{LOCK_TIMEOUT} seconds for write lock to #{filepath}: #{e.message}"
+    raise XmlResolution::LockError, "Timed out waiting #{wait_time} seconds for write lock to #{filepath}: #{e.message}"
   end
 
-  # read_lock FILEPATH
+  # read_lock FILEPATH [ WAIT_TIME = LOCK_TIMEOUT ]
   #
   # Access the file named by FILEPATH in a shared manner.  Note that
   # we have two kinds of locks associated with a given file,
@@ -92,20 +94,20 @@ module ResolverUtils
   # active at any time. There may exist many active read_locks at
   # once, but if there is an active write_lock, it is the only lock of
   # any kind in existance (for FILEPATH) at that time.  Requests for
-  # locks may block for up to LOCK_TIMEOUT seconds, after which a
-  # LockError exception is raised.
+  # locks may block for up to WAIT_TIME seconds (defaults to
+  # LOCK_TIMEOUT), after which a LockError exception is raised.
   #
-  # On success, we yield a file desciptor positioned at the
-  # beginning of the file and ready to read from.  On return, the
-  # file is properly closed.
+  # On success, we yield a file desciptor positioned at the beginning
+  # of the file and ready to read from.  On exiting the block, the
+  # file is properly closed and the lock released.
 
-  def ResolverUtils.read_lock filepath
+  def ResolverUtils.read_lock filepath, wait_time = LOCK_TIMEOUT
     open(filepath, 'r') do |fd|
-      Timeout.timeout(LOCK_TIMEOUT) { fd.flock(File::LOCK_SH) }
+      Timeout.timeout(wait_time) { fd.flock(File::LOCK_SH) }
       yield fd
     end
   rescue Timeout::Error => e
-    raise XmlResolution::LockError, "Timed out waiting #{LOCK_TIMEOUT} seconds for read lock to #{filepath}: #{e.message}"
+    raise XmlResolution::LockError, "Timed out waiting #{wait_time} seconds for read lock to #{filepath}: #{e.message}"
   end
 
   # escape *LIST
@@ -138,7 +140,6 @@ module ResolverUtils
   def ResolverUtils.collection_name_ok? collection_id
     not (collection_id =~ /\// or collection_id != URI.escape(collection_id))
   end
-
 
   # remote_name ADDR
   #

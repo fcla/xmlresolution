@@ -1,4 +1,4 @@
-require 'xmlresolution/tarwriter'
+require 'xmlresolution/tar_writer'
 require 'tmpdir'
 require 'tempfile'
 require 'fileutils'

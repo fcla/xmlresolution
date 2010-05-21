@@ -16,8 +16,9 @@ When an XML document is uploaded for a particular collection the
 service responds with a PREMIS XML document summarizing the analysis
 of the document.  The returned XML document should validate correctly,
 though it is expected only certain parts of it will be of value to the
-client, which commonly extracts parts of the document. The
-elements <code>object</code>, <code>event</code>, and
+client, which in the case of DAITSS extracts and modifies parts of the
+document for inclusion into other XML documents. In the complete PREMIS
+document, elements <code>object</code>, <code>event</code>, and
 <code>agents</code> are included as immediate children of the root node.
 </p>
 

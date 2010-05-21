@@ -42,7 +42,8 @@ desc "Maintain the sinatra tmp directory for automated restart (passenger phusio
 task :restart do
   mkdir TMPDIR unless File.directory? TMPDIR
   restart = File.join(TMPDIR, 'restart.txt')     
-  if not (File.exists?(restart) and `find "#{HOME}" -type f -newer "#{restart}" 2> /dev/null`.empty?)
+  puts `find  #{HOME}/ -type f -newer "#{restart}"`
+  if not (File.exists?(restart) and `find  #{HOME}/ -type f -newer "#{restart}" 2> /dev/null`.empty?)
     File.open(restart, 'w') { |f| f.write "" }
   end  
 end
