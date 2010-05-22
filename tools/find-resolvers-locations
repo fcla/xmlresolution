@@ -39,7 +39,6 @@ FileUtils.mkdir_p [ root, "#{root}/schemas", "#{root}/collections" ]
 
 resolver = XmlResolution::XmlResolver.new(File.read(file), "file://localhost/#{file.gsub(%r{^/+}, '')}",
                                           root, proxy)
-resolver.process
 
 locations = resolver.schema_dictionary.map do |record|  
   case record.retrieval_status

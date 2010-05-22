@@ -1,19 +1,19 @@
 require 'xmlresolution'
 
 # xmlresolution.rb mostly just includes the actual library files, but there
-# is a version class method in it.
+# is a version class method in it; we test those here.
 
 describe XmlResolution do
 
-  it "should provice a VERSION constant" do
+  it "should provide a VERSION constant" do
     (XmlResolution::VERSION =~ /^1\./).should == 0
   end
 
-  it "should provice a RELEASE constant" do
+  it "should provide a RELEASE constant" do
     (XmlResolution::RELEASE.length > 0).should == true
   end
 
-  it "should provice a REVISION constant" do
+  it "should provie a REVISION constant" do
     (XmlResolution::REVISION.length > 0).should == true
   end
 

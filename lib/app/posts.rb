@@ -6,7 +6,6 @@
 # Additionally, we require that the content disposition must supply a
 # filename.
 
-
 post '/ieids/:collection_id/' do |collection_id|
 
   begin
@@ -26,7 +25,6 @@ post '/ieids/:collection_id/' do |collection_id|
 
     res = XmlResolver.new(tempfile.open.read, file_url, settings.data_path, settings.proxy)
 
-    res.process
     res.save collection_id
 
     res.schema_dictionary.map do |record|  

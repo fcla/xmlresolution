@@ -23,11 +23,12 @@ module XmlResolution
   #  * retrieval_status     the outcome of retrieving the schema: one of :success, :failure, or :redirect.
   #  * error_message        if retrieval_status is :failure, this will be the associated error message. Usually a Net::HTTP exception, it could also represent a run-time exception.
   #  * redirected_location  if retrieval_status is :redirect, this will be the initial Location URL; the location slot contains the address of the retrieved schema text.
-  #
-  
-
 
   class SchemaCatalog
+
+    # As we process schemas, we record that we've seen them
+
+    @processed_locations = nil
 
     # If a proxy has been given, @proxy_addr is its address, either as a DNS name or IP Address,.
 
@@ -59,10 +60,10 @@ module XmlResolution
 
     # SchemaCatalog.new(NAMESPACE_LOCATIONS, DATA_STORAGE_PATH, [ PROXY ])
     #
-    # Create a catalog of schemas, normally for one document.
-    # DATA_STORAGE_PATH provides a path to where downloaded schemas can
-    # be saved. PROXY, if supplied, is the address and port of a caching
-    # web proxy, e.g. squid.example.com:3128.
+    # Creates a catalog of schemas.  DATA_STORAGE_PATH provides a path
+    # to where downloaded schemas can be saved. PROXY, if supplied, is
+    # the address and port of a caching web proxy,
+    # e.g. squid.example.com:3128.
     #
     # NAMESPACE_LOCATIONS is a hash of Location-URL/Namespace-URN key/value pairs
     # of schemas that will downloaded; the SchemaCatalog provides a convenient
@@ -79,12 +80,12 @@ module XmlResolution
     # via the catalog.merge method, allowing us to recursively search the schemas.)
 
     def initialize namespace_locations, data_storage_path = '/tmp/', proxy = nil
-
       if proxy
         @proxy_addr, @proxy_port = proxy.split(':', 2)
         @proxy_port  = @proxy_port.nil? ? 3128 : @proxy_port.to_i
       end
 
+      @processed_locations = {}
       @data_root = data_storage_path.gsub(%r{/+$}, '')
 
       ResolverUtils.check_directory "The schema storage directory", @data_root
@@ -123,18 +124,11 @@ module XmlResolution
     # key/value pairs, the same data structure passed to us in the
     # constructor.
     #
-    # Merge lets us add new schema records to the SchemaCatalog, but we
-    # take care not to overwrite existing records that have been processed.
-    # Note that this method will silently ignore new records in the case
-    # where we have identical locations for different namespaces ("can't
-    # happen").
+    # Merge lets us add new schema records to the SchemaCatalog, but
+    # we take care not to overwrite existing records that have already
+    # been processed.
 
     def merge namespace_locations
-
-      # Make a stop list for everything we already have, O(n):
-
-      seen = Hash.new
-      @schema_dictionary.each { |elt| seen[elt.location] = true }
 
       # For each location in NAMESPACE_LOCATIONS hash, check to see if
       # they aren't yet in our schema_dictionary, go fetch them.  If we
@@ -142,26 +136,23 @@ module XmlResolution
       # for, one or more redirects occured: mark it as such.
 
       namespace_locations.each do |location, namespace|
-        next if seen[location]
+
+        next if @processed_locations[location]
 
         schema_record = get_schema_record(location, namespace)
+
         @schema_dictionary.push schema_record
+        @processed_locations[schema_record.location] = true
 
         if schema_record.location != location   # then one or more redirects
-
           original = Struct::Schema.new(location, schema_record.namespace)
           original.retrieval_status    = :redirect
           original.redirected_location = schema_record.location
           @schema_dictionary.push  original
+          @processed_locations[original.location] = true
         end
       end
     end
-
-    # unresolved_namespaces
-    #
-    # Return those namespaces known to have been used, but that have
-    # not (yet) had a location found, and the schema downloaded, for it.
-    #
 
     private
 

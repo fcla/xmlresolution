@@ -24,7 +24,7 @@ end
 
 def get_capistrano_release
   full_path = File.expand_path(File.join(File.dirname(__FILE__)))
-  (full_path =~ %r{/releases/(\d+){14}/}) ? $1 : "Not Available"
+  (full_path =~ %r{/releases/((\d+){14})/}) ? $1 : "Not Available"
 end
 
 

@@ -3,11 +3,19 @@ require 'rake/rdoctask'
 require 'spec/rake/spectask'
 require 'fileutils'
 
+# require 'rubygems'
+# gem 'ci_reporter'
+
+require 'ci/reporter/rake/rspec' 
+
 Spec::Rake::SpecTask.new do |t|
   t.libs << 'lib'
   t.libs << 'spec'
   # t.rcov = true
 end
+
+task :tags => ["tags:emacs"]
+task :spec => ["ci:setup:rspec"]
 
 HOME    = File.expand_path(File.dirname(__FILE__))
 LIBDIR  = File.join(HOME, 'lib')
@@ -42,8 +50,10 @@ desc "Maintain the sinatra tmp directory for automated restart (passenger phusio
 task :restart do
   mkdir TMPDIR unless File.directory? TMPDIR
   restart = File.join(TMPDIR, 'restart.txt')     
-  puts `find  #{HOME}/ -type f -newer "#{restart}"`
-  if not (File.exists?(restart) and `find  #{HOME}/ -type f -newer "#{restart}" 2> /dev/null`.empty?)
+
+  files="app.rb config.ru lib/ public/ views/"
+
+  if not (File.exists?(restart) and `find  #{files} -type f -newer "#{restart}" 2> /dev/null`.empty?)
     File.open(restart, 'w') { |f| f.write "" }
   end  
 end

@@ -9,7 +9,7 @@ describe SchemaCatalog do
 
   @@tempdir = Dir.mktmpdir('schema-catalog-test-', '/tmp') + '/'
   @@proxy   = nil
-  @@cat     = nil
+  @@catalog = nil
 
   before(:all) do 
     @@proxy = ENV['RESOLVER_PROXY']   # set this environment variable if you want to test via a proxy
@@ -31,8 +31,8 @@ describe SchemaCatalog do
   end
 
   it "should retrieve the datiss schema directly from our website" do
-    @@cat = SchemaCatalog.new(daitss_namespace_locations, @@tempdir, @@proxy)
-    recs = @@cat.schemas 
+    @@catalog = SchemaCatalog.new(daitss_namespace_locations, @@tempdir, @@proxy)
+    recs = @@catalog.schemas 
     recs.length.should == 1
     info = recs[0]
     info.retrieval_status.should == :success
@@ -42,8 +42,8 @@ describe SchemaCatalog do
 
   it "should merge additional records, retrieving those schema" do
 
-    @@cat.merge({ 'http://www.fcla.edu/dls/md/daitss/daitssBitstream.xsd' => 'http://www.fcla.edu/dls/md/daitss/' })
-    recs = @@cat.schemas
+    @@catalog.merge({ 'http://www.fcla.edu/dls/md/daitss/daitssBitstream.xsd' => 'http://www.fcla.edu/dls/md/daitss/' })
+    recs = @@catalog.schemas
     recs.length.should == 2
 
     recs.each do |info|
@@ -61,19 +61,48 @@ describe SchemaCatalog do
     ns  = 'http://www.loc.gov/mods/v3'
     loc = 'http://www.loc.gov/mods/v3/mods-3-2.xsd'
 
-    @@cat.merge({ loc  => ns })
-    recs = @@cat.schemas
+    @@catalog.merge({ loc  => ns })
+    recs = @@catalog.schemas
 
     recs.length.should == 4   # adds one redirect record, one for the direct retrieval
 
     info = nil
     recs.each { |rec| info = rec if rec.namespace == ns and rec.location == loc }  # find the redirect record
     
-    info.should_not                 == nil
-    info.retrieval_status.should    == :redirect
-    info.redirected_location.should == 'http://www.loc.gov/standards/mods/v3/mods-3-2.xsd'
+    info.should_not == nil
+
+    if info
+      info.retrieval_status.should    == :redirect
+      info.redirected_location.should == 'http://www.loc.gov/standards/mods/v3/mods-3-2.xsd'
+    end
   end
 
+  it "should retrieve the schema location information from the catalog via a block method" do
 
+    locs = []
+    successes = 0
+    failures  = 0
+    redirects = 0
+
+    @@catalog.schemas do |rec|
+      locs.push rec.location
+
+      case rec.retrieval_status
+      when :success;  successes += 1
+      when :failure;  failures  += 1
+      when :redirect; redirects += 1
+      end
+    end
+
+    locs.length.should == 4
+    locs.include?("http://www.fcla.edu/dls/md/daitss/daitss.xsd").should == true
+    locs.include?("http://www.fcla.edu/dls/md/daitss/daitssBitstream.xsd").should == true
+    locs.include?("http://www.loc.gov/mods/v3/mods-3-2.xsd").should == true
+    locs.include?("http://www.loc.gov/standards/mods/v3/mods-3-2.xsd").should == true
+
+    successes.should == 3
+    redirects.should == 1
+    failures.should  == 0
+  end
 
 end # of tests

@@ -3,46 +3,46 @@ require 'tempfile'
 
 describe ResolverUtils do
 
-  it "should escape and concanate a list of strings" do
+  it "should escape and concanate a list of strings into one string" do
     ResolverUtils.escape('th is', 'is', 'a', 'test').should == 'th%20is is a test'
   end
 
-  it "should unescape a string into an array" do
+  it "should unescape an previously escaped string into an array" do
     ResolverUtils.unescape('th%20is is a test').length.should == 4
     ResolverUtils.unescape('th%20is is a test')[0].should == 'th is'
   end
 
-  it "should report collection id names with / or blanks as invalid" do
+  it "should report collection id names with / or blanks as invalid when checking a collection name" do
     ResolverUtils.collection_name_ok?("foo/bar").should ==  false
     ResolverUtils.collection_name_ok?("foo bar").should ==  false
-    ResolverUtils.collection_name_ok?("foobar").should ==  true
+    ResolverUtils.collection_name_ok?("foobar").should  ==  true
   end
 
-  it "should get the owner of this process" do
+  it "should get the owner of this process with the user utilitiy" do
     ResolverUtils.user.should == `whoami`.chomp
   end
 
-  it "should get the owner of this file" do
+  it "should get the owner of this file with the user utility" do
     ResolverUtils.user(__FILE__).should == `whoami`.chomp
   end
 
-  it "should get the group of this process" do
+  it "should get the group of this process with the group utility" do
     ResolverUtils.group.should == `id -gn`.chomp
   end
 
-  it "should get the group of this file" do
+  it "should get the group of this file with the group utility" do
     ResolverUtils.group(__FILE__).should == `id -gn`.chomp
   end
 
-  it "should raise an error on a non-writable directory" do
+  it "should raise an error on a non-writable directory when doing a directory check" do
     lambda { ResolverUtils.check_directory("oops", "/etc/") }.should raise_error XmlResolution::ConfigurationError
   end
 
-  it "should not raise an error on a writable directory" do
+  it "should not raise an error on a writable directory when doing a directory check" do
     lambda { ResolverUtils.check_directory("well, ok", ".") }.should_not raise_error
   end
 
-  it "should be able to get two read locks on a file" do
+  it "should allow us to get two read locks on a file" do
     f1 = ''
     f2 = ''
     ResolverUtils.read_lock(__FILE__) do |fd1|
@@ -54,7 +54,7 @@ describe ResolverUtils do
     f1.should == f2
   end
 
-  it "should allow a write_lock to be obtained on an existing file, and new file contents to be written" do
+  it "should be allow us to obtain a write_lock for an existing file, so that new file writes over the previous contents" do
     tempfile = Tempfile.new('lock-', '/tmp')
     tempfile.write "A failed test."
     tempfile.close
@@ -64,7 +64,7 @@ describe ResolverUtils do
     tempfile.open.read.should == "A successful test."
   end
 
-  it "should allow a write_lock to be obtained on a non-existing file, creating it, and new file contents to be written" do
+  it "should be allow us to  obtain a write_lock on a non-existing file, creating it, and allow writes to it" do
 
     tempfile = Tempfile.new('lock-', '/tmp')  # create a new file and delete it.
     tempfile.close
@@ -89,8 +89,7 @@ describe ResolverUtils do
         end 
       end
 
-
-  it "should not be able to get a write lock, or modify a file, after a read lock is established" do
+  it "should not allow the creation of a write lock, nor modify the contents of a file, after a read lock is established" do
     tempfile = Tempfile.new('lock-', '/tmp')
     tempfile.write 'A test.'
     tempfile.close

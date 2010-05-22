@@ -8,6 +8,8 @@ require 'xmlresolution/schema_catalog'
 require 'xmlresolution/utils'
 require 'xmlresolution/xml_processors'
 
+
+
 # The XmlResolver class resolves an XML document by finding the schemas it depends on for interpretation
 # and validation, recursively finding all the used schemas.  Once analyzed, a PREMIS document describing
 # the outcome of the analysis can be generated.  All the relevant information can be dumped and later 
@@ -26,8 +28,7 @@ module XmlResolution
   # Example usage:
   #
   #  xrez = XmlResolution::XmlResolver.new(File.read("F20060215_AAAAHL.xml"), "file://mydoc.xml",
-  #                                         "/var/resolver-files/", "satyagraha.sacred.net:3128")
-  #   xrez.process
+  #                                        "/var/resolver-files/", "satyagraha.sacred.net:3128")
   #   xrez.schemas_each.each do |rec|
   #      next unless rec.retrieval_status == :success
   #      puts "#{rec.namespace} => #{rec.location}\n"
@@ -127,11 +128,7 @@ module XmlResolution
     # The proxy to use when gathering schemas. If nil, go directly to the source.
     
     attr_reader :proxy
-    
-    # Processed: a boolean that lets us know the method process has been called.
-    
-    attr_reader :processed
-    
+        
     # used_namespaces is meant to be used as a list of unique
     # namespaces that have been directly used by an XML document or
     # one of its schemas.  It is a hash where the values are
@@ -189,55 +186,10 @@ module XmlResolution
       ResolverUtils.check_directory "The document collection directory", collections_storage_directory
       
       raise InadequateDataError, "XML document #{document_uri} was empty" if document_size == 0
+
+      process
     end
 
-    # process
-    #
-    # Process the XML instance document, downloading the schemas it references, analyze the schemas, and 
-    # download the schemas *those* reference, and so on, until we're done.
-    
-    def process
-      
-      raise "The process method may not be called twice on the document #{document_identifier}." if processed
-      
-      @resolution_time = Time.now
-      
-      instance_document   = analyze_xml_document(document_text)
-
-
-      if instance_document.version != '1.0'
-        raise XmlResolution::BadXmlVersion, "This service only supports XML Version 1.0. This document is XML Version #{instance_document.version}"
-      end
-
-      namespace_locations = instance_document.namespace_locations   # a hash of Location-URL => Namespace-URN pairs
-      @used_namespaces    = instance_document.used_namespaces       # a hash of Namespace-URN => 'true' pairs 
-
-      @errors = instance_document.errors
-
-      # TODO: pending team review - be strict, or try to get some information?
-      #
-      #  if instance_document.errors.count > 0  # strict?
-
-      if (instance_document.errors.count > 0) and namespace_locations.empty? and @used_namespaces.empty?
-        raise XmlResolution::BadBadXmlDocument, "The XML document #{document_uri} had too many errors: " + instance_document.errors.join('; ')
-      end
-      
-      catalog = SchemaCatalog.new(namespace_locations, schemas_storage_directory, proxy)
-
-      count = 0
-      catalog.schemas do |schema_record|
-        count += 1
-
-        next if schema_record.retrieval_status != :success
-        schema_document = analyze_schema_document(schema_record.location, File.read(schema_record.localpath), @used_namespaces)
-        catalog.merge schema_document.namespace_locations
-
-        raise XmlResolution::TooManyDarnSchemas,  "Too many schemas (#{count}) encountered for #{document_uri}." if count > TOO_MANY_SCHEMAS
-      end
-      
-      @schema_dictionary = catalog.schemas   # only those actually required, that is, in used_namespaces
-      @processed = true
-    end
     
     # unresolved_namespaces
     #
@@ -328,7 +280,6 @@ module XmlResolution
 
 
     def premis_report
-      raise "The resolution data can't be reported for #{document_identifier}; it hasn't been processed yet." unless processed
 
       $KCODE == 'UTF8' or raise ConfigurationError, "Ruby $KCODE == #{$KCODE}, but it must be UTF8"
       
@@ -446,7 +397,6 @@ module XmlResolution
     def save collection_id
 
       raise XmlResolution::BadCollectionID, "Invalid collection identifier '#{collection_id}'" unless ResolverUtils.collection_name_ok? collection_id
-      raise "The resolution data can't be saved for #{document_identifier}; it hasn't been processed yet." unless processed
 
       record_file = File.join(collections_storage_directory, collection_id, document_identifier)
 
@@ -462,6 +412,50 @@ module XmlResolution
     end
     
     private
+
+    # process
+    #
+    # Process the XML instance document, downloading the schemas it references, analyze the schemas, and 
+    # download the schemas *those* reference, and so on, until we're done.
+    
+    def process
+      @resolution_time = Time.now
+      
+      instance_document   = analyze_xml_document(document_text)
+
+      if instance_document.version != '1.0'
+        raise XmlResolution::BadXmlVersion, "This service only supports XML Version 1.0. This document is XML Version #{instance_document.version}"
+      end
+
+      namespace_locations = instance_document.namespace_locations   # a hash of Location-URL => Namespace-URN pairs
+      @used_namespaces    = instance_document.used_namespaces       # a hash of Namespace-URN => 'true' pairs 
+
+      @errors = instance_document.errors
+
+      # TODO: pending team review - be strict, or try to get some information?
+      #
+      #  if instance_document.errors.count > 0  # strict?
+
+      if (instance_document.errors.count > 0) and namespace_locations.empty? and @used_namespaces.empty?
+        raise XmlResolution::BadBadXmlDocument, "The XML document #{document_uri} had too many errors: " + instance_document.errors.join('; ')
+      end
+      
+      catalog = SchemaCatalog.new(namespace_locations, schemas_storage_directory, proxy)
+
+      count = 0
+      catalog.schemas do |schema_record|
+        count += 1
+
+        next if schema_record.retrieval_status != :success
+        schema_document = analyze_schema_document(schema_record.location, File.read(schema_record.localpath), @used_namespaces)
+        catalog.merge schema_document.namespace_locations
+
+        raise XmlResolution::TooManyDarnSchemas,  "Too many schemas (#{count}) encountered for #{document_uri}." if count > TOO_MANY_SCHEMAS
+      end
+      
+      @schema_dictionary = catalog.schemas   # only those actually required, that is, in used_namespaces
+    end
+
 
     def mint_event_id
       'file://' + Socket::gethostname  + File::SEPARATOR + File.join('xmlresolution', 'events', document_identifier + '-' + Digest::MD5.hexdigest(rand(1_000_000_000_000).to_s)[0..5])
@@ -577,8 +571,6 @@ module XmlResolution
       end
 
       load File.read filename
-
-      @processed = true
     end
 
     private

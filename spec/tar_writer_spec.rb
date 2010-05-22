@@ -50,11 +50,11 @@ describe XmlResolution::TarWriter do
     path
   end
 
-  it "should create a tarwriter object" do
+  it "should create without error a tarwriter object with specific user and group names" do
     XmlResolution::TarWriter.new(@@tarfile, { :gid => 80, :uid => 80, :username => 'daitss', :groupname => 'daitss' }).class.to_s == 'XmlResolution::TarWriter'
   end
 
-  it "should store files consectively in a tarfile" do
+  it "should store files consecutively in a tarfile" do
 
     tf = XmlResolution::TarWriter.new(@@tarfile, { :gid => 80, :uid => 80, :username => 'daitss', :groupname => 'daitss' })
 
@@ -68,7 +68,7 @@ describe XmlResolution::TarWriter do
   end
 
 
-  it "should save files by their filename correctly in a tarfile" do
+  it "should write files into a tarfile by their original pathnames, when only the original path is specified" do
 
     tf = XmlResolution::TarWriter.new(@@tarfile, { :gid => 80, :uid => 80, :username => 'daitss', :groupname => 'daitss' })
 
@@ -83,7 +83,7 @@ describe XmlResolution::TarWriter do
   end
 
 
-  it "should save files by our specified path in a tarfile" do
+  it "should write files into a tarfile using our specified path in a tarfile, when we specify the original path and the internal pathname" do
 
     tf = XmlResolution::TarWriter.new(@@tarfile, { :gid => 80, :uid => 80, :username => 'daitss', :groupname => 'daitss' })
 
@@ -105,14 +105,13 @@ describe XmlResolution::TarWriter do
     filepath = some_filepath
     tf.write(filepath)
     tf.close
-
     first_line = list_tar[0]
     first_line.split[2].should == 'daitss-user'
     first_line.split[3].should == 'daitss-group'
   end
 
 
-  it "should provide a file that gnutar can correctly extract, retaining the file metadata" do
+  it "should provide a tar file that gnutar can correctly extract, retaining all of the filesystem metadata." do
 
     tf = XmlResolution::TarWriter.new(@@tarfile, { :gid => 80, :uid => 80, :username => 'daitss-user', :groupname => 'daitss-group' })
     tf.write("/etc/passwd", "/tmp/passwd")
