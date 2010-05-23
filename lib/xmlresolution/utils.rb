@@ -50,7 +50,7 @@ module ResolverUtils
   def ResolverUtils.check_directory phrase, directory
 
     if not File.exists? directory
-      raise XmlResolution::ConfigurationError, "#{phrase} #{directory} doesn't exist or is unreadble by this user (#{ResolverUtils.user}) and group (#{ResolverUtils.group})."
+      raise XmlResolution::ConfigurationError, "#{phrase} #{directory} doesn't exist or is unreadable by this user (#{ResolverUtils.user}) and group (#{ResolverUtils.group})."
     end
 
     if not File.directory? directory

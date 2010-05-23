@@ -9,12 +9,6 @@ require 'xmlresolution/utils'
 require 'xmlresolution/xml_processors'
 
 
-
-# The XmlResolver class resolves an XML document by finding the schemas it depends on for interpretation
-# and validation, recursively finding all the used schemas.  Once analyzed, a PREMIS document describing
-# the outcome of the analysis can be generated.  All the relevant information can be dumped and later 
-# loaded from a file.
-
 module XmlResolution
 
   # Initial Author: Randy Fischer (rf@ufl.edu) for DAITSS

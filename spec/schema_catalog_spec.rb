@@ -53,6 +53,13 @@ describe SchemaCatalog do
     end
   end
 
+  it "should not merge additional records if they've already been retrieved" do
+
+    @@catalog.merge({ 'http://www.fcla.edu/dls/md/daitss/daitssBitstream.xsd' => 'http://www.fcla.edu/dls/md/daitss/' })
+    recs = @@catalog.schemas
+    recs.length.should == 2
+  end
+
   it "should retrieve the mods schema, performing the necessary redirect" do
     
     # currently, http://www.loc.gov/mods/v3/mods-3-2.xsd causes a redirect
@@ -104,5 +111,30 @@ describe SchemaCatalog do
     redirects.should == 1
     failures.should  == 0
   end
+
+
+  it "should add an error record if the location is unfetchable" do
+
+    badloc = 'http://www.fcla.edu/dls/md/daitss/daitssFooBar.xsd'
+    @@catalog.merge({ badloc => 'http://www.fcla.edu/dls/md/daitss/' })
+
+    errec = nil
+    @@catalog.schemas.each { |rec| errec = rec if rec.location == badloc }
+
+    errec.should_not == nil
+    if not errec.nil?
+      errec.retrieval_status.should == :failure
+      (errec.error_message =~ /404/).should_not == nil
+    end
+
+  end
+
+
+  it "should allow subsequent catalogs to reuse the same data" do    # this forces some additional coverage in the class.
+    catalog = SchemaCatalog.new(daitss_namespace_locations, @@tempdir, @@proxy)
+    recs = catalog.schemas 
+    recs.length.should == 1
+  end
+
 
 end # of tests

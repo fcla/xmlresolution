@@ -9,21 +9,21 @@ module XmlResolution
 
   # Initial Author: Randy Fischer (rf@ufl.edu) for DAITSS
   #
-  # This class stores and retrieves information for XmlResolution
+  # This class stores and retrieves information for the XmlResolution
   # service.  It maintains a set of collection identifiers supplied by
-  # the client, and uses the XmlResolution::XmlResolver class
-  # to associate documents and the schemas necessary to validate them
-  # with a given collection identifier. All of a document's resolved
-  # schemas can be retrieved in a per-collection tarfile.
+  # the client, and uses the XmlResolution::XmlResolver class to
+  # associate documents and the schemas necessary to validate them
+  # with this collection identifier. All of a set of documents
+  # resolved schemas can be retrieved in a per-collection tarfile.
   #
-  # Example usage: write a mainfest file for the collection 'foo'
-  # for the collections stored under '/var/data'
+  # Example usage: write a mainfest file for the collection 'foo'; the
+  # collections are stored under '/var/data'
   #
   #  collection = ResovlerCollection.new '/var/data', 'foo'
-  #  File.open("foo.xml", "w")  { |f| collection.manifest }
+  #  File.open("foo.xml", "w")  { |f| f.write collection.manifest }
   #
-  # Example usage: write tar files for all the collections we
-  # have, stored under '/var/data'
+  # Example usage: write tar files for all the collections we have,
+  # stored under '/var/data'
   #
   #  root = '/var/data'
   #  ResolverCollection.collections(root).each do |collection_name|

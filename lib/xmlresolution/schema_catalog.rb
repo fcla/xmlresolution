@@ -2,8 +2,8 @@ require 'digest/md5'
 require 'net/http'
 require 'time'
 require 'uri'
-require 'xmlresolution/exceptions'  # 
-require 'xmlresolution/utils'       # ResolverUtils.*
+require 'xmlresolution/exceptions'
+require 'xmlresolution/utils'
 
 module XmlResolution
 
@@ -15,16 +15,21 @@ module XmlResolution
   # SchemaCatalog builds a dictionary of interesting information about schemas.  These are accessed with the
   # SchemaCatalog#schemas iterator.  Each record yielded has the following methods:
   #
-  #  * location             the location of the schema, an HTTP-schemed URL.
-  #  * namespace            the namespace associated with this schema.
-  #  * last_modified        on a successful retrieval, this is the last-modified time of the schema (a Time object). If last-modified wasn't available, this is the current datetime.
-  #  * digest               on a successful retrieval, the MD5 digest of the retrieved text of the schema.
-  #  * localpath            on a successful retrieval, the filename of the locally-stored copy of the schema.
-  #  * retrieval_status     the outcome of retrieving the schema: one of :success, :failure, or :redirect.
-  #  * error_message        if retrieval_status is :failure, this will be the associated error message. Usually a Net::HTTP exception, it could also represent a run-time exception.
-  #  * redirected_location  if retrieval_status is :redirect, this will be the initial Location URL; the location slot contains the address of the retrieved schema text.
+  # location::             the location of the schema, an HTTP-schemed URL.
+  # namespace::            the namespace associated with this schema.
+  # last_modified::        on a successful retrieval, this is the last-modified time of the schema (a Time object). If last-modified wasn't available, this is the current datetime.
+  # digest::               on a successful retrieval, the MD5 digest of the retrieved text of the schema.
+  # localpath::            on a successful retrieval, the filename of the locally-stored copy of the schema.
+  # retrieval_status::     the outcome of retrieving the schema: one of :success, :failure, or :redirect.
+  # error_message::        if retrieval_status is :failure, this will be the associated error message. Usually a Net::HTTP exception, it could also represent a run-time exception.
+  # redirected_location::  if retrieval_status is :redirect, this will be the initial Location URL; the location slot contains the address of the retrieved schema text.
 
   class SchemaCatalog
+
+    # Be sure to keep the following more or less in sync with the Struct::SchemaReloaded used in the XmlResolverReloaded class;
+    # it is the data structure that we maintain in the SchemaCatalog.
+
+    Struct.new("Schema", :location, :namespace, :last_modified, :digest, :localpath, :retrieval_status, :error_message, :redirected_location)
 
     # As we process schemas, we record that we've seen them
 
@@ -41,11 +46,6 @@ module XmlResolution
     # @data_root is where we cache the downloaded schema texts.
 
     @data_root = nil
-
-    # Be sure to keep the following more or less in sync with the Struct::SchemaReloaded used in the XmlResolverReloaded class;
-    # it is the data structure that we maintain in the SchemaCatalog.
-
-    Struct.new("Schema", :location, :namespace, :last_modified, :digest, :localpath, :retrieval_status, :error_message, :redirected_location)
 
     # @schema_dictionary is an array of structs that describe schemas.  See 
     # documentation above for the meaning of the slots:
@@ -112,7 +112,7 @@ module XmlResolution
 
     def schemas
       if block_given?
-        @schema_dictionary.each { |record| yield record }   # need to preserve order here: it's a stack in this role
+        @schema_dictionary.each { |record| yield record }   # need to preserve order here: the array acts as a queue in this role.
       else
         @schema_dictionary.sort{ |a,b| a.location.downcase <=> b.location.downcase }
       end
@@ -145,9 +145,11 @@ module XmlResolution
         @processed_locations[schema_record.location] = true
 
         if schema_record.location != location   # then one or more redirects
+
           original = Struct::Schema.new(location, schema_record.namespace)
           original.retrieval_status    = :redirect
           original.redirected_location = schema_record.location
+
           @schema_dictionary.push  original
           @processed_locations[original.location] = true
         end
@@ -183,6 +185,8 @@ module XmlResolution
           File.utime(File.atime(record.localpath), record.last_modified, record.localpath)
         end
       end
+
+      ### TODO: write a log in the schemas directory with time, location, and digest
 
       return record
 

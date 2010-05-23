@@ -246,8 +246,8 @@ class SchemaDocument < PlainXmlDocument
 
   # absolutize LOCATION
   #
-  # Given the URL LOCATION, attempt to turn it into an absolute URL (relative
-  # to out object's schema_location instance variable).
+  # Given the URL LOCATION, attempt to turn it into an absolute URL. It is done relative
+  # to our object's schema_location, a required parameter in the contstructor.
 
   def absolutize location
     return location if URI.parse(location).absolute?

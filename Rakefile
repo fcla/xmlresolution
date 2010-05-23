@@ -1,21 +1,38 @@
+require 'fileutils'
 require 'rake'
 require 'rake/rdoctask'
+require 'socket'
 require 'spec/rake/spectask'
-require 'fileutils'
 
-# require 'rubygems'
-# gem 'ci_reporter'
+spec_dependencies = []
 
-require 'ci/reporter/rake/rspec' 
+# Working with continuous integration.  What a pile of steaming monkey
+# shit are the CI servers out there.... Something that should be so
+# easy...let's start with ci/reporter...
 
-Spec::Rake::SpecTask.new do |t|
-  t.libs << 'lib'
-  t.libs << 'spec'
-  # t.rcov = true
+begin
+  require 'ci/reporter/rake/rspec' 
+rescue LoadError => e
+else
+  spec_dependencies.push "ci:setup:rspec"
+end  
+
+begin
+  require 'ci/reporter/rake/cucumber' 
+rescue LoadError => e
+else
+  spec_dependencies.push "ci:setup:cucumber"
+end  
+
+task :spec => spec_dependencies
+
+Spec::Rake::SpecTask.new do |task|
+  task.libs << 'lib'
+  task.libs << 'spec'
+  task.rcov = true if Socket.gethostname =~ /romeo-foxtrot/   # do coverage tests on my devlopment box
 end
 
 task :tags => ["tags:emacs"]
-task :spec => ["ci:setup:rspec"]
 
 HOME    = File.expand_path(File.dirname(__FILE__))
 LIBDIR  = File.join(HOME, 'lib')
@@ -36,7 +53,8 @@ task :rdoc do
   begin
     FileUtils.rm_rf RDOCDIR
     chdir LIBDIR
-    command = "#{COMMAND} #{DIAGRAM} --op #{File.join(HOME, 'public/rdoc')} --inline-source --all --title 'XML Resolution' #{Dir['*.rb'].join(' ')}  #{Dir['xmlresolution/*.rb'].join(' ')}"
+    # #{Dir['app/*.rb'].join(' ')}
+    command = "#{COMMAND} #{DIAGRAM} --main XmlResolution --op #{File.join(HOME, 'public/rdoc')} --inline-source --all --title 'XML Resolution' #{Dir['*.rb'].join(' ')}  #{Dir['xmlresolution/*.rb'].join(' ')}"
     puts command
     `#{command}`    
   rescue => e
@@ -70,7 +88,6 @@ namespace "tags" do
 end
 
 task :tags => ["tags:emacs"]
-
 
 # TODO: do subsequent tasks kick off if a preceding one fails?
 

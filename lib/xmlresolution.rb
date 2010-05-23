@@ -5,7 +5,7 @@ require 'ostruct'
 # 'REVISION' file.  Here we search for that file, and if found, return
 # its contents.
 
-def read_capistrano_git_revision
+def get_capistrano_git_revision
   revision_file = File.expand_path(File.join(File.dirname(__FILE__), '..', 'REVISION'))
   File.exists?(revision_file) ? File.readlines(revision_file)[0].chomp : 'Unknown'
 end
@@ -27,11 +27,33 @@ def get_capistrano_release
   (full_path =~ %r{/releases/((\d+){14})/}) ? $1 : "Not Available"
 end
 
+# Consider a collection of XML documents.  You'd like to gather up all
+# the information necessary to understand them, and bundle them all up
+# and preserve them with the original set of XML documents.  The
+# XMLResolution classes help you to do that for the schemas that the
+# documents depend on. (Coming will be DTD and Stylesheet support)
+#
+# 
+# We have several classes to effect this:
+# 
+# - SchemaCatalog  downloads schemas and maintains basic metadata about them (location, namespace, modification times, etc.)
+# - PlainXmlDocument and SchemaDocument  are SAX-based XML processors that analyze XML instance documents and schemas, respectively.
+# - XmlResolver orchestrates the above components to recursively find all the schema dependencies for an XML instance document.
+# - ResolverCollection associates a Collection ID with one or more XML documents and all of the XmlResolver-based information obtained about those documents.
+#
+# There are a few helper classes as well:
+#
+# - Logger for logging to Syslog, Standard Error, or a plain file.
+# - ResolverUtils for the assorted unsortables.
+# - TarWriter for creating tar files on the fly.
+# - A hierarchical set of exceptions, rooted at the HttpError class.
 
 module XmlResolution
-  REVISION = read_capistrano_git_revision
-  RELEASE  = get_capistrano_release
-  VERSION  = '1.0.0'
+
+  REVISION = get_capistrano_git_revision()
+  RELEASE  = get_capistrano_release()
+  VERSION  = '1.0.1'
+  NAME     = 'XMLResolution'
 
   require 'xmlresolution/exceptions'
   require 'xmlresolution/logger'
@@ -43,10 +65,10 @@ module XmlResolution
   require 'xmlresolution/xml_resolver'
 
   def self.version
-    os = OpenStruct.new("rev"    => "Version #{VERSION}, Git Revision #{REVISION}, Capistrano Release #{RELEASE}.",
+    os = OpenStruct.new("rev"    => "#{NAME} Version #{VERSION}, Git Revision #{REVISION}, Capistrano Release #{RELEASE}.",
                         "uri"    => "info:fcla/daitss/xmlresolution/#{VERSION}")
     def os.to_s
-      "XML Resolution Service #{self.rev}"
+      self.rev
     end
     os
   end

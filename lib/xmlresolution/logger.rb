@@ -7,11 +7,10 @@ require 'xmlresolution/exceptions'
 require 'xmlresolution/utils'
 
 
- 
-
-# TODO:  the whole prefix thing is lame - rip it out, and rip out the @env environment/commonlogger requirement.
-
 module XmlResolution
+
+  # TODO:  the whole prefix thing is lame - rip it out, and rip out the @env environment/commonlogger requirement.
+
 
   # Initial Author: Randy Fischer (rf@ufl.edu) for DAITSS
   #
