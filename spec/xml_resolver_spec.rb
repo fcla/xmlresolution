@@ -90,11 +90,10 @@ describe XmlResolver do  # and XmlResolverReloaded
 
   end
 
-
-
   it "should correctly locate and download the 77 schemas our sample DAITSS descriptor XML file requires." do
 
-    # need to have the following locations downloaded from our resolution (keep this list sorted)
+    # need to have the following locations downloaded from our resolution (keep this list sorted); this 
+    # used the DAITSS validation tool.
 
     required_successes = [ 
                  "http://www.fcla.edu/dls/md/daitss/daitss.xsd",
@@ -217,7 +216,6 @@ describe XmlResolver do  # and XmlResolverReloaded
     (premis =~ /<event.*>.*<\/event>/mi).should_not == nil
     (premis =~ /<object.*>.*<\/object>/mi).should_not == nil
   end
-
   
   it "should have no errors when performing the resolution of our DAITSS descriptor XML." do
     @@resolver.errors.count.should == 0
