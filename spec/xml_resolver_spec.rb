@@ -62,27 +62,37 @@ describe XmlResolver do  # and XmlResolverReloaded
     File.join(@@files, 'UF00056159_00002.xml')
   end
 
-  it "should recursively process an XML document" do
+  it "should recursively process an XML document." do
     file_name = daitss_instance_doc
     file_text = File.read file_name
     lambda { @@resolver = XmlResolver.new(file_text, file_url(file_name), store, proxy) }.should_not raise_error
   end
 
-  it "should properly record the instance document and its relevant metadata" do
+  it "should properly record the instance document and its relevant metadata." do
 
     text = File.read(daitss_instance_doc)
 
     @@resolver.document_text.should == text
     @@resolver.document_size.should == text.length
     @@resolver.document_identifier.should == Digest::MD5.hexdigest(text)
-
+    @@resolver.resolution_time.should be_close(Time.now, 30)
   end
 
   it "should not have any unresolved namespaces for our sample DAITSS descriptor XML file." do
     @@resolver.unresolved_namespaces.should == []
   end
 
-  it "should not correctly locate and download the 77 schemas our sample DAITSS descriptor XML file requires." do
+  it "should have unresolved namespaces for our example normalized file descriptor." do
+    name = File.join(@@files, "F20060402_AAAAAB_NORM.xml")
+    text = File.read(name)
+    res = XmlResolver.new(text, file_url(name), store, proxy)
+    res.unresolved_namespaces.sort.should == ["http://www.w3.org/2001/XMLSchema", "http://www.w3.org/XML/1998/namespace"]
+
+  end
+
+
+
+  it "should correctly locate and download the 77 schemas our sample DAITSS descriptor XML file requires." do
 
     # need to have the following locations downloaded from our resolution (keep this list sorted)
 
@@ -209,7 +219,7 @@ describe XmlResolver do  # and XmlResolverReloaded
   end
 
   
-  it "should have no errors on the resolution of our DAITSS descriptor XML." do
+  it "should have no errors when performing the resolution of our DAITSS descriptor XML." do
     @@resolver.errors.count.should == 0
   end
 
@@ -221,7 +231,7 @@ describe XmlResolver do  # and XmlResolverReloaded
     @@reloaded = XmlResolverReloaded.new(@@store, @@collection_id, id)
 
     original = @@resolver.schema_dictionary.sort { |a,b| a.location.downcase <=> b.location.downcase }
-    reloaded  = @@reloaded.schema_dictionary.sort { |a,b| a.location.downcase <=> b.location.downcase }
+    reloaded = @@reloaded.schema_dictionary.sort { |a,b| a.location.downcase <=> b.location.downcase }
     
     original.length.should == reloaded.length
     

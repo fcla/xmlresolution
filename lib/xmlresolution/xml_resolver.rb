@@ -104,13 +104,12 @@ module XmlResolution
     
     attr_reader :used_namespaces
     
+    public
+    
     # resolution_time shows the time we began to process the XML document.
     
     attr_reader :resolution_time
 
-
-    public
-    
     # The text of the XML document we'll resolve.
     
     attr_reader :document_text
