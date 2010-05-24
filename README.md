@@ -1,23 +1,23 @@
 XML Resolution Service
 ======================
 Consider a collection of XML documents.  You would like to gather up
-all of the schemas necessary to understand those documents.  This web
-service helps you do that, in three RESTful steps:
+all of the schemas necessary to understand those documents for
+preservation purposes.  This web service helps you do that, in three
+RESTful steps:
 
   1. Create a collection resource.
   2. POST some XML documents to the collection.
-  3. GET the collection, retrieving a tar file of the schemas and a manifest.
+  3. GET the collection, retrieving a tar file of the XML schemas and a manifest of what was done.
 
-The original XML documents are not kept nor are they returned in the
-tar file.  It is recommended that you use this with a caching proxy
-such as squid.
+The original XML documents are not returned.  It is recommended that
+you use this with a caching proxy such as squid.
 
 Envronment
 ----------
 
 In your web server you should set up some environment variables:
 
-  * SetEnv RACK_ENV development - still in beta
+  * SetEnv DATA_ROOT - where you'll save information about the schemas and document collections.
   * SetEnv RESOLVER_PROXY sake.fcla.edu:3128 - an optional squid caching proxy
   * SetEnv LOG_FACILITY LOG_LOCAL2 - optionally a facility code if using syslog for logging
 
@@ -27,7 +27,7 @@ Known to work with with ruby 1.8.7. The following packages (beyond the
 standards)
 
   * sinatra & rack
-  * libxml-ruby & builder
+  * nokogiri, libxml-ruby & builder
   * rake & rspec & cucumber
   * log4r
   * capistrano & railsless-deploy 
@@ -46,7 +46,7 @@ or run under a web server.  I'm using passenger phusion under apache:
 	<VirtualHost>
 	  ServerName xmlresolution.example.com
 	  DocumentRoot "/.../xmlresolution/public"
-	  SetEnv RACK_ENV development
+	  SetEnv DATA_ROOT /var/resolutions
 	  SetEnv RESOLVER_PROXY squid.example.com:3128
 	  SetEnv LOG_FACILITY LOG_LOCAL2
 	  <Directory "/.../xmlresolution/public">
@@ -54,8 +54,6 @@ or run under a web server.  I'm using passenger phusion under apache:
 	    Allow from all
 	  </Directory>
 	</VirtualHost>`
- 
-
 
 
 Directory Structure
@@ -66,12 +64,13 @@ the top few lines in deploy.rb to match your installation.
  * config.ru & app.rb - the Sinatra setup
  * public/            - rdocs wiil land in here via % rake rdoc; otherwise empty
  * views/             - instructional erb pages and forms
- * lib/               - root of the xmlresolution libraries
+ * lib/app/           - root of the sinatra stuff - helpers and routes
+ * lib/xmlresolution/ - root of the xmlresolution libraries
  * config/            - capistrano deployment files
  * spec/              - tests
+ * data/              - example DATA_ROOT which must have:
  * data/schemas       - where cached schemas live
  * data/collections   - where collections, and information about submitted documents for a collection, live
- * logs/              - you can point your web server here, or use the built in logging (uses logs/xmlresolution.log)
  * tmp/               - phusion writes the restart.txt file here.  Rake has a restart target for this, capistrano uses it 
 
 
@@ -92,7 +91,7 @@ instructions.  The following models how your RESTful clients should access the s
 
 	`curl -F xmlfile=@myotherfile.xml http://xmlresolution.example.com/ieids/collection-1/`
 	
- * Get the tarfile of the associated schemas
+ * Get the tarfile of the associated schemas and a manifest
 	
 	`curl http://xmlresolution.example.com/ieids/collection-1/`
 	
@@ -100,7 +99,8 @@ instructions.  The following models how your RESTful clients should access the s
 
 Documentation
 -------------
-See the root of the running webservice for instructions on use; there is
-a Rake task that will install the rdocs under public/rdoc.
+See the root of the running service for a web page of instructions on
+use and testing; there is a Rake task that will install the rdocs
+under public/rdoc.
 
 

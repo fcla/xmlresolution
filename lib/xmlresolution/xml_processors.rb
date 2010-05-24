@@ -281,6 +281,7 @@ class SchemaDocument < PlainXmlDocument
     attributes.each do |attr|
       if attr.localname == 'targetNamespace' and (attr.uri.nil? or attr.uri == 'http://www.w3.org/2001/XMLSchema')
         @target_namespace = attr.value
+        @used_namespaces[@target_namespace] = true
       end
     end
   end

@@ -23,7 +23,7 @@ module XmlResolution
   #
   #  xrez = XmlResolution::XmlResolver.new(File.read("F20060215_AAAAHL.xml"), "file://mydoc.xml",
   #                                        "/var/resolver-files/", "satyagraha.sacred.net:3128")
-  #   xrez.schemas_each.each do |rec|
+  #   xrez.schema_dictionary.each do |rec|
   #      next unless rec.retrieval_status == :success
   #      puts "#{rec.namespace} => #{rec.location}\n"
   #   end
@@ -66,34 +66,24 @@ module XmlResolution
     # download those.
     #
     # In other cases there are no actual schemas at all -
-    # schema-processors really do have to know about them.
+    # schema-processors really do have to interpret them.
     #
     # For this latter case we do not want to report them as unresolved
     # namespaces. NAMESPACE_DONT_TELL is the place to list them.
     #
-    # There's another interesting case: for some namespaces such as
-    # http://www.w3.org/XML/1998/namespace, a given application schema
-    # may associate a location with them via targetNamespace, but they
-    # will not normally appear otherwise.  I think we can safely ignore
-    # them.
 
     NAMESPACE_DONT_TELL =  [
-                            # 'http://www.w3.org/1999/xlink',   # not sure about these two yet
-                            # 'http://www.w3.org/1999/xhtml',
+                            'http://www.w3.org/1999/xhtml',
                             'http://www.w3.org/2001/XMLSchema-hasFacetAndProperty',
                             'http://www.w3.org/2001/XMLSchema-instance'
                            ]
 
-    # TODO: pending team review of above, uncomment out the namespace stop list.
-    #
-    # Oddball namespaces:
-    #
-    # 'http://www.w3.org/XML/1998/namespace
-
-    # To avoid potential denial of service attacks (even if self-inflcited), limit the number
+    # To avoid potential denial of service attacks (even if self-inflicted), limit the number
     # of schemas we are willing to process for one XML instance document.
 
     TOO_MANY_SCHEMAS  =  500
+
+    private
 
     # A writable directory for storing retrieved schema documents.
     
@@ -102,6 +92,24 @@ module XmlResolution
     # A writable directory for storing information about a collection of XML documents
     
     attr_reader :collections_storage_directory
+
+    # The proxy to use when gathering schemas. If nil, go directly to the source.
+    
+    attr_reader :proxy
+        
+    # used_namespaces is meant to be used as a list of unique
+    # namespaces that have been directly used by an XML document or
+    # one of its schemas.  It is a hash where the values are
+    # irrelevant; only the keys are important.
+    
+    attr_reader :used_namespaces
+    
+    # resolution_time shows the time we began to process the XML document.
+    
+    attr_reader :resolution_time
+
+
+    public
     
     # The text of the XML document we'll resolve.
     
@@ -119,27 +127,11 @@ module XmlResolution
     
     attr_reader :document_uri
     
-    # The proxy to use when gathering schemas. If nil, go directly to the source.
-    
-    attr_reader :proxy
-        
-    # used_namespaces is meant to be used as a list of unique
-    # namespaces that have been directly used by an XML document or
-    # one of its schemas.  It is a hash where the values are
-    # irrelevant; only the keys are important.
-    
-    attr_reader :used_namespaces
-    
     # schema_dictionary is a array of Structs that provides data about schemas.  See
     # documentation for XmlResolution::SchemaCatalog.  
     
     attr_reader :schema_dictionary
     
-    # resolution_time shows the time we began to process the XML document.
-    
-    attr_reader :resolution_time
-
-
     # errors is an array of errors encountered in processing the docment.
     
     attr_reader :errors
