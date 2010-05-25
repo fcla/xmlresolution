@@ -1,7 +1,7 @@
 shared
 docs
 spec/reports
-spec/coverage
+coverage
 logs
 *~
 *-

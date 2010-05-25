@@ -1,6 +1,6 @@
 require 'ostruct'
 
-# When we deploy with Capistrano, it checks out the code using Git
+# When we deploy with Capistrano it checks out the code using Git
 # into its own branch, and places the git revision hash into the
 # 'REVISION' file.  Here we search for that file, and if found, return
 # its contents.
@@ -28,10 +28,11 @@ def get_capistrano_release
 end
 
 # Consider a collection of XML documents.  You'd like to gather up all
-# the information necessary to understand them, and bundle them all up
-# and preserve them with the original set of XML documents.  The
-# XMLResolution classes help you to do that for the schemas that the
-# documents depend on. (Coming will be DTD and Stylesheet support)
+# of the information necessary to understand them, and gather up that
+# information into one tidy bundle.  The XMLResolution classes help
+# you to do just that: they will locate and download al of the schemas
+# that your documents depend on. (Coming will be DTD and Stylesheet
+# support)
 #
 # 
 # We have several classes to effect this:

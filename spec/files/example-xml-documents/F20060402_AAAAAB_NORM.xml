@@ -2,172 +2,220 @@
 <METS:mets xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd      http://purl.org/dc/elements/1.1/ http://dublincore.org/schemas/xmls/simpledc20021212.xsd     http://www.fcla.edu/dls/md/techmd/ http://www.fcla.edu/dls/md/techmd.xsd     http://www.fcla.edu/dls/md/palmm/ http://www.fcla.edu/dls/md/palmm.xsd     http://www.fcla.edu/dls/md/rightsmd/ http://www.fcla.edu/dls/md/rightsmd.xsd     http://www.fcla.edu/dls/md/daitss/ http://www.fcla.edu/dls/md/daitss/daitss.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:METS="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:techmd="http://www.fcla.edu/dls/md/techmd/" xmlns:palmm="http://www.fcla.edu/dls/md/palmm/" xmlns:rightsmd="http://www.fcla.edu/dls/md/rightsmd/" xmlns:daitss="http://www.fcla.edu/dls/md/daitss/">
   <METS:fileSec>
     <METS:fileGrp>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="62aa2e7d13d0ef1e1b2048b4d4bbb7bde4b20758" SEQ="1" ID="FID0">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="b4c1ea5d24d31875389a727adbed03e4b533367f" SEQ="1" ID="FID0">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page1.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="ef81001059957993574a44ff58a3220fc5615bf2" SEQ="2" ID="FID1">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="878f3a962b40fbb0834f8bb02c070c3a344d556d" SEQ="2" ID="FID1">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page10.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="da2d25c825eb8f3befeea5b67243d727f059ba80" SEQ="3" ID="FID2">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="ed9bfef7d8bc2dd96fc8da4e25cd08682d73d5d0" SEQ="3" ID="FID2">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page11.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="29c092b0ac4fee3f014a16b41912173e98de344a" SEQ="4" ID="FID3">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="56f8ee38c1f11d2803f6de74ecfcfbb7a5e8c3a2" SEQ="4" ID="FID3">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page12.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="1cdabc3abc8d92b803f7402372258e3dbc08bcd3" SEQ="5" ID="FID4">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="9586e93376b2adf310d0173b6c06edf7c3051d2f" SEQ="5" ID="FID4">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page13.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="2a4fdcbaf545504b1f78804c6cd6950f41a4c106" SEQ="6" ID="FID5">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="df158affd18d1578216e161a787a1494ef6f8a3a" SEQ="6" ID="FID5">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page14.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="0679c85bbeed703b268d62c9955c0b49167644b6" SEQ="7" ID="FID6">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="d7e9b2a8903740267a4b570f982dcd359ee5ad75" SEQ="7" ID="FID6">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page15.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="565d599bfe8e8ef49cc7ca93c062c866a8597a44" SEQ="8" ID="FID7">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="1f9f360a76740acaef15fe186b7700f678f576d0" SEQ="8" ID="FID7">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page16.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="a51d75ebd1ebc67fe84e46b80bf74a08b2de17d8" SEQ="9" ID="FID8">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="435d5177bea8691a3cc924608737409048469fae" SEQ="9" ID="FID8">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page17.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="074a26e6460ec0dd7bca93822d6e628ab54c252b" SEQ="10" ID="FID9">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="efbacbc313d4e13cf4e9a50c25ccff584ab7035c" SEQ="10" ID="FID9">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page18.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="3f85846e20c110747358bccbc7622692a43725ee" SEQ="11" ID="FID10">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="33301bf3367f2247eeeb0834c9f479e52e7826c6" SEQ="11" ID="FID10">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page19.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="992153f2b3001e087c16e556b20e9d305c1c3487" SEQ="12" ID="FID11">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="dad1926ba4202512c3e8ff678ceb8f9fa144264f" SEQ="12" ID="FID11">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page2.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="11a9fbaa3fb6b812749ba065d19fa9f3993440fe" SEQ="13" ID="FID12">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="5f7e515f3340a20232a6ca64c6d0403412d12cef" SEQ="13" ID="FID12">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page20.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="672d8745173a302f18dd8bbcf6fa174b656d586d" SEQ="14" ID="FID13">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="67c2f2f0a828d582a9abba41c15ed523f2363493" SEQ="14" ID="FID13">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page21.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="79a3ebff854af226f5f6c52d10d707220224e144" SEQ="15" ID="FID14">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="08d037b476e7869594ba197a45b951709004ffde" SEQ="15" ID="FID14">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page22.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="8e6db516a4ace15a09324ef44c3d85da73d2117e" SEQ="16" ID="FID15">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="ff87f0da120d8f5bf90f53273104f7ce4623ff8b" SEQ="16" ID="FID15">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page23.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="98c407a743f1d2dcb69d59142c3797c3787bf6b2" SEQ="17" ID="FID16">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="a2fe14b7a6f8d4816f53f1e48143427d3f5fb567" SEQ="17" ID="FID16">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page24.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="4273e7a155acb98c9d078a17101ef5424dc0d4ee" SEQ="18" ID="FID17">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="665dfe66dc7ab89bbd2f33fdf1247783bfc3c798" SEQ="18" ID="FID17">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page25.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="9bc3a284167af66968a0606c4c4aeec4a0ae8b87" SEQ="19" ID="FID18">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="f0dc3ea8e00ce334aad7ec7d68566a5277eabea7" SEQ="19" ID="FID18">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page26.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="2e0b99d9b3748f0cf9906a2bb63eab13d78f14d4" SEQ="20" ID="FID19">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="afc8ede0b304e58756dfd0cf88a73cf4eede0d6d" SEQ="20" ID="FID19">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page27.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="8bb1c47d0651a99eba0dd12b353a175883f3bc43" SEQ="21" ID="FID20">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="ea9033cc6d30af8fcf99d4b0f2bc69781713d863" SEQ="21" ID="FID20">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page28.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="7580be14fad50c85caacee3328e64952a272bb2d" SEQ="22" ID="FID21">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="723fce41d5095e710688a503650cb1857c41e26d" SEQ="22" ID="FID21">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page29.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="7a85e81e22fbe91a2e4bd4a9398cf0ea22d708d9" SEQ="23" ID="FID22">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="2f97967915cd2488129c096fed33ab3bdf4634e7" SEQ="23" ID="FID22">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page3.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="7dc1f3b9bd720d97588dcc6b4b925e450d933804" SEQ="24" ID="FID23">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="39ffc6d6fb8f917fd0dc3a0d50334e7d2632964b" SEQ="24" ID="FID23">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page30.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="2f663155428dbcbe9f4320d57f32736dae9f38d4" SEQ="25" ID="FID24">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="09486b0de989e86046b6e3ab871e9dab0fb274af" SEQ="25" ID="FID24">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page31.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="e4ddd6d8f98fe150cc5990e7dd0f0f3c7affd07e" SEQ="26" ID="FID25">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="b83b408bba4bde63ec0256ed0ea9d93a12a447c5" SEQ="26" ID="FID25">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page32.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="a2f0b19fada7d94089f92447203a5bbcc449e143" SEQ="27" ID="FID26">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="84121e63f07f4cf9dc444a50ffcad99fc0d1b64b" SEQ="27" ID="FID26">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page33.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="ea4c59aab6fdf572db04c0d3abbf54a5fb45c009" SEQ="28" ID="FID27">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="d37d878506012b48d6f8033d6653457f630328a4" SEQ="28" ID="FID27">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page34.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="6013051f044b8806d00ae39dd4e50f58a03dfd30" SEQ="29" ID="FID28">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="1551c5dc645f8056940b33c152959a1166f66622" SEQ="29" ID="FID28">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page35.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="80eb2e2a80aa966d21efc0919a6e4a521efac654" SEQ="30" ID="FID29">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="efc56e2274124489f7237fe5583c9167907aa4d1" SEQ="30" ID="FID29">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page36.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="6984395aedcf7641b189ad7f82aa9a0ebada36e9" SEQ="31" ID="FID30">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="a709dc6d30e8bcfd5fedec3079de7de170369a84" SEQ="31" ID="FID30">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page37.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="2a3391a9de1ec127e17083dd9b8079b95514dc5d" SEQ="32" ID="FID31">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="10a8bd169be9655a27f64237cd4c1947261d422b" SEQ="32" ID="FID31">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page38.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="4a5422fd0dcaa0480bf04d6fb1e7c98753c19854" SEQ="33" ID="FID32">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="8571ac910f57a21c9cfc7c0708b4e3b160a7a4a7" SEQ="33" ID="FID32">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page39.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="1f53e60ebd919ca098330c6fa831a3c50585a5f0" SEQ="34" ID="FID33">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="7460302cddf2370da4f571ce87e77a77a0e0c669" SEQ="34" ID="FID33">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page4.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="c5d07ba092c468e2dd5a1536203ecce80af7bb14" SEQ="35" ID="FID34">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="3423cce858215e631d004bf75bbd8ee79521b92c" SEQ="35" ID="FID34">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page40.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="61ec28e8867f8bca0342d0d0f9f9f8f1a2b60bce" SEQ="36" ID="FID35">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="0cb8a3c01984a1624e85ca0fb210cacb9a913e90" SEQ="36" ID="FID35">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page41.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="e809ccf28d34bba50680bb0f1011eccd5c9f1fa0" SEQ="37" ID="FID36">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="4342194397fc2c8024a141335c8df473ecc760c5" SEQ="37" ID="FID36">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page42.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="6ccf307dd8efc7375b17793d2076b31addb11e67" SEQ="38" ID="FID37">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="bfac6d20f7eab687cb0d8480f51dede0f0bb48d3" SEQ="38" ID="FID37">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page43.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="4e9825c55db94790ae1e1fc170fbb2d6987f85a3" SEQ="39" ID="FID38">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="a1db9d486015c90a4859ef72cc2adc29d3f3469f" SEQ="39" ID="FID38">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page44.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="f3523f3e1ebfcfe008d179b4f86c9e94727e2b57" SEQ="40" ID="FID39">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="86220df6a64ab684c71bee73fc550010d73ea831" SEQ="40" ID="FID39">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page45.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="5e0be96e81a7e3b96bcf13607476613e726cde11" SEQ="41" ID="FID40">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="401f2c0437da6725f9a3dd1b212f90ef24947cbe" SEQ="41" ID="FID40">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page46.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="636b0db3647eda2501a6d09e8f8af4deca873a3b" SEQ="42" ID="FID41">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="258d6c38a4dd43de2e8e4b75018cbdb6e37d0c32" SEQ="42" ID="FID41">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page47.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="6875bcc88367fbb2dd6e6b21824810d8f8b6b33c" SEQ="43" ID="FID42">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="57f307f3b9c97dd8aeb3844a576d809d02121525" SEQ="43" ID="FID42">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page48.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="33f127216ddaf1e43912279c03159aa4d2d73778" SEQ="44" ID="FID43">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="556c77707d52c9d55bf9976efd5d5cdc313b2c81" SEQ="44" ID="FID43">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page49.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="e6b47c929b19cb49211f73b8fe8e0f40a826687d" SEQ="45" ID="FID44">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="156753653f6a9de3e3ea998803518b69a05f7534" SEQ="45" ID="FID44">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page5.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="d7df92782429a828c498cb3ea479ed9953548731" SEQ="46" ID="FID45">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="6bc69fd0c0995b6fcb8358f6240321d51dadad2b" SEQ="46" ID="FID45">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page50.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="1db33b67498a01803bdef62fdf7eb758c22935db" SEQ="47" ID="FID46">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="cf207fe01076fcd10f416da56d25134554df0644" SEQ="47" ID="FID46">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page51.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="ada21a7ef654ff38c6785472eefd7aa1ad63ec6d" SEQ="48" ID="FID47">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="a6bf2065c895558d16533f660cb373249e23a757" SEQ="48" ID="FID47">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page52.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="8a3fec8bcd3843d675c313580fd19e2b6366cc2c" SEQ="49" ID="FID48">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="a2cb5d6565282d242b21a62ba3d9d64e3c6b3319" SEQ="49" ID="FID48">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page53.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="95bb827b02e12114f392db0a1704d905fe4d3911" SEQ="50" ID="FID49">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="8f6d3929c2dda26683fd457f43bac046c7cbd7bb" SEQ="50" ID="FID49">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page54.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="3279f5dfee2857a216a6e20fb02393ee4a45046c" SEQ="51" ID="FID50">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="b7e66b16b98b0da51b7939a55869146d6d2096c1" SEQ="51" ID="FID50">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page55.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="d9130cae94b0b6d525159caf9316d69cb66954f8" SEQ="52" ID="FID51">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="613f109c1ffc44558739f42c95ae9f2d7617d9bd" SEQ="52" ID="FID51">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page56.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="28da8e19846e64e72fb20bad4b41692151de06c6" SEQ="53" ID="FID52">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="bfb3d0f2b8921809804581fe2952cb909212744d" SEQ="53" ID="FID52">
+        <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page57.tiff"/>
+      </METS:file>
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="6c8c9423e180dc5bac96992134cf530889440b49" SEQ="54" ID="FID53">
+        <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page58.tiff"/>
+      </METS:file>
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="199b47bd00dd796ebe682bb74ec60fc92c04ab20" SEQ="55" ID="FID54">
+        <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page59.tiff"/>
+      </METS:file>
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="23a35ac7bcf8f4727ecdcdc7d4b0420f7c795d73" SEQ="56" ID="FID55">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page6.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="5559ba4de0424f16481c72a4a035fc858cb541ed" SEQ="54" ID="FID53">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="1923bde9a1dbd8f9105eab2abe3d26cec7691bf2" SEQ="57" ID="FID56">
+        <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page60.tiff"/>
+      </METS:file>
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="341bb848fe350e7a7e45010f333317e84c839216" SEQ="58" ID="FID57">
+        <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page61.tiff"/>
+      </METS:file>
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="cfb30dfd79785752062e64bf15ed628c19f34b75" SEQ="59" ID="FID58">
+        <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page62.tiff"/>
+      </METS:file>
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="42a3393d0f10fe4e8a70fae6f6d9cfcc323b9bc2" SEQ="60" ID="FID59">
+        <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page63.tiff"/>
+      </METS:file>
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="65cf98cfcce0a84dc445f6d73032177ac6078155" SEQ="61" ID="FID60">
+        <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page64.tiff"/>
+      </METS:file>
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="3eb974d2f2032b77f5241d9548249687d14a2049" SEQ="62" ID="FID61">
+        <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page65.tiff"/>
+      </METS:file>
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="87bc89c1c3e3490488ab9dd26fcaab27d136887a" SEQ="63" ID="FID62">
+        <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page66.tiff"/>
+      </METS:file>
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="cef0c8b4c8ea7750b4e3c6dee4775553273dbdcc" SEQ="64" ID="FID63">
+        <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page67.tiff"/>
+      </METS:file>
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="f753fe1249a070f5f772332f57ac37786d5421b6" SEQ="65" ID="FID64">
+        <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page68.tiff"/>
+      </METS:file>
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="4079932829b682d622f48e96a5057a6f1c1ff2bf" SEQ="66" ID="FID65">
+        <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page69.tiff"/>
+      </METS:file>
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="3a681150a194e41685f9c652f4cbbbb4626fffa1" SEQ="67" ID="FID66">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page7.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="bfc20d608009e304627495543e9621800a9caac7" SEQ="55" ID="FID54">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="417d28a34d11a3fbfa55c5d82c65d11ffdae2344" SEQ="68" ID="FID67">
+        <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page70.tiff"/>
+      </METS:file>
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="96fb19d905574b3c9bc1aa2d903b4b4a023c27ce" SEQ="69" ID="FID68">
+        <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page71.tiff"/>
+      </METS:file>
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="09fe7efbf3e6299c74aa235dc7e861d687288fb2" SEQ="70" ID="FID69">
+        <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page72.tiff"/>
+      </METS:file>
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="e7c89e5902855a660c5e64c349dc432268484683" SEQ="71" ID="FID70">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page8.tiff"/>
       </METS:file>
-      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="6a8732f08ba9925946cabc73096a7e2a22982d7b" SEQ="56" ID="FID55">
+      <METS:file SIZE="50490332" MIMETYPE="image/tiff" CHECKSUMTYPE="SHA-1" CHECKSUM="ca5201477a1088f91498a49033ce9d178b79b52d" SEQ="72" ID="FID71">
         <METS:FLocat OTHERLOCTYPE="DatabaseID" LOCTYPE="OTHER" xlink:type="simple" xlink:href="page9.tiff"/>
       </METS:file>
     </METS:fileGrp>
@@ -341,6 +389,54 @@
       </METS:div>
       <METS:div TYPE="page" LABEL="Page 56" ORDER="56" ID="div56">
         <METS:fptr FILEID="FID55"/>
+      </METS:div>
+      <METS:div TYPE="page" LABEL="Page 57" ORDER="57" ID="div57">
+        <METS:fptr FILEID="FID56"/>
+      </METS:div>
+      <METS:div TYPE="page" LABEL="Page 58" ORDER="58" ID="div58">
+        <METS:fptr FILEID="FID57"/>
+      </METS:div>
+      <METS:div TYPE="page" LABEL="Page 59" ORDER="59" ID="div59">
+        <METS:fptr FILEID="FID58"/>
+      </METS:div>
+      <METS:div TYPE="page" LABEL="Page 60" ORDER="60" ID="div60">
+        <METS:fptr FILEID="FID59"/>
+      </METS:div>
+      <METS:div TYPE="page" LABEL="Page 61" ORDER="61" ID="div61">
+        <METS:fptr FILEID="FID60"/>
+      </METS:div>
+      <METS:div TYPE="page" LABEL="Page 62" ORDER="62" ID="div62">
+        <METS:fptr FILEID="FID61"/>
+      </METS:div>
+      <METS:div TYPE="page" LABEL="Page 63" ORDER="63" ID="div63">
+        <METS:fptr FILEID="FID62"/>
+      </METS:div>
+      <METS:div TYPE="page" LABEL="Page 64" ORDER="64" ID="div64">
+        <METS:fptr FILEID="FID63"/>
+      </METS:div>
+      <METS:div TYPE="page" LABEL="Page 65" ORDER="65" ID="div65">
+        <METS:fptr FILEID="FID64"/>
+      </METS:div>
+      <METS:div TYPE="page" LABEL="Page 66" ORDER="66" ID="div66">
+        <METS:fptr FILEID="FID65"/>
+      </METS:div>
+      <METS:div TYPE="page" LABEL="Page 67" ORDER="67" ID="div67">
+        <METS:fptr FILEID="FID66"/>
+      </METS:div>
+      <METS:div TYPE="page" LABEL="Page 68" ORDER="68" ID="div68">
+        <METS:fptr FILEID="FID67"/>
+      </METS:div>
+      <METS:div TYPE="page" LABEL="Page 69" ORDER="69" ID="div69">
+        <METS:fptr FILEID="FID68"/>
+      </METS:div>
+      <METS:div TYPE="page" LABEL="Page 70" ORDER="70" ID="div70">
+        <METS:fptr FILEID="FID69"/>
+      </METS:div>
+      <METS:div TYPE="page" LABEL="Page 71" ORDER="71" ID="div71">
+        <METS:fptr FILEID="FID70"/>
+      </METS:div>
+      <METS:div TYPE="page" LABEL="Page 72" ORDER="72" ID="div72">
+        <METS:fptr FILEID="FID71"/>
       </METS:div>
     </METS:div>
   </METS:structMap>

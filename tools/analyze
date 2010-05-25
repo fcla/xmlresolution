@@ -1,0 +1,117 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
+
+require 'socket'
+require 'xmlresolution'
+
+def dump catalog
+  results = []
+  catalog.schemas do |s|
+    results.push case s.retrieval_status
+                 when nil;       'unprocessed' + "\t" + s.namespace + "\t" + s.location
+                 when :success;  'successful ' + "\t" + s.namespace + "\t" + s.location
+                 when :failure;  'failure    ' + "\t" + s.namespace + "\t" + s.location
+                 when :redirect; 'redirect   ' + "\t" + s.namespace + "\t" + s.location + " (#{s.redirected_location})"
+                 else;            raise "Unknown status #{s.retrieval_status}"
+                 end
+  end
+  results
+end
+
+def analyze_xml_document filename
+  document = PlainXmlDocument.new
+  Nokogiri::XML::SAX::Parser.new(document).parse(File.read filename)
+  return document
+end
+
+def analyze_schema_document schema_location, schema_filename, namespaces
+  document = SchemaDocument.new(schema_location, namespaces)
+  Nokogiri::XML::SAX::Parser.new(document).parse(File.read(schema_filename))
+  return document
+end
+
+# MAIN
+
+time = Time.now
+
+proxy = case Socket.gethostname
+        when /local/, /romeo-foxtrot/  ; 'localhost:3128'
+        when /sacred.net/              ; 'satyagraha.sacred.net:3128'
+        when /fcla.edu/                ; 'sake.fcla.edu:3128'
+        else
+          STDERR.puts "Can't figure out how to assign a proxy - on an unsupported network."
+          exit
+        end
+
+case filename = ARGV[0]
+when /.xml$/
+  # OK
+when nil 
+  STDERR.puts "Must call with an XML file on the command line."
+  exit
+when /.xsd$/
+  STDERR.puts "Expecting a plain XML file, not a schema file."
+  exit
+else
+  STDERR.puts "Wrong file extension: expecting a .xml file extension."
+  exit
+end
+
+FileUtils.mkdir_p '/tmp/schema-cache'
+FileUtils.mkdir_p '/tmp/schema-cache/schemas'
+FileUtils.mkdir_p '/tmp/schema-cache/collections'
+
+
+instance_document   = analyze_xml_document(filename)
+
+namespace_locations = instance_document.namespace_locations   # a hash of Location-URL => Namespace-URN pairs
+used_namespaces     = instance_document.used_namespaces       # a hash of Namespace-URN => 'true' pairs 
+
+puts sprintf("Initial analysis of schema document: %0.3f seconds",  Time.now - time);  time = Time.now
+
+puts "Warnings for File #{filename}:\n  " + instance_document.warnings.join("\n  ") unless instance_document.warnings.empty?
+puts "Errors for File #{filename}:\n  "   + instance_document.errors.join("\n  ")   unless instance_document.errors.empty?
+
+if (instance_document.errors.count > 0) \
+  and instance_document.namespace_locations.empty? \
+  and instance_document.used_namespaces.empty?
+
+  raise BadBadXmlDocument, "XML file #{filename} had too many errors: " + document.errors.join('; ')
+end
+
+catalog = XmlResolution::SchemaCatalog.new(instance_document.namespace_locations, '/tmp/schema-cache', proxy)
+
+puts sprintf("Catalog setup with #{instance_document.namespace_locations.count} initial locations: %0.3f seconds",  Time.now - time);  time = Time.now
+
+used_namespaces = instance_document.used_namespaces  # used_namespaces is updated by side-effect, below:
+
+catalog.schemas do |schema_record|
+  next if schema_record.retrieval_status != :success
+
+  schema_document = analyze_schema_document(schema_record.location, schema_record.localpath, used_namespaces)
+  catalog.merge schema_document.namespace_locations
+
+  puts "Warnings for Schema #{schema_record.location}:\n  " + schema_document.warnings.join("\n  ") unless schema_document.warnings.empty?
+  puts "Errors for Schema #{schema_record.location}:\n  "   + schema_document.errors.join("\n  ")   unless schema_document.errors.empty?
+end
+
+puts sprintf("Recursive catalog followup, with #{catalog.schemas.length} total locations: %0.3f seconds",  Time.now - time);  time = Time.now
+
+list = catalog.schemas.map{ |s| s.location if s.retrieval_status == :success }.compact.sort
+puts "\nLocations Successfully Retrieved:\n  " + list.join("\n  ")  unless list.empty?
+
+list = catalog.schemas.map{ |s| s.location if s.retrieval_status == :failure }.compact.sort
+puts "\nLocations Failed in Retrieval:\n  "    + list.join("\n  ")  unless list.empty?
+
+list = catalog.schemas.map{ |s| s.location + " (redirected to #{s.redirected_location})" if s.retrieval_status == :redirect }.compact.sort
+puts "\nLocations Redirected in Retrieval:\n  "  + list.join("\n  ")  unless list.empty?
+
+# We may have successfully retrieved schemas (:success and :redirect), or unretrievalable schemas (:failure).
+# However, we may still have some missing ones....
+
+list = used_namespaces.keys.sort - catalog.schemas.map{ |s| s.namespace }
+
+puts "\nUnresolved Namespaces:\n  " + list.join("\n  ")  unless list.empty?
+
+puts "\nCatalog dump:\n  " + dump(catalog).join("\n  ") 
