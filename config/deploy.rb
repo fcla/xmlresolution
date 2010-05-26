@@ -43,7 +43,7 @@ after "deploy:update", "deploy:layout", "deploy:rdoc", "deploy:restart"
        run "chmod -R ug+rwX #{realname}" 
      end
 
-     run "(cd #{current_path}; bundle install #{File.join(shared_path, "vendor")} --relock)"
+     run "(cd #{current_path}; bundle install #{File.join(shared_path, "vendor")})"
 
      # logdir = File.join(shared_path, 'logs')        # logs will be in shared data
      # run "mkdir -p #{logdir}"
