@@ -8,11 +8,17 @@ dependencies:
     group: 
     - :default
     version: ">= 1.0.0"
+  builder: 
+    group: 
+    - :default
+    version: ">= 0"
   nokogiri: 
     group: 
     - :default
     version: ">= 1.4.1"
 specs: 
+- builder: 
+    version: 2.1.2
 - log4r: 
     version: 1.1.5
 - nokogiri: 
@@ -21,6 +27,6 @@ specs:
     version: 1.1.0
 - sinatra: 
     version: "1.0"
-hash: 80296dfe3772ce816ba80c6627eca9198bd34d4b
+hash: 7e11ce197f07ed007f82b63f0c46fed1e8809ba2
 sources: []
 

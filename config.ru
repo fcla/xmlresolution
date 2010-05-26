@@ -37,6 +37,9 @@ ENV['RESOLVER_PROXY'] ||= case Socket.gethostname
                             nil
                           end
 
+require 'rubygems'
+require 'bundler'
+Bundler.setup
 require 'sinatra'
 require 'app'
 
