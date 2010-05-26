@@ -15,6 +15,6 @@ specs:
     version: 1.1.0
 - sinatra: 
     version: "1.0"
-hash: 03d13e742c857cfa73d86dbf24cb55972d3763d4
+hash: bdae0ba287d2efca15f77d3e0b91cfd37ac3c5d9
 sources: []
 

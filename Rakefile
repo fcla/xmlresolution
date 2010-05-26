@@ -6,9 +6,9 @@ require 'spec/rake/spectask'
 
 spec_dependencies = []
 
-# Working with continuous integration.  What a pile of steaming monkey
-# shit are the CI servers out there.... Something that should be so
-# easy...let's start with ci/reporter...
+# Working with continuous integration.  The CI servers out
+# there.... Sigh... Something that should be so easy...let's start
+# with ci/reporter...
 
 begin
   require 'ci/reporter/rake/rspec' 

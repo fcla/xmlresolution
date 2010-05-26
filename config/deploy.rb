@@ -1,6 +1,7 @@
  set :application,       "xmlresolution"
- set :domain,            "xmlresolution.dev.fcla.edu"
- set :repository,        "git@github.com:daitss/xmlresolution.git"   # thanks to Franco, we've got a clean sane system.
+ set :domain,            "10.5.68.119"
+#set :repository,        "git@github.com:daitss/xmlresolution.git"   # thanks to Franco, we've got a clean sane system.
+ set :repository,        "http://github.com/daitss/xmlresolution.git"
  set :use_sudo,          false
  set :deploy_to,         "/opt/web-services/sites/#{application}"
  set :scm,               "git"
@@ -42,10 +43,10 @@ after "deploy:update", "deploy:layout", "deploy:rdoc", "deploy:restart"
        run "chmod -R ug+rwX #{realname}" 
      end
 
-     logdir = File.join(shared_path, 'logs')        # logs will be in shared data
-     run "mkdir -p #{logdir}"
-     run "ln -s #{logdir} #{current_path}"
-     run "chmod ug+rwX #{logdir}"                   # some of the logs are owned by the system, -R won't work
+     # logdir = File.join(shared_path, 'logs')        # logs will be in shared data
+     # run "mkdir -p #{logdir}"
+     # run "ln -s #{logdir} #{current_path}"
+     # run "chmod ug+rwX #{logdir}"                   # some of the logs are owned by the system, -R won't work
      
    end
    
@@ -56,3 +57,7 @@ after "deploy:update", "deploy:layout", "deploy:rdoc", "deploy:restart"
    
  end
  
+
+
+
+# remote deployed server: make sure we have rake in our path
