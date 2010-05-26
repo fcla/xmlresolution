@@ -1,4 +1,5 @@
-require 'socket'
+require 'bundler'
+Bundler.setup
 
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
 
@@ -25,6 +26,8 @@ $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
 # We'd also like to be able to run using rackup, where the following
 # defaults will kick in:
 
+require 'socket'
+
 ENV['LOG_FACILITY']   ||= nil  # default to stderr, may be apache error log, or console depending on how started
 
 ENV['DATA_PATH']      ||= File.expand_path(File.join(File.dirname(__FILE__), 'data'))
@@ -37,9 +40,6 @@ ENV['RESOLVER_PROXY'] ||= case Socket.gethostname
                             nil
                           end
 
-require 'rubygems'
-require 'bundler'
-Bundler.setup
 require 'sinatra'
 require 'app'
 
