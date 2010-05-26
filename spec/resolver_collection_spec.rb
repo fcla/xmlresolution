@@ -3,6 +3,8 @@ require 'xmlresolution/xml_resolver'
 require 'socket'
 require 'tempfile'
 
+# Hey Manny!
+
 include XmlResolution
 
 describe ResolverCollection do
@@ -75,17 +77,28 @@ describe ResolverCollection do
   end
 
   it "should save document resolution data" do
+
+    # resolve three representative documents:
+
     mets_resolver   = XmlResolver.new(File.read(mets_instance_doc),   file_url(mets_instance_doc),   @@store, proxy)
     daitss_resolver = XmlResolver.new(File.read(daitss_instance_doc), file_url(daitss_instance_doc), @@store, proxy)
     snwf_resolver   = XmlResolver.new(File.read(snwf_instance_doc),   file_url(snwf_instance_doc),   @@store, proxy)
+
+    # save the data collected to our collection
 
     mets_resolver.save(collection_name_1)
     daitss_resolver.save(collection_name_1)
     snwf_resolver.save(collection_name_1)
 
+    # Let's get the collection:
+
     collection = ResolverCollection.new(@@store, collection_name_1)
 
+    # look through the resolutions in the collection: grab the document identifiers in doc_ids
+
     doc_ids = collection.resolutions.map { |resolver| resolver.document_identifier }
+
+    # do we have all three we expect? (check for the document identifiers we've saved)
 
     collection.resolutions.count.should == 3
     doc_ids.include?(mets_resolver.document_identifier).should   == true
@@ -95,11 +108,15 @@ describe ResolverCollection do
 
   it "should give the collapsed list of schemas" do
 
+    # get the collection of resolutions we've created:
+
     collection = ResolverCollection.new(@@store, collection_name_1)
 
     collection.resolutions.count.should == 3
 
-    # Create a uniquified list of all of the downloaded schemas... around 77 of them
+    # Create a uniquified list of all of the downloaded schemas... we
+    # expect around 77 of them (lots of repeated schemas over the
+    # three document resolutionss):
 
     schema_locs = {}
     collection.resolutions.each do |resolver|
@@ -118,7 +135,7 @@ describe ResolverCollection do
     locations.each { |loc|  /#{loc}/.should =~ manifest }
 
     # Create a tarfile of the schemas; get a table of contents of the tar'd output of the collection using a third-party
-    # tar program; make sure the 
+    # tar program:
     
     tmp = Tempfile.new('tar-', '/tmp')
     collection.tar do |io|
@@ -128,14 +145,14 @@ describe ResolverCollection do
     tar_toc = `tar tvf #{tmp.path}`
     tmp.unlink
 
+    # Do we have a manifest in the tar file?
+
     %r{#{collection.collection_name}/manifest\.xml}.should =~ tar_toc
+
+    # Is each of the locations we found represented in the tar file?
 
     locations.each { |loc|  %r{#{collection.collection_name}/#{loc}}.should =~ tar_toc }
   end
-
-  
-  # tar, resolutions, manifest
-
 
 end # ResolverCollection
 

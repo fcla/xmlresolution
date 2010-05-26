@@ -84,7 +84,7 @@ class PlainXmlDocument < Nokogiri::XML::SAX::Document
   end
 
   # TODO: can <xsd:attributeGroup ref="xlink:simpleLink"/> occur with
-  # xlink not having been already resolved?
+  # xlink not having been already resolved? Apparently not...
 
   # namespace_locations
   #

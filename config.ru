@@ -7,8 +7,8 @@ $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
 # these, and then only in a configure section.
 #
 # Apache is typically set up along the following lines, where the
-# virtual host configuration environment variables will override
-# the defaults in this file:
+# virtual host configuration environment variables will override the
+# defaults in this file:
 #
 # <VirtualHost *:80>
 #   ServerName xmlresolution.example.com

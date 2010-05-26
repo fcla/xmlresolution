@@ -417,10 +417,6 @@ module XmlResolution
 
       @errors = instance_document.errors
 
-      # TODO: pending team review - be strict, or try to get some information?
-      #
-      #  if instance_document.errors.count > 0  # strict?
-
       if (instance_document.errors.count > 0) and namespace_locations.empty? and @used_namespaces.empty?
         raise XmlResolution::BadBadXmlDocument, "The XML document #{document_uri} had too many errors: " + instance_document.errors.join('; ')
       end

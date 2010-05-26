@@ -112,7 +112,6 @@ describe SchemaCatalog do
     failures.should  == 0
   end
 
-
   it "should add an error record if the location is unfetchable" do
 
     badloc = 'http://www.fcla.edu/dls/md/daitss/daitssFooBar.xsd'
@@ -128,7 +127,6 @@ describe SchemaCatalog do
     end
 
   end
-
 
   it "should allow subsequent catalogs to reuse the same data" do    # this forces some additional coverage in the class.
     catalog = SchemaCatalog.new(daitss_namespace_locations, @@tempdir, @@proxy)

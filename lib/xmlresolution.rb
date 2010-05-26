@@ -30,7 +30,7 @@ end
 # Consider a collection of XML documents.  You'd like to gather up all
 # of the information necessary to understand them, and gather up that
 # information into one tidy bundle.  The XMLResolution classes help
-# you to do just that: they will locate and download al of the schemas
+# you to do just that: they will locate and download all of the schemas
 # that your documents depend on. (Coming will be DTD and Stylesheet
 # support)
 #
@@ -53,7 +53,7 @@ module XmlResolution
 
   REVISION = get_capistrano_git_revision()
   RELEASE  = get_capistrano_release()
-  VERSION  = '1.0.2'
+  VERSION  = '1.1.0'
   NAME     = 'XMLResolution'
 
   require 'xmlresolution/exceptions'
