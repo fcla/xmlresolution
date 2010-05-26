@@ -1,5 +1,9 @@
 --- 
 dependencies: 
+  log4r: 
+    group: 
+    - :default
+    version: ">= 1.1.5"
   sinatra: 
     group: 
     - :default
@@ -9,12 +13,14 @@ dependencies:
     - :default
     version: ">= 1.4.1"
 specs: 
+- log4r: 
+    version: 1.1.5
 - nokogiri: 
     version: 1.4.1
 - rack: 
     version: 1.1.0
 - sinatra: 
     version: "1.0"
-hash: bdae0ba287d2efca15f77d3e0b91cfd37ac3c5d9
+hash: 80296dfe3772ce816ba80c6627eca9198bd34d4b
 sources: []
 
