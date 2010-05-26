@@ -1,0 +1,20 @@
+--- 
+dependencies: 
+  sinatra: 
+    group: 
+    - :default
+    version: ">= 1.0.0"
+  nokogiri: 
+    group: 
+    - :default
+    version: ">= 1.4.1"
+specs: 
+- nokogiri: 
+    version: 1.4.1
+- rack: 
+    version: 1.1.0
+- sinatra: 
+    version: "1.0"
+hash: 03d13e742c857cfa73d86dbf24cb55972d3763d4
+sources: []
+
