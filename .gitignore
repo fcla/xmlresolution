@@ -2,7 +2,6 @@ shared
 docs
 spec/reports
 coverage
-logs
 *~
 *-
 .#*
@@ -10,3 +9,7 @@ logs
 .emacs*
 REVISION
 TAGS
+.bundle
+vendor/doc
+vendor/gems
+vendor/specifications
