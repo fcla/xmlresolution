@@ -5,6 +5,7 @@
  set :scm,               "git"
  set :domain,            "xmlresolution.ripple.sacred.net"
  set :user,              "xmlrez"
+ set :group,             "daitss"
 
  role :app, domain
  role :web, domain
@@ -30,7 +31,7 @@ after "deploy:update", "deploy:layout", "deploy:rdoc", "deploy:restart"
    end
    
    task :layout, :roles => :app do
-     
+
      ['data', 'public'].each do |dir|               # might not be in git, since these directories are usually empty.
        pathname = File.join(current_path, dir)
        run "mkdir -p #{pathname}"       
@@ -45,6 +46,13 @@ after "deploy:update", "deploy:layout", "deploy:rdoc", "deploy:restart"
        run "ln -s #{realname} #{linkname}"
        run "chmod -R ug+rwX #{realname}" 
      end
+
+     # for production we'll want to keep our hands off, but it seems
+     # reasonable, for now, to let anyone in the #{group} group tweak
+     # the files on the server.
+
+     run "find #{shared_path} #{release_path} -type d | xargs chmod 2775"
+     run "find #{shared_path} #{release_path}  | xargs chgrp #{group}"
 
    end
    
