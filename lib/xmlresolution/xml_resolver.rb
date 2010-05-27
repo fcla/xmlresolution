@@ -342,7 +342,7 @@ module XmlResolution
             if (unresolved_namespaces.count > 0) or (broken_links.count > 0)
               xml.eventOutcomeDetail {
                 xml.eventOutcomeDetailExtension {
-                  broken_links.each { |loc| xml.broke_link(loc) }
+                  broken_links.each { |loc| xml.broken_link(loc) }
                   unresolved_namespaces.each { |ns| xml.unresolved_namespace(ns) }
                 }
               }
