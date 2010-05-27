@@ -19,8 +19,6 @@ after "deploy:update", "deploy:layout", "deploy:rdoc", "deploy:restart"
 
  namespace :deploy do
    
-borken
-
    task :start do  # setup sudo command to restart apache?  Isn't necessary yet.
    end
    
