@@ -1,18 +1,20 @@
  set :application,       "xmlresolution"
- set :domain,            "10.5.68.119"
-#set :repository,        "git@github.com:daitss/xmlresolution.git"   # thanks to Franco, we've got a clean sane system.
+ set :domain,            "xmlresolution.ripple.sacred.net"
  set :repository,        "http://github.com/daitss/xmlresolution.git"
  set :use_sudo,          false
  set :deploy_to,         "/opt/web-services/sites/#{application}"
  set :scm,               "git"
+ set :user,              "xmlrez"
+
 
  role :app, domain
  role :web, domain
  role :db,  domain, :primary => true
 
-# After we've successfully updated, we run these tasks:
-# layout sets up the directory structure; rdoc builds library doco;
-# restart instructs passenger phusion to restart the app.
+# After we've successfully updated, we run these tasks: layout sets up
+# the directory structure and runs bundle to install our own gem
+# dependencies; rdoc builds library doco; restart touches the file
+# that instructs passenger phusion to restart the app.
 
 after "deploy:update", "deploy:layout", "deploy:rdoc", "deploy:restart"
 
@@ -43,13 +45,7 @@ after "deploy:update", "deploy:layout", "deploy:rdoc", "deploy:restart"
        run "chmod -R ug+rwX #{realname}" 
      end
 
-     run "(cd #{current_path}; bundle install #{File.join(shared_path, "vendor")})"
-
-     # logdir = File.join(shared_path, 'logs')        # logs will be in shared data
-     # run "mkdir -p #{logdir}"
-     # run "ln -s #{logdir} #{current_path}"
-     # run "chmod ug+rwX #{logdir}"                   # some of the logs are owned by the system, -R won't work
-     
+     run "cd #{current_path}; bundle install #{File.join(shared_path, "vendor")}"
    end
    
    task :rdoc, :roles => :app do                     # generate fresh rdoc.
