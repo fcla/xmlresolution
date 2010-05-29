@@ -62,16 +62,16 @@ You can use the supplied Capfile and config/deploy.rb to set up. Adjust
 the top few lines in deploy.rb to match your installation.
 
  * config.ru & app.rb - the Sinatra setup
- * public/            - rdocs wiil land in here via % rake rdoc; otherwise empty
+ * public/            - programming docs will land in public/internals here via % rake yard; otherwise empty
  * views/             - instructional erb pages and forms
  * lib/app/           - root of the sinatra stuff - helpers and routes
  * lib/xmlresolution/ - root of the xmlresolution libraries
- * config/            - capistrano deployment files
+ * lib/sys            - capistrano deployment files, rake helpers, that sort of stuff
  * spec/              - tests
- * data/              - example DATA_ROOT which must have:
+ * data/              - example DATA_ROOT which must have the directories:
  * data/schemas       - where cached schemas live
  * data/collections   - where collections, and information about submitted documents for a collection, live
- * tmp/               - phusion writes the restart.txt file here.  Rake has a restart target for this, capistrano uses it 
+ * tmp/               - phusion checks the restart.txt file here.  Rake has a restart target for this, capistrano uses it 
 
 
 Usage

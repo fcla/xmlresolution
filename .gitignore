@@ -10,7 +10,6 @@ TAGS
 coverage
 docs
 shared
-public/internals
 spec/reports
 vendor/doc
 vendor/gems

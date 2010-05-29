@@ -28,7 +28,7 @@ $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
 
 require 'socket'
 
-ENV['LOG_FACILITY']   ||= nil  # default to stderr, may be apache error log, or console depending on how started
+ENV['LOG_FACILITY']   ||= nil  # default to stderr; may be apache error log or console depending on how started
 
 ENV['DATA_PATH']      ||= File.expand_path(File.join(File.dirname(__FILE__), 'data'))
 
