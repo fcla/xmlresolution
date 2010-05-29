@@ -10,11 +10,14 @@ HOME    = File.expand_path(File.dirname(__FILE__))
 LIBDIR  = File.join(HOME, 'lib')
 TMPDIR  = File.join(HOME, 'tmp')
 
-PUBLIC_DOCS = File.join(HOME, 'public', 'internals')
+FILES   = FileList["#{LIBDIR}/**/*.rb", 'config.ru', 'app.rb']         # run yard/hanna/rdoc on these and..
+DOCDIR  = File.join(HOME, 'public', 'internals')                       # ...place the html doc files here.
 
 def dev_host
   Socket.gethostname =~ /romeo-foxtrot/
 end
+
+# cleanup handling of CI & spec dependencies
 
 spec_dependencies = []
 
@@ -45,63 +48,51 @@ Spec::Rake::SpecTask.new do |task|
 end
 
 
-defaults = [:spec, :restart]
+desc "Generate documentation from libraries - try yardoc, hanna, rdoc, in that order."
+task :docs do
+  
+  yardoc  = `which yardoc`
+  hanna   = `which hanna`
+  rdoc    = `which rdoc`
 
-defaults.push :tags if dev_host
-
-begin
-  require 'yard'
-  YARD::Rake::YardocTask.new do |task|
-    task.files   = ['lib/**/*.rb']  
-    task.options = ['--private', '--protected', '--title', 'XML Resolution Service', '--output-dir', PUBLIC_DOCS ]
+  if not yardoc.empty?
+    command = "yardoc --private --protected --title 'XML Resolution Service' --output-dir #{DOCDIR} #{FILES}" 
+  elsif not hanna.empty?
+    command = "hanna --main XmlResolution --op #{DOCDIR} --inline-source --all --title 'XML Resolution' #{FILES}"
+  elsif not rdoc.empty?
+    command = "rdoc --main XmlResolution --op #{DOCDIR} --inline-source --all --title 'XML Resolution' #{FILES}"
+  else
+    command = nil
   end
-  defaults.push :yard
-rescue LoadError => e
-  STDERR.puts 
-end
 
-# Assumes you're keeping your code in a lib directory - adjust accordingly:
-
-desc "Generate rdoc documentation from libraries - we added --inline and --all options and --op rdoc options"
-task :rdoc do
-
-  COMMAND = `which hanna`.empty? ? 'rdoc' : 'hanna'
-
-  begin
-    FileUtils.rm_rf PUBLIC_DOCS
-    chdir LIBDIR
-    command = "#{COMMAND} --main XmlResolution --op #{File.join(HOME, 'public/internals')} --inline-source --all --title 'XML Resolution' #{Dir['*.rb'].join(' ')}  #{Dir['xmlresolution/*.rb'].join(' ')}"
-    puts command
-    `#{command}`    
-  rescue => e
-    raise e
-  ensure 
-    chdir HOME
+  if command.nil?
+    puts "No documention helper (yardoc/hannah/rdoc) found, skipping the 'doc' task."
+  else
+    FileUtils.rm_rf FileList["#{DOCDIR}/**/*"]
+    puts "Creating docs with #{command.split.first}."
+    `#{command}`
   end
 end
 
-desc "Maintain the sinatra tmp directory for automated restart (passenger phusion pays attention to tmp/restart.txt) - only restarts if necessary"
+desc "Maintain the sinatra tmp directory for automated restart (passenger phusion pays attention to tmp/restart.txt)."
 task :restart do
   mkdir TMPDIR unless File.directory? TMPDIR
-  restart = File.join(TMPDIR, 'restart.txt')     
-
-  files="app.rb config.ru lib/ public/ views/"
-
-  if not (File.exists?(restart) and `find  #{files} -type f -newer "#{restart}" 2> /dev/null`.empty?)
+  restart = File.join(TMPDIR, 'restart.txt')
+  if not (File.exists?(restart) and `find  #{FILES} -type f -newer "#{restart}" 2> /dev/null`.empty?)
+    puts "Indicating a restart is in order."
     File.open(restart, 'w') { |f| f.write "" }
-  end  
-end
-
-namespace "tags" do
-  files = FileList['**/*.rb', '**/*.ru'].exclude("pkg")
-  task :emacs => files do
-    puts "Making Emacs TAGS file"
-    sh "xctags -e #{files}", :verbose => false
   end
 end
 
-task :tags => ["tags:emacs"]
+desc "Make emacs tags files"
+task :etags do
+  files = (FileList['lib/**/*', "tools/**/*", 'views/**/*', 'spec/**/*', 'bin/**/*']).exclude('*/xmlvalidator.jar', 'spec/files', 'spec/reports')        # run yard/hanna/rdoc on these and..
+  puts "Creating Emacs TAGS file"
+  `xctags -e #{files}`    
+end
 
+defaults = [:restart]
+defaults.push :etags   if dev_host
+defaults.push :spec    if dev_host
 
 task :default => defaults
-

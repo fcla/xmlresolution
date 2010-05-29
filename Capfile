@@ -64,15 +64,13 @@ after "deploy:update", "deploy:layout", "deploy:rdoc", "deploy:restart"
      run "find #{shared_path} #{release_path}  | xargs chgrp #{group}"
 
    end
+
+  # Need 
    
-   task :rdoc, :roles => :app do                     # generate fresh rdoc.
-     run "cd #{current_path}; rake rdoc"
-     run "chmod -R ug+rwX #{File.join(current_path, 'public', 'rdoc')}"
+   task :doc, :roles => :app do                     # generate fresh rdoc.
+     run "cd #{current_path}; rake docs"
+     run "chmod -R ug+rwX #{File.join(current_path, 'public', 'internals')}"
    end
    
  end
  
-
-
-
-# remote deployed server: make sure we have rake in our path
