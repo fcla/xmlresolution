@@ -75,5 +75,9 @@ namespace :deploy do
     run "chmod -R ug+rwX #{File.join(current_path, 'public', 'internals')}"
   end
 
+  task :spec, :roles => :app do                     # run spec tests, ci
+    run "cd #{current_path}; rake spec"
+
+
 end
 

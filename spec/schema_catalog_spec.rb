@@ -1,5 +1,6 @@
 require 'digest/md5'
 require 'fileutils'
+require 'socket'
 require 'tmpdir'
 require 'xmlresolution/schema_catalog'
 
@@ -7,12 +8,30 @@ include XmlResolution
 
 describe SchemaCatalog do
 
-  @@tempdir = Dir.mktmpdir('schema-catalog-test-', '/tmp') + '/'
+  @@tempdir = nil 
   @@proxy   = nil
   @@catalog = nil
 
+  def proxy 
+    prox = ENV['RESOLVER_PROXY']
+    prox ||= case Socket.gethostname
+             when /romeo-foxtrot/;   'localhost:3128'
+             when /sacred.net/;      'satyagraha.sacred.net:3128'
+             when /fcla.edu/;        'sake.fcla.edu'
+             else
+               nil
+             end
+    
+    if prox.nil?
+      STDERR.puts 'No http proxy set: will download schemas directly - very slow.  Set environment variable RESOLVER_PROXY to caching proxy if you want to speed this up.'
+    end
+    prox
+  end
+
+
   before(:all) do 
-    @@proxy = ENV['RESOLVER_PROXY']   # set this environment variable if you want to test via a proxy
+    @@tempdir = Dir.mktmpdir('schema-catalog-test-', '/tmp') + '/'
+    @@proxy   = proxy
   end
 
   after(:all) do
