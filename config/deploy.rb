@@ -3,7 +3,8 @@
  set :use_sudo,          false
  set :deploy_to,         "/opt/web-services/sites/#{application}"
  set :scm,               "git"
- set :domain,            "xmlresolution.ripple.sacred.net"
+#set :domain,            "xmlresolution.ripple.sacred.net"
+ set :domain,            "xmlresolution.ripple.daitss.net"
  set :user,              "xmlrez"
  set :group,             "daitss"
 

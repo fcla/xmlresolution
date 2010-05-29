@@ -1,8 +1,20 @@
+# -*- mode:ruby; -*-
+
 require 'fileutils'
 require 'rake'
 require 'rake/rdoctask'
 require 'socket'
 require 'spec/rake/spectask'
+
+HOME    = File.expand_path(File.dirname(__FILE__))
+LIBDIR  = File.join(HOME, 'lib')
+TMPDIR  = File.join(HOME, 'tmp')
+
+PUBLIC_DOCS = File.join(HOME, 'public', 'internals')
+
+def dev_host
+  Socket.gethostname =~ /romeo-foxtrot/
+end
 
 spec_dependencies = []
 
@@ -29,15 +41,24 @@ task :spec => spec_dependencies
 Spec::Rake::SpecTask.new do |task|
   task.libs << 'lib'
   task.libs << 'spec'
-  task.rcov = true if Socket.gethostname =~ /romeo-foxtrot/   # do coverage tests on my devlopment box
+  task.rcov = true if dev_host   # do coverage tests on my devlopment box
 end
 
-task :tags => ["tags:emacs"]
 
-HOME    = File.expand_path(File.dirname(__FILE__))
-LIBDIR  = File.join(HOME, 'lib')
-TMPDIR  = File.join(HOME, 'tmp')
-RDOCDIR = File.join(HOME, 'public', 'rdoc')
+defaults = [:spec, :restart]
+
+defaults.push :tags if dev_host
+
+begin
+  require 'yard'
+  YARD::Rake::YardocTask.new do |task|
+    task.files   = ['lib/**/*.rb']  
+    task.options = ['--private', '--protected', '--title', 'XML Resolution Service', '--output-dir', PUBLIC_DOCS ]
+  end
+  defaults.push :yard
+rescue LoadError => e
+  STDERR.puts 
+end
 
 # Assumes you're keeping your code in a lib directory - adjust accordingly:
 
@@ -51,10 +72,9 @@ task :rdoc do
   # COMMAND = 'rdoc'
 
   begin
-    FileUtils.rm_rf RDOCDIR
+    FileUtils.rm_rf PUBLIC_DOCS
     chdir LIBDIR
-    # #{Dir['app/*.rb'].join(' ')}
-    command = "#{COMMAND} #{DIAGRAM} --main XmlResolution --op #{File.join(HOME, 'public/rdoc')} --inline-source --all --title 'XML Resolution' #{Dir['*.rb'].join(' ')}  #{Dir['xmlresolution/*.rb'].join(' ')}"
+    command = "#{COMMAND} #{DIAGRAM} --main XmlResolution --op #{File.join(HOME, 'public/internals')} --inline-source --all --title 'XML Resolution' #{Dir['*.rb'].join(' ')}  #{Dir['xmlresolution/*.rb'].join(' ')}"
     puts command
     `#{command}`    
   rescue => e
@@ -76,19 +96,16 @@ task :restart do
   end  
 end
 
-module Tags
-  RUBY_FILES = FileList['**/*.rb', '**/*.ru'].exclude("pkg")
-end
-
 namespace "tags" do
-  task :emacs => Tags::RUBY_FILES do
+  files = FileList['**/*.rb', '**/*.ru'].exclude("pkg")
+  task :emacs => files do
     puts "Making Emacs TAGS file"
-    sh "xctags -e #{Tags::RUBY_FILES}", :verbose => false
+    sh "xctags -e #{files}", :verbose => false
   end
 end
 
 task :tags => ["tags:emacs"]
 
-# TODO: do subsequent tasks kick off if a preceding one fails?
 
-task :default => [:spec, :rdoc, :restart]
+task :default => defaults
+

@@ -3,7 +3,7 @@ require 'xmlresolution'
 include XmlResolution
 
 configure do
-  $KCODE = 'UTF8'         # Required for XML processing libraries
+  $KCODE = 'UTF8'         # Required for XML processing libraries.
 
   disable :logging        # Stop CommonLogger from logging to STDERR, please.
 
@@ -13,7 +13,7 @@ configure do
   set :environment,  :production            # Get some exceptional defaults.
 
   set :proxy,       ENV['RESOLVER_PROXY']   # Where to find the tape robot (see SiloTape and TsmExecutor).
-  set :data_path,   ENV['DATA_ROOT']        # collections and schema data live here.
+  set :data_path,   ENV['DATA_ROOT']        # The collections and schema data live here.
 
   if ENV['LOG_FACILITY'].nil?
     Logger.stderr
@@ -22,6 +22,9 @@ configure do
   end
 
   use Rack::CommonLogger, Logger.new  # Bend CommonLogger to our will...
+
+  Logger.info "Starting #{XmlResolution.version.rev}."
+  Logger.info "Initializing with data directory #{ENV['DATA_ROOT']}; caching proxy is #{ENV['RESOLVER_PROXY'] || 'off' }."
 end
 
 begin
