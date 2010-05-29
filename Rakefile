@@ -65,16 +65,12 @@ end
 desc "Generate rdoc documentation from libraries - we added --inline and --all options and --op rdoc options"
 task :rdoc do
 
-  DIAGRAM = ''
   COMMAND = `which hanna`.empty? ? 'rdoc' : 'hanna'
-
-  # DIAGRAM = `which dot`.empty?   ? '' : '--diagram'
-  # COMMAND = 'rdoc'
 
   begin
     FileUtils.rm_rf PUBLIC_DOCS
     chdir LIBDIR
-    command = "#{COMMAND} #{DIAGRAM} --main XmlResolution --op #{File.join(HOME, 'public/internals')} --inline-source --all --title 'XML Resolution' #{Dir['*.rb'].join(' ')}  #{Dir['xmlresolution/*.rb'].join(' ')}"
+    command = "#{COMMAND} --main XmlResolution --op #{File.join(HOME, 'public/internals')} --inline-source --all --title 'XML Resolution' #{Dir['*.rb'].join(' ')}  #{Dir['xmlresolution/*.rb'].join(' ')}"
     puts command
     `#{command}`    
   rescue => e
