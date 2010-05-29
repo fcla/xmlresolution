@@ -66,7 +66,6 @@ the top few lines in deploy.rb to match your installation.
  * views/             - instructional erb pages and forms
  * lib/app/           - root of the sinatra stuff - helpers and routes
  * lib/xmlresolution/ - root of the xmlresolution libraries
- * lib/sys            - capistrano deployment files, rake helpers, that sort of stuff
  * spec/              - tests
  * data/              - example DATA_ROOT which must have the directories:
  * data/schemas       - where cached schemas live

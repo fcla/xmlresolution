@@ -24,6 +24,9 @@ spec_dependencies = []
 # Working with continuous integration.  The CI servers out
 # there.... Sigh... Something that should be so easy...let's start
 # with ci/reporter...
+#
+# TODO: conditionally add to the spec tests, and send the output to
+# a web service
 
 begin
   require 'ci/reporter/rake/rspec' 
@@ -51,16 +54,16 @@ end
 desc "Generate documentation from libraries - try yardoc, hanna, rdoc, in that order."
 task :docs do
   
-  yardoc  = `which yardoc`
-  hanna   = `which hanna`
-  rdoc    = `which rdoc`
+  yardoc  = `which yardoc 2> /dev/null`
+  hanna   = `which hanna  2> /dev/null`
+  rdoc    = `which rdoc   2> /dev/null`
 
   if not yardoc.empty?
-    command = "yardoc --private --protected --title 'XML Resolution Service' --output-dir #{DOCDIR} #{FILES}" 
+    command = "yardoc --quiet --private --protected --title 'XML Resolution Service' --output-dir #{DOCDIR} #{FILES}" 
   elsif not hanna.empty?
-    command = "hanna --main XmlResolution --op #{DOCDIR} --inline-source --all --title 'XML Resolution' #{FILES}"
+    command = "hanna --quiet --main XmlResolution --op #{DOCDIR} --inline-source --all --title 'XML Resolution' #{FILES}"
   elsif not rdoc.empty?
-    command = "rdoc --main XmlResolution --op #{DOCDIR} --inline-source --all --title 'XML Resolution' #{FILES}"
+    command = "rdoc --quiet --main XmlResolution --op #{DOCDIR} --inline-source --all --title 'XML Resolution' #{FILES}"
   else
     command = nil
   end
@@ -91,8 +94,7 @@ task :etags do
   `xctags -e #{files}`    
 end
 
-defaults = [:restart]
+defaults = [:restart, :spec]
 defaults.push :etags   if dev_host
-defaults.push :spec    if dev_host
 
 task :default => defaults
