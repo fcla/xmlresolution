@@ -27,10 +27,11 @@ role :db,  domain, :primary => true
 
 # After we've successfully updated, we run these tasks: layout sets up
 # the directory structure and runs bundle to install our own gem
-# dependencies; rdoc builds library doco; restart touches the file
-# that instructs passenger phusion to restart the app.
+# dependencies; docs builds library documentation into
+# public/internals/; restart touches the file that instructs passenger
+# phusion to restart the app.
 
-after "deploy:update", "deploy:layout", "deploy:docs", "deploy:restart"
+after "deploy:update", "deploy:layout", "deploy:docs", "deploy:spec", "deploy:restart"
 
 namespace :deploy do
 
