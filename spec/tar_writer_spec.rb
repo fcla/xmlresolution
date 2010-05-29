@@ -125,7 +125,7 @@ describe XmlResolution::TarWriter do
     copy.mode.should  == orig.mode
     copy.size.should  == orig.size
     copy.mtime.should == orig.mtime
-    copy.atime.should == orig.atime
+    copy.atime.should be_close(orig.atime, 1)  # within a second here is OK
   end
 
   
