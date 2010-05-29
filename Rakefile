@@ -29,18 +29,18 @@ spec_dependencies = []
 # a web service
 
 begin
-  require 'ci/reporter/rake/rspec' 
+  require 'ci/reporter/rake/rspec'
 rescue LoadError => e
 else
   spec_dependencies.push "ci:setup:rspec"
-end  
+end
 
 begin
-  require 'ci/reporter/rake/cucumber' 
+  require 'ci/reporter/rake/cucumber'
 rescue LoadError => e
 else
   spec_dependencies.push "ci:setup:cucumber"
-end  
+end
 
 task :spec => spec_dependencies
 
@@ -53,13 +53,13 @@ end
 
 desc "Generate documentation from libraries - try yardoc, hanna, rdoc, in that order."
 task :docs do
-  
+
   yardoc  = `which yardoc 2> /dev/null`
   hanna   = `which hanna  2> /dev/null`
   rdoc    = `which rdoc   2> /dev/null`
 
   if not yardoc.empty?
-    command = "yardoc --quiet --private --protected --title 'XML Resolution Service' --output-dir #{DOCDIR} #{FILES}" 
+    command = "yardoc --quiet --private --protected --title 'XML Resolution Service' --output-dir #{DOCDIR} #{FILES}"
   elsif not hanna.empty?
     command = "hanna --quiet --main XmlResolution --op #{DOCDIR} --inline-source --all --title 'XML Resolution' #{FILES}"
   elsif not rdoc.empty?
@@ -91,7 +91,7 @@ desc "Make emacs tags files"
 task :etags do
   files = (FileList['lib/**/*', "tools/**/*", 'views/**/*', 'spec/**/*', 'bin/**/*']).exclude('*/xmlvalidator.jar', 'spec/files', 'spec/reports')        # run yard/hanna/rdoc on these and..
   puts "Creating Emacs TAGS file"
-  `xctags -e #{files}`    
+  `xctags -e #{files}`
 end
 
 defaults = [:restart, :spec]

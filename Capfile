@@ -77,7 +77,7 @@ namespace :deploy do
 
   task :spec, :roles => :app do                     # run spec tests, ci
     run "cd #{current_path}; rake spec"
-
+  end
 
 end
 
