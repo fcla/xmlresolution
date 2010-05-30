@@ -44,8 +44,15 @@ describe ResolverUtils do
     ResolverUtils.group.should == `id -gn`.chomp
   end
 
-  it "should get the group of this file with the group utility" do
-    ResolverUtils.group(__FILE__).should == `id -gn`.chomp
+  it "should get the group of a file with the group utility" do
+    begin
+      tempfile = Tempfile.new('group-check-')
+      tempfile.write 'foo'
+      tempfile.close
+      ResolverUtils.group(tempfile.path).should == `id -gn`.chomp
+    ensure
+      tempfile.unlink
+    end
   end
 
   it "should raise an error if a plain file is used when doing a directory check" do

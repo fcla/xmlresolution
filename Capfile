@@ -1,5 +1,7 @@
 # -*- mode:ruby; -*-
 
+# Run as cap --set-before domain="remote host"  deploy
+
 load    'deploy' if respond_to?(:namespace)  # cap2?
 require 'rubygems'
 require 'railsless-deploy'
@@ -10,9 +12,10 @@ set :use_sudo,          false
 set :deploy_to,         "/opt/web-services/sites/#{application}"
 set :scm,               "git"
 
+
 # set domain from cap command line, e.g.
 #
-#  cap --set-before domain=xmlresolution.ripple.fcla.edu   deploy
+#  cap --set-before domain=xmlresolution.ripple.fcla.edu  --set-before proxy=sake.fcla.edu:3128  deploy
 #
 
 # set :domain,      "xmlresolution.ripple.sacred.net"
@@ -77,7 +80,7 @@ namespace :deploy do
   end
 
   task :spec, :roles => :app do                     # run spec tests, ci
-    run "cd #{current_path}; rake spec"
+    run "cd #{current_path}; RESOLVER_PROXY=#{proxy} rake spec"
   end
 
 end

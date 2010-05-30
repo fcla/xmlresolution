@@ -18,12 +18,18 @@ describe XmlResolution::TarWriter do
     FileUtils::rm_f "/tmp/passwd"
   end
 
-  # list_tar  - use the system tar to list the files in our tar; we expect something like this:
+  # list_tar  - use the system tar to list the files in our tar; we expect something either like this:
   #
   # -rw-------  0 daitss-user daitss-group 3376 Nov 13 15:25 tmp/tar-test-1353/tf20091113-1353-keexjq-0
   #
   # perms/dunno/user/group/size/mon/day/time/file
   # 0     1     2    3    4     5   6   7    8
+  #
+  # or, perhaps, if it gnutar based:
+  #
+  # -rw------- daitss-user/daitss-group 3379 2010-05-29 23:41 tmp/tar-test-1353/tf20091113-1353-keexjq-0
+  #
+  # 
 
   def list_tar 
     `tar tvf #{@@tarfile.path}`.split("\n")
@@ -78,7 +84,7 @@ describe XmlResolution::TarWriter do
 
     first_line = list_tar[0]
 
-    tarname = first_line.split[8]
+    tarname = first_line.split.pop     # last entry is filename
     filepath.should == "/" + tarname   # gnutar strips the leading "/" in the TOC
   end
 
@@ -92,7 +98,7 @@ describe XmlResolution::TarWriter do
     tf.close
 
     first_line = list_tar[0]
-    tarname    = first_line.split[8]
+    tarname    = first_line.split.pop  # all tars list filename last
 
     tarname.should == 'myfile'
   end
@@ -106,8 +112,8 @@ describe XmlResolution::TarWriter do
     tf.write(filepath)
     tf.close
     first_line = list_tar[0]
-    first_line.split[2].should == 'daitss-user'
-    first_line.split[3].should == 'daitss-group'
+    first_line.should =~ /daitss-user/
+    first_line.should =~ /daitss-group/
   end
 
 
