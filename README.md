@@ -60,8 +60,8 @@ Quickstart
 
 Directory Structure
 -------------------
-You can use the supplied Capfile and config/deploy.rb to set up. Adjust
-the top few lines in deploy.rb to match your installation.
+You can use the supplied Capfile to set up. Adjust
+the top few lines in that file to match your installation.
 
  * config.ru & app.rb - the Sinatra setup
  * public/            - programming docs will land in public/internals here via % rake yard; otherwise empty
