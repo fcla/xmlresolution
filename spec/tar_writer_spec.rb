@@ -4,7 +4,6 @@ require 'tempfile'
 require 'fileutils'
 
 describe XmlResolution::TarWriter do
-
   @@dir = nil
   @@tarfile = nil
 
