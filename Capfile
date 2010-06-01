@@ -12,20 +12,39 @@ set :use_sudo,          false
 set :deploy_to,         "/opt/web-services/sites/#{application}"
 set :scm,               "git"
 
-# TODO: check for proxy being set; for domain being set.
+set :user,              "xmlrez"    unless variables[:user]
+set :group,             "daitss"    unless variables[:group]
 
-# set domain from cap command line, e.g.
+
+# set domain and test proxy to use from cap command line, e.g.
 #
-#  cap --set-before domain=xmlresolution.ripple.fcla.edu  --set-before proxy=sake.fcla.edu:3128  deploy
+#  cap --set-before domain=xmlresolution.ripple.fcla.edu  --set-before test_proxy=sake.fcla.edu:3128  deploy
 #
 
 # set :domain,      "xmlresolution.ripple.sacred.net"
 # set :domain,      "xmlresolution.ripple.daitss.net"
 
+def usage(messages)
+  STDERR.puts "Usage: deploy cap -S domain=<target domain> -S test_proxy=<target proxy>"  
+  STDERR.puts messages.join("\n")
+  STDERR.puts "You may also set the remote user and group similarly (defaults to #{user} and #{group}, respectively)."
+  STDERR.puts "If you set the user, you must be able to ssh to the domain as that user."
+  exit
+end
+
+errors = []
+if not variables[:domain]
+  errors.push 'The domain was not set (e.g., domain=ripple.fcla.edu).'
+end
+
+if not variables[:test_proxy]
+  errors.push 'The test_proxy was not set (e.g. test_proxy=sake.fcla.edu:3128).'
+end
+
+usage(errors) unless errors.empty?
 
 
-set :user,         "xmlrez"
-set :group,        "daitss"
+
 
 role :app, domain
 role :web, domain
@@ -82,7 +101,7 @@ namespace :deploy do
   end
 
   task :spec, :roles => :app do                     # run spec tests, ci
-    run "cd #{current_path}; RESOLVER_PROXY=#{proxy} rake spec"
+    run "cd #{current_path}; RESOLVER_PROXY=#{test_proxy} rake spec"
   end
 end
 
