@@ -17,7 +17,7 @@ describe XmlResolution do
     (XmlResolution::RELEASE.length > 0).should == true
   end
 
-  it "should provie a REVISION constant" do
+  it "should provide a REVISION constant" do
     (XmlResolution::REVISION.length > 0).should == true
   end
 

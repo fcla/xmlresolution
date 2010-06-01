@@ -5,7 +5,7 @@ $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
 
 # We use environment variables here to support two different service
 # scenarios. Note that only the top level app.rb pays attention to
-# these, and then only in a configure section.
+# these environment variables, and then only in a configure section.
 #
 # Apache is typically set up along the following lines, where the
 # virtual host configuration environment variables will override the
@@ -44,4 +44,3 @@ require 'sinatra'
 require 'app'
 
 run Sinatra::Application
-

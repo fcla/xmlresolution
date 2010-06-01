@@ -7,7 +7,7 @@ RESTful steps:
 
   1. Create a collection resource.
   2. POST some XML documents to the collection.
-  3. GET the collection, retrieving a tar file of the XML schemas and a manifest of what was done.
+  3. GET the collection, retrieving a tar file of the XML schemas and a manifest of what was found.
 
 The original XML documents are not returned.  It is recommended that
 you employ a caching proxy such as squid when used in a production
