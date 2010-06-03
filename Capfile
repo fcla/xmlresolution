@@ -1,13 +1,13 @@
 # -*- mode:ruby; -*-
-
+#
 #  Set domain and test proxy to use from cap command line as so:
 #
 #  cap deploy  -S domain=xmlresolution.ripple.fcla.edu  -S test_proxy=sake.fcla.edu:3128
 #
-#  THe test-proxy is used only in remote spec tests.
+#  The test-proxy is used only in remote spec tests.
 #  One can over-ride user and group settings the same way.
 
-load    'deploy' if respond_to?(:namespace)  # cap2?
+load    'deploy'
 require 'rubygems'
 require 'railsless-deploy'
 
@@ -16,10 +16,12 @@ set :repository,        "http://github.com/daitss/xmlresolution.git"
 set :use_sudo,          false
 set :deploy_to,         "/opt/web-services/sites/#{application}"
 set :scm,               "git"
-
+set :branch,            "master"
 set :user,              "xmlrez"    unless variables[:user]
 set :group,             "daitss"    unless variables[:group]
 
+# set :git_shallow_clone,  1  # doesn't work for some reason...maybe I'm not waiting long enough.
+#
 # set :domain,      "xmlresolution.ripple.sacred.net"
 # set :domain,      "xmlresolution.ripple.daitss.net"
 
@@ -42,10 +44,7 @@ end
 
 usage(errors) unless errors.empty?
 
-
 role :app, domain
-role :web, domain
-role :db,  domain, :primary => true
 
 # After we've successfully updated, we run these tasks: layout sets up
 # the directory structure and runs bundle to install our own gem
@@ -57,16 +56,12 @@ after "deploy:update", "deploy:layout", "deploy:docs", "deploy:spec", "deploy:re
 
 namespace :deploy do
 
-  task :start do  # setup sudo command to restart apache?  Isn't necessary yet.
-  end
-
-  task :stop do
-  end
-
+  desc "Touch the tmp/restart.txt file on the target host, which signals passenger phusion to reload the app"
   task :restart, :roles => :app, :except => { :no_release => true } do  # passenger phusion restarts when it detects this sentinel file  has changed mtime
     run "touch #{File.join(current_path, 'tmp', 'restart.txt')}"
   end
 
+  desc "Create the directory hierarchy, as necessary, on the target host"
   task :layout, :roles => :app do
 
     ['data', 'public'].each do |dir|                    # might not be in git since these directories are usually empty - create if necessary
@@ -93,11 +88,13 @@ namespace :deploy do
     run "find #{shared_path} #{release_path}  | xargs chgrp #{group}"
   end
 
+  desc "Create documentation in public/internals via a rake task - tries yard, hanna, and rdoc"
   task :docs, :roles => :app do                     # generate fresh rdoc.
     run "cd #{current_path}; rake docs"
     run "chmod -R ug+rwX #{File.join(current_path, 'public', 'internals')}"
   end
 
+  desc "Run spec tests on the target host via rake - will use ci/reporter if available"
   task :spec, :roles => :app do                     # run spec tests, ci
     run "cd #{current_path}; RESOLVER_PROXY=#{test_proxy} rake spec"
   end

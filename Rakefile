@@ -48,6 +48,7 @@ end
 task :spec => spec_dependencies
 
 Spec::Rake::SpecTask.new do |task|
+  task.spec_opts = [ '--format', 'specdoc' ]    # ci/reporter is getting in the way of this being used.
   task.libs << 'lib'
   task.libs << 'spec'
   task.rcov = true if dev_host   # do coverage tests on my devlopment box
