@@ -42,8 +42,8 @@ end
 
 # Documentation, built by rake and placed in the public folder.
 
-get '/rdoc/?' do
-   redirect '/rdoc/index.html', 301
+get '/docs/?' do
+   redirect '/internals/index.html', 301
 end
 
 # Test form for submitting an XML document via a file upload form:
