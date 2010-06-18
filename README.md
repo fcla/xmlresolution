@@ -21,7 +21,7 @@ In your web server you should set up some environment variables:
 
   * SetEnv DATA_ROOT - where you'll save information about the schemas and document collections.
   * SetEnv RESOLVER_PROXY squid.example.com:3128 - an optional squid caching proxy.
-  * SetEnv LOG_FACILITY LOG_LOCAL1 - set a facility code if you use syslog for logging.
+  * SetEnv LOG_FACILITY LOG_LOCAL1 - optionally set a facility code if you use syslog for logging; STDERR will be used otherwise.
 
 Requirements
 ------------
