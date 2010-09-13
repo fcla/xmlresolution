@@ -23,7 +23,8 @@ end
 # in Sinatra 1.0.  We have to repeat the code above for this special case.
 
 not_found  do
-  message = if @env['sinatra.error'].is_a? XmlResolution::Http404 
+  e = @env['sinatra.error']
+  message = if e.is_a? XmlResolution::Http404 
               e.client_message
             else
               "404 Not Found - #{request.url} doesn't exist.\n"
