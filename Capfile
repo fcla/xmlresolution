@@ -58,7 +58,7 @@ role :app, domain
 # public/internals/; restart touches the file that instructs passenger
 # phusion to restart the app; spec runs the spec tests.
 
-after "deploy:update", "deploy:layout", "deploy:docs", "deploy:spec", "deploy:restart"
+after "deploy:update", "deploy:layout", "deploy:spec", "deploy:restart"
 
 namespace :deploy do
 
