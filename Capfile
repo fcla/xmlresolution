@@ -96,11 +96,12 @@ namespace :deploy do
 
   end
 
-  desc "Create documentation in public/internals via a rake task - tries yard, hanna, and rdoc"
-  task :docs, :roles => :app do                     # generate fresh rdoc.
-    run "cd #{current_path}; rake docs"
-    run "chmod -R ug+rwX #{File.join(current_path, 'public', 'internals')}"
-  end
+  # We're giving up on doing this on remotely deployed systems - they are just too flaky.
+  # desc "Create documentation in public/internals via a rake task - tries yard, hanna, and rdoc"
+  # task :docs, :roles => :app do                     # generate fresh rdoc.
+  #   run "cd #{current_path}; rake docs"
+  #   run "chmod -R ug+rwX #{File.join(current_path, 'public', 'internals')}"
+  # end
 
   desc "Run spec tests on the target host via rake - will use ci/reporter if available"
   task :spec, :roles => :app do                     # run spec tests, ci

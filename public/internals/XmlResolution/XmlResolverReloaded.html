@@ -1,0 +1,458 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Class: XmlResolution::XmlResolverReloaded</title>
+<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (X)</a> &raquo; 
+    <span class='title'><span class='object_link'><a href="../XmlResolution.html" title="XmlResolution (module)">XmlResolution</a></span></span>
+     &raquo; 
+    <span class="title">XmlResolverReloaded</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: XmlResolution::XmlResolverReloaded
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName"><span class='object_link'><a href="XmlResolver.html" title="XmlResolution::XmlResolver (class)">XmlResolver</a></span></span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next"><span class='object_link'><a href="XmlResolver.html" title="XmlResolution::XmlResolver (class)">XmlResolver</a></span></li>
+          
+            <li class="next">XmlResolution::XmlResolverReloaded</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+XmlResolverReloaded provides a subset of the capabilities of the
+XmlResolver class; it reloads the data that is dumped via XmlResolver#dump.
+In particular, we can get:
+</p>
+<pre class="code">
+ <span class='mult op'>*</span> <span class='those identifier id'>those</span> <span class='successfully identifier id'>successfully</span> <span class='retrieved identifier id'>retrieved</span> <span class='schemas identifier id'>schemas</span> <span class='needed identifier id'>needed</span> <span class='for for kw'>for</span> <span class='understanding identifier id'>understanding</span> <span class='the identifier id'>the</span> <span class='analyzed identifier id'>analyzed</span> <span class='document identifier id'>document</span>
+ <span class='mult op'>*</span> <span class='a identifier id'>a</span> <span class='list identifier id'>list</span> <span class='of identifier id'>of</span> <span class='unretrievable identifier id'>unretrievable</span> <span class='and and kw'>and</span> <span class='redirected identifier id'>redirected</span> <span class='schemas identifier id'>schemas</span> 
+ <span class='mult op'>*</span> <span class='the identifier id'>the</span> <span class='unresolved identifier id'>unresolved</span> <span class='namespaces identifier id'>namespaces</span>
+ <span class='mult op'>*</span> <span class='basic identifier id'>basic</span> <span class='information identifier id'>information</span> <span class='about identifier id'>about</span> <span class='the identifier id'>the</span> <span class='document identifier id'>document</span> <span class='analyzed identifier id'>analyzed</span><span class='colon op'>:</span> <span class='checksum identifier id'>checksum</span><span class='comma token'>,</span> <span class='size identifier id'>size</span><span class='comma token'>,</span> <span class='original identifier id'>original</span> <span class='filename identifier id'>filename</span><span class='dot token'>.</span>
+</pre>
+<p>
+The original document text is no longer available, however.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div>
+  <h2>Constant Summary</h2>
+  
+
+
+  
+  
+  
+  
+  <h3 class="inherited">Constants inherited from <span class='object_link'><a href="XmlResolver.html" title="XmlResolution::XmlResolver (class)">XmlResolver</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="XmlResolver.html#NAMESPACE_DONT_TELL-constant" title="XmlResolution::XmlResolver::NAMESPACE_DONT_TELL (constant)">NAMESPACE_DONT_TELL</a></span>, <span class='object_link'><a href="XmlResolver.html#TOO_MANY_SCHEMAS-constant" title="XmlResolution::XmlResolver::TOO_MANY_SCHEMAS (constant)">TOO_MANY_SCHEMAS</a></span></p>
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (XmlResolverReloaded) <strong>initialize</strong>(data_root, collection_id, document_identifier) </a>
+    
+
+    
+  </span>
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+A new instance of XmlResolverReloaded.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="private ">
+  <span class="summary_signature">
+    
+      <a href="#load-instance_method" title="#load (instance method)">- (Object) <strong>load</strong>(text) </a>
+    
+
+    
+  </span>
+  
+  
+  <span class="note title private">private</span>
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+load TEXT.
+</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <span class='object_link'><a href="XmlResolver.html" title="XmlResolution::XmlResolver (class)">XmlResolver</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="XmlResolver.html#analyze_schema_document-instance_method" title="XmlResolution::XmlResolver#analyze_schema_document (method)">#analyze_schema_document</a></span>, <span class='object_link'><a href="XmlResolver.html#analyze_xml_document-instance_method" title="XmlResolution::XmlResolver#analyze_xml_document (method)">#analyze_xml_document</a></span>, <span class='object_link'><a href="XmlResolver.html#dump-instance_method" title="XmlResolution::XmlResolver#dump (method)">#dump</a></span>, <span class='object_link'><a href="XmlResolver.html#mint_event_id-instance_method" title="XmlResolution::XmlResolver#mint_event_id (method)">#mint_event_id</a></span>, <span class='object_link'><a href="XmlResolver.html#premis_report-instance_method" title="XmlResolution::XmlResolver#premis_report (method)">#premis_report</a></span>, <span class='object_link'><a href="XmlResolver.html#process-instance_method" title="XmlResolution::XmlResolver#process (method)">#process</a></span>, <span class='object_link'><a href="XmlResolver.html#save-instance_method" title="XmlResolution::XmlResolver#save (method)">#save</a></span>, <span class='object_link'><a href="XmlResolver.html#unresolved_namespaces-instance_method" title="XmlResolution::XmlResolver#unresolved_namespaces (method)">#unresolved_namespaces</a></span></p>
+<div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <p class="signature first" id="initialize-instance_method">
+  
+    - (<tt><span class='object_link'><a href="" title="XmlResolution::XmlResolverReloaded (class)">XmlResolverReloaded</a></span></tt>) <strong>initialize</strong>(data_root, collection_id, document_identifier) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+A new instance of XmlResolverReloaded
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 526</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='data_root identifier id'>data_root</span><span class='comma token'>,</span> <span class='collection_id identifier id'>collection_id</span><span class='comma token'>,</span> <span class='document_identifier identifier id'>document_identifier</span>
+
+  <span class='@document_text ivar id'>@document_text</span>       <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
+  <span class='@proxy ivar id'>@proxy</span>               <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
+  <span class='@document_size ivar id'>@document_size</span>       <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
+  <span class='@collection_id ivar id'>@collection_id</span>       <span class='assign token'>=</span> <span class='collection_id identifier id'>collection_id</span>
+  
+  <span class='@used_namespaces ivar id'>@used_namespaces</span>     <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+  <span class='@schema_dictionary ivar id'>@schema_dictionary</span>   <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='@errors ivar id'>@errors</span>              <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='@schemas_storage_directory ivar id'>@schemas_storage_directory</span>     <span class='assign token'>=</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='data_root identifier id'>data_root</span><span class='comma token'>,</span> <span class='string val'>'schemas'</span><span class='rparen token'>)</span>
+  <span class='@collections_storage_directory ivar id'>@collections_storage_directory</span> <span class='assign token'>=</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='data_root identifier id'>data_root</span><span class='comma token'>,</span> <span class='string val'>'collections'</span><span class='rparen token'>)</span>
+
+  <span class='ResolverUtils constant id'>ResolverUtils</span><span class='dot token'>.</span><span class='check_directory identifier id'>check_directory</span> <span class='string val'>&quot;The schemas storage directory&quot;</span><span class='comma token'>,</span>     <span class='schemas_storage_directory identifier id'>schemas_storage_directory</span>  <span class='comment val'># raise ConfigurationError if issue</span>
+  <span class='ResolverUtils constant id'>ResolverUtils</span><span class='dot token'>.</span><span class='check_directory identifier id'>check_directory</span> <span class='string val'>&quot;The document collection directory&quot;</span><span class='comma token'>,</span> <span class='collections_storage_directory identifier id'>collections_storage_directory</span>
+  
+  <span class='comment val'># Load up @resolution_time, @document_identifier, @document_uri, @schema_dictionary, @used_namespaces:</span>
+  
+  <span class='filename identifier id'>filename</span> <span class='assign token'>=</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='@collections_storage_directory ivar id'>@collections_storage_directory</span><span class='comma token'>,</span> <span class='@collection_id ivar id'>@collection_id</span><span class='comma token'>,</span> <span class='document_identifier identifier id'>document_identifier</span><span class='rparen token'>)</span>
+  
+  <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='exists? fid id'>exists?</span> <span class='filename identifier id'>filename</span>
+    <span class='raise identifier id'>raise</span> <span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Can't find the data file #{document_identifier} for the collection #{collection_id} to read in schema info (looking in #{@collections_storage_directory})&quot;</span>
+  <span class='end end kw'>end</span>
+
+  <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='readable? fid id'>readable?</span> <span class='filename identifier id'>filename</span>
+    <span class='raise identifier id'>raise</span> <span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Can't read the data file #{document_identifier} for the collection #{collection_id} to read in schema info (looking in #{@collections_storage_directory})&quot;</span>
+  <span class='end end kw'>end</span>
+
+  <span class='load identifier id'>load</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='read identifier id'>read</span> <span class='filename identifier id'>filename</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="load-instance_method">
+  
+    - (<tt>Object</tt>) <strong>load</strong>(text)  <span class="extras">(private)</span>
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+load TEXT
+</p>
+<p>
+Given the data that dump produces, read it in and recreate most of objects
+that dump dumps. See the parent&#8217;s XmlResolver.dump method for the
+details
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+564
+565
+566
+567
+568
+569
+570
+571
+572
+573
+574
+575
+576
+577
+578
+579
+580
+581
+582
+583
+584
+585
+586
+587
+588
+589
+590
+591
+592
+593
+594
+595
+596
+597
+598
+599
+600
+601
+602
+603
+604
+605
+606
+607
+608
+609
+610
+611
+612
+613
+614
+615
+616
+617
+618
+619
+620</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 564</span>
+
+<span class='def def kw'>def</span> <span class='load identifier id'>load</span> <span class='text identifier id'>text</span>
+
+  <span class='unresolved identifier id'>unresolved</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+
+  <span class='text identifier id'>text</span><span class='dot token'>.</span><span class='split identifier id'>split</span><span class='lparen token'>(</span><span class='string val'>&quot;\n&quot;</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='line identifier id'>line</span><span class='bitor op'>|</span>
+    <span class='data identifier id'>data</span> <span class='assign token'>=</span> <span class='ResolverUtils constant id'>ResolverUtils</span><span class='dot token'>.</span><span class='unescape identifier id'>unescape</span> <span class='line identifier id'>line</span>
+
+    <span class='case case kw'>case</span> <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span>
+
+    <span class='when when kw'>when</span> <span class='string val'>'DATE_TIME'</span>             <span class='then then kw'>then</span> <span class='@resolution_time ivar id'>@resolution_time</span>       <span class='assign token'>=</span> <span class='Time constant id'>Time</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span> <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span>
+    <span class='when when kw'>when</span> <span class='string val'>'DIGEST'</span>                <span class='then then kw'>then</span> <span class='@document_identifier ivar id'>@document_identifier</span>   <span class='assign token'>=</span> <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span>
+    <span class='when when kw'>when</span> <span class='string val'>'FILE_NAME'</span>             <span class='then then kw'>then</span> <span class='@document_uri ivar id'>@document_uri</span>          <span class='assign token'>=</span> <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span>
+    <span class='when when kw'>when</span> <span class='string val'>'LENGTH'</span>                <span class='then then kw'>then</span> <span class='@document_size ivar id'>@document_size</span>         <span class='assign token'>=</span> <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span><span class='dot token'>.</span><span class='to_i identifier id'>to_i</span>
+    <span class='when when kw'>when</span> <span class='string val'>'UNRESOLVED_NAMESPACES'</span> <span class='then then kw'>then</span> <span class='unresolved identifier id'>unresolved</span> <span class='assign token'>=</span> <span class='data identifier id'>data</span>
+    <span class='when when kw'>when</span> <span class='string val'>'ERROR'</span>                 <span class='then then kw'>then</span> <span class='@errors ivar id'>@errors</span><span class='dot token'>.</span><span class='push identifier id'>push</span> <span class='data identifier id'>data</span>
+
+    <span class='when when kw'>when</span> <span class='string val'>'SCHEMA'</span>
+      <span class='s identifier id'>s</span> <span class='assign token'>=</span> <span class='Struct constant id'>Struct</span><span class='colon2 op'>::</span><span class='SchemaReloaded constant id'>SchemaReloaded</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+
+      <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='digest identifier id'>digest</span>           <span class='assign token'>=</span> <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span>
+      <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='last_modified identifier id'>last_modified</span>    <span class='assign token'>=</span> <span class='Time constant id'>Time</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span><span class='lparen token'>(</span><span class='data identifier id'>data</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span><span class='rparen token'>)</span>
+      <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='location identifier id'>location</span>         <span class='assign token'>=</span> <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span>
+      <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='namespace identifier id'>namespace</span>        <span class='assign token'>=</span> <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span>
+      <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='retrieval_status identifier id'>retrieval_status</span> <span class='assign token'>=</span> <span class='symbol val'>:success</span>
+      <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='localpath identifier id'>localpath</span>        <span class='assign token'>=</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='@schemas_storage_directory ivar id'>@schemas_storage_directory</span><span class='comma token'>,</span> <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='digest identifier id'>digest</span><span class='rparen token'>)</span>
+
+      <span class='@schema_dictionary ivar id'>@schema_dictionary</span><span class='dot token'>.</span><span class='push identifier id'>push</span> <span class='s identifier id'>s</span>
+
+    <span class='when when kw'>when</span> <span class='string val'>'BROKEN_SCHEMA'</span>                   <span class='comment val'># misnomer: usually they are simply unretrievable, not broken.</span>
+      <span class='s identifier id'>s</span> <span class='assign token'>=</span> <span class='Struct constant id'>Struct</span><span class='colon2 op'>::</span><span class='SchemaReloaded constant id'>SchemaReloaded</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+
+      <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='location identifier id'>location</span>         <span class='assign token'>=</span> <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span>
+      <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='namespace identifier id'>namespace</span>        <span class='assign token'>=</span> <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span>
+      <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='error_message identifier id'>error_message</span>    <span class='assign token'>=</span> <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span>
+      <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='retrieval_status identifier id'>retrieval_status</span> <span class='assign token'>=</span> <span class='symbol val'>:failure</span>
+
+      <span class='@schema_dictionary ivar id'>@schema_dictionary</span><span class='dot token'>.</span><span class='push identifier id'>push</span> <span class='s identifier id'>s</span>
+
+    <span class='when when kw'>when</span> <span class='string val'>'REDIRECTED_SCHEMA'</span>
+      <span class='s identifier id'>s</span> <span class='assign token'>=</span> <span class='Struct constant id'>Struct</span><span class='colon2 op'>::</span><span class='SchemaReloaded constant id'>SchemaReloaded</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+
+      <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='location identifier id'>location</span>            <span class='assign token'>=</span> <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span>
+      <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='namespace identifier id'>namespace</span>           <span class='assign token'>=</span> <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span>
+      <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='redirected_location identifier id'>redirected_location</span> <span class='assign token'>=</span> <span class='data identifier id'>data</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span>
+      <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='retrieval_status identifier id'>retrieval_status</span>    <span class='assign token'>=</span> <span class='symbol val'>:redirect</span>
+
+      <span class='@schema_dictionary ivar id'>@schema_dictionary</span><span class='dot token'>.</span><span class='push identifier id'>push</span> <span class='s identifier id'>s</span>
+
+    <span class='end end kw'>end</span> <span class='comment val'># of case</span>
+  <span class='end end kw'>end</span> <span class='comment val'># of split loop</span>
+
+  <span class='comment val'># record all the namespaces we've re-read as of interest.</span>
+
+  <span class='unresolved identifier id'>unresolved</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='ns identifier id'>ns</span><span class='bitor op'>|</span> <span class='@used_namespaces ivar id'>@used_namespaces</span><span class='lbrack token'>[</span><span class='ns identifier id'>ns</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='true true kw'>true</span> <span class='rbrace token'>}</span>
+  <span class='@schema_dictionary ivar id'>@schema_dictionary</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='s identifier id'>s</span><span class='bitor op'>|</span> <span class='@used_namespaces ivar id'>@used_namespaces</span><span class='lbrack token'>[</span><span class='s identifier id'>s</span><span class='dot token'>.</span><span class='namespace identifier id'>namespace</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='true true kw'>true</span> <span class='rbrace token'>}</span>
+
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Tue Sep 14 16:31:06 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.0 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

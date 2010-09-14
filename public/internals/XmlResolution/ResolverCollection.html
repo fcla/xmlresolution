@@ -1,0 +1,1536 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Class: XmlResolution::ResolverCollection</title>
+<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (R)</a> &raquo; 
+    <span class='title'><span class='object_link'><a href="../XmlResolution.html" title="XmlResolution (module)">XmlResolution</a></span></span>
+     &raquo; 
+    <span class="title">ResolverCollection</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: XmlResolution::ResolverCollection
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">XmlResolution::ResolverCollection</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+Initial Author: Randy Fischer (rf@ufl.edu) for DAITSS
+</p>
+<p>
+This class stores and retrieves information for the XmlResolution service. 
+It maintains a set of collection identifiers supplied by the client, and
+uses the XmlResolution::XmlResolver class to associate documents and the
+schemas necessary to validate them with this collection identifier. All of
+a set of documents resolved schemas can be retrieved in a per-collection
+tarfile.
+</p>
+<p>
+Example usage: write a mainfest file for the collection &#8216;foo&#8217;;
+the collections are stored under &#8217;/var/data&#8217;
+</p>
+<pre class="code">
+ <span class='collection identifier id'>collection</span> <span class='assign token'>=</span> <span class='ResovlerCollection constant id'>ResovlerCollection</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='string val'>'/var/data'</span><span class='comma token'>,</span> <span class='string val'>'foo'</span>
+ <span class='File constant id'>File</span><span class='dot token'>.</span><span class='open identifier id'>open</span><span class='lparen token'>(</span><span class='string val'>&quot;foo.xml&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;w&quot;</span><span class='rparen token'>)</span>  <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='f identifier id'>f</span><span class='bitor op'>|</span> <span class='f identifier id'>f</span><span class='dot token'>.</span><span class='write identifier id'>write</span> <span class='collection identifier id'>collection</span><span class='dot token'>.</span><span class='manifest identifier id'>manifest</span> <span class='rbrace token'>}</span>
+</pre>
+<p>
+Example usage: write tar files for all the collections we have, stored
+under &#8217;/var/data&#8217;
+</p>
+<pre class="code">
+ <span class='root identifier id'>root</span> <span class='assign token'>=</span> <span class='string val'>'/var/data'</span>
+ <span class='ResolverCollection constant id'>ResolverCollection</span><span class='dot token'>.</span><span class='collections identifier id'>collections</span><span class='lparen token'>(</span><span class='root identifier id'>root</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='collection_name identifier id'>collection_name</span><span class='bitor op'>|</span>
+   <span class='collection identifier id'>collection</span> <span class='assign token'>=</span> <span class='ResolverCollection constant id'>ResolverCollection</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='root identifier id'>root</span><span class='comma token'>,</span> <span class='collection_name identifier id'>collection_name</span>
+   <span class='File constant id'>File</span><span class='dot token'>.</span><span class='open identifier id'>open</span><span class='lparen token'>(</span><span class='dstring node'>&quot;#{collection_name}.tar&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;w&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='f identifier id'>f</span><span class='bitor op'>|</span> 
+     <span class='collection identifier id'>collection</span><span class='dot token'>.</span><span class='tar identifier id'>tar</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='io identifier id'>io</span><span class='bitor op'>|</span>
+       <span class='f identifier id'>f</span><span class='dot token'>.</span><span class='write identifier id'>write</span> <span class='io identifier id'>io</span><span class='dot token'>.</span><span class='read identifier id'>read</span>
+     <span class='end end kw'>end</span>
+   <span class='end end kw'>end</span>
+ <span class='end end kw'>end</span>
+</pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div>
+  <h2>Constant Summary</h2>
+  
+    <dl class="constants">
+      
+        <dt id="TOO_LONG_SINCE_LAST_MODIFIED-constant" class="">TOO_LONG_SINCE_LAST_MODIFIED =
+          <div class="docstring">
+  <div class="discussion">
+    <p>
+Last-modified time after which we&#8217;ll delete collections as being
+stale.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div>
+        </dt>
+        <dd><pre class="code"><span class='integer val'>14</span> <span class='mult op'>*</span> <span class='integer val'>24</span> <span class='mult op'>*</span> <span class='integer val'>60</span> <span class='mult op'>*</span> <span class='integer val'>60</span>
+</pre></dd>
+      
+    </dl>
+  
+
+
+  <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#collection_name-instance_method" title="#collection_name (instance method)">- (Object) <strong>collection_name</strong> </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title readonly">readonly</span>
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+The client-supplied id for grouping a collection of XML documents.
+</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#collections_path-instance_method" title="#collections_path (instance method)">- (Object) <strong>collections_path</strong> </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title readonly">readonly</span>
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+The top-level path where we store collections information; collection_name
+will be a subdirectory of this.
+</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#data_path-instance_method" title="#data_path (instance method)">- (Object) <strong>data_path</strong> </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title readonly">readonly</span>
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+data_path is the topmost path we need to concern ourselves with, where
+schemas and collections all live.
+</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#schemas_path-instance_method" title="#schemas_path (instance method)">- (Object) <strong>schemas_path</strong> </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title readonly">readonly</span>
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+The top-level path where we store downloaded schemas.
+</p>
+</div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+  
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="private ">
+  <span class="summary_signature">
+    
+      <a href="#age_out_collections-class_method" title="age_out_collections (class method)">+ (Object) <strong>age_out_collections</strong>(collections_pathname) </a>
+    
+
+    
+  </span>
+  
+  
+  <span class="note title private">private</span>
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+age_out_collections COLLECTIONS_PATHNAME.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#collections-class_method" title="collections (class method)">+ (Object) <strong>collections</strong>(pathname) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+ResolverCollection.collections pathname.
+</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="private ">
+  <span class="summary_signature">
+    
+      <a href="#collection_documents-instance_method" title="#collection_documents (instance method)">- (Object) <strong>collection_documents</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  <span class="note title private">private</span>
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+collection_documents.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="private ">
+  <span class="summary_signature">
+    
+      <a href="#collection_documents_path-instance_method" title="#collection_documents_path (instance method)">- (Object) <strong>collection_documents_path</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  <span class="note title private">private</span>
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+collection_documents_path.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (ResolverCollection) <strong>initialize</strong>(pathname, collection_name) </a>
+    
+
+    
+  </span>
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+ResolverCollection.new PATHNAME, COLLECTION_NAME.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#manifest-instance_method" title="#manifest (instance method)">- (Object) <strong>manifest</strong>(collection_resolutions = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+manifest [ COLLECTION_RESOLUTIONS ].
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="private ">
+  <span class="summary_signature">
+    
+      <a href="#manifest_file-instance_method" title="#manifest_file (instance method)">- (Object) <strong>manifest_file</strong>(collection_resolutions) </a>
+    
+
+    
+  </span>
+  
+  
+  <span class="note title private">private</span>
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+manifest_file COLLECTION_RESOLUTIONS.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#resolutions-instance_method" title="#resolutions (instance method)">- (Object) <strong>resolutions</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+resolutions.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="private ">
+  <span class="summary_signature">
+    
+      <a href="#schemas-instance_method" title="#schemas (instance method)">- (Object) <strong>schemas</strong>(document_resolutions) </a>
+    
+
+    
+  </span>
+  
+  
+  <span class="note title private">private</span>
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+schemas DOCUMENT_RESOLUTIONS.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#tar-instance_method" title="#tar (instance method)">- (Object) <strong>tar</strong> {|io| ... }</a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+tar.
+</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+<div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <p class="signature first" id="initialize-instance_method">
+  
+    - (<tt><span class='object_link'><a href="" title="XmlResolution::ResolverCollection (class)">ResolverCollection</a></span></tt>) <strong>initialize</strong>(pathname, collection_name) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+ResolverCollection.new PATHNAME, COLLECTION_NAME
+</p>
+<p>
+Create a new ResolverCollection object associated with the persistent
+object store (files) at PATHNAME, known by COLLECTION_NAME (both strings).
+</p>
+<p>
+It will, as a side effect, create a directory COLLECTION_NAME under
+PATHNAME if it doesn&#8217;t alreday exists and if COLLECTION_NAME is
+well-formed.  If you don&#8217;t want that, you&#8217;d want to do a check
+in your app along the lines of:
+</p>
+<p>
+if ResolverCollection.collections(data_root).include? Users_Collection_Name
+</p>
+<pre class="code">
+   <span class='collection identifier id'>collection</span> <span class='assign token'>=</span> <span class='ResolverCollection constant id'>ResolverCollection</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='data_root identifier id'>data_root</span><span class='comma token'>,</span> <span class='Users_Collection_Name constant id'>Users_Collection_Name</span><span class='rparen token'>)</span> 
+   <span class='dot3 op'>...</span>
+</pre>
+<p>
+else
+</p>
+<pre class="code">
+   <span class='Boom! constant id'>Boom!</span>
+</pre>
+<p>
+end
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 117</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='pathname identifier id'>pathname</span><span class='comma token'>,</span> <span class='collection_name identifier id'>collection_name</span>
+
+  <span class='@collection_name ivar id'>@collection_name</span>  <span class='assign token'>=</span> <span class='collection_name identifier id'>collection_name</span>
+  <span class='@data_path ivar id'>@data_path</span>        <span class='assign token'>=</span> <span class='pathname identifier id'>pathname</span>
+
+  <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='ResolverUtils constant id'>ResolverUtils</span><span class='dot token'>.</span><span class='collection_name_ok? fid id'>collection_name_ok?</span> <span class='collection_name identifier id'>collection_name</span>
+    <span class='raise identifier id'>raise</span> <span class='XmlResolution constant id'>XmlResolution</span><span class='colon2 op'>::</span><span class='BadCollectionID constant id'>BadCollectionID</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Bad collection name '#{collection_name}' - it has to be a simple string with no spaces or special characters&quot;</span>
+  <span class='end end kw'>end</span>
+
+  <span class='@schemas_path ivar id'>@schemas_path</span>       <span class='assign token'>=</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='data_path identifier id'>data_path</span><span class='comma token'>,</span> <span class='string val'>'schemas'</span><span class='rparen token'>)</span>
+  <span class='@collections_path ivar id'>@collections_path</span>   <span class='assign token'>=</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='data_path identifier id'>data_path</span><span class='comma token'>,</span> <span class='string val'>'collections'</span><span class='rparen token'>)</span>
+
+  <span class='ResolverUtils constant id'>ResolverUtils</span><span class='dot token'>.</span><span class='check_directory identifier id'>check_directory</span> <span class='string val'>&quot;The directory for storing schemas&quot;</span><span class='comma token'>,</span>            <span class='@schemas_path ivar id'>@schemas_path</span>
+  <span class='ResolverUtils constant id'>ResolverUtils</span><span class='dot token'>.</span><span class='check_directory identifier id'>check_directory</span> <span class='string val'>&quot;The directory for storing XML document data&quot;</span><span class='comma token'>,</span>  <span class='@collections_path ivar id'>@collections_path</span>
+
+  <span class='FileUtils constant id'>FileUtils</span><span class='dot token'>.</span><span class='mkdir_p identifier id'>mkdir_p</span>  <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='collection_documents_path identifier id'>collection_documents_path</span><span class='rparen token'>)</span>  
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id=""></span>
+      <span id="collection_name-instance_method"></span>
+      <div class="method_details first">
+  <p class="signature first" id="collection_name-instance_method">
+  
+    - (<tt>Object</tt>) <strong>collection_name</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+The client-supplied id for grouping a collection of XML documents.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+47
+48
+49</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 47</span>
+
+<span class='def def kw'>def</span> <span class='collection_name identifier id'>collection_name</span>
+  <span class='@collection_name ivar id'>@collection_name</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <span id="collections_path-instance_method"></span>
+      <div class="method_details ">
+  <p class="signature " id="collections_path-instance_method">
+  
+    - (<tt>Object</tt>) <strong>collections_path</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+The top-level path where we store collections information; collection_name
+will be a subdirectory of this.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+78
+79
+80</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 78</span>
+
+<span class='def def kw'>def</span> <span class='collections_path identifier id'>collections_path</span>
+  <span class='@collections_path ivar id'>@collections_path</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <span id="data_path-instance_method"></span>
+      <div class="method_details ">
+  <p class="signature " id="data_path-instance_method">
+  
+    - (<tt>Object</tt>) <strong>data_path</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+data_path is the topmost path we need to concern ourselves with, where
+schemas and collections all live. Say it is named
+&#8220;&#8230;data_root&#8221;; then the heirarchy looks like this:
+</p>
+<pre class="code">
+  <span class='dot3 op'>...</span><span class='data_root identifier id'>data_root</span><span class='div op'>/</span><span class='collections identifier id'>collections</span>
+  <span class='dot3 op'>...</span>
+  <span class='dot3 op'>...</span><span class='data_root identifier id'>data_root</span><span class='div op'>/</span><span class='collections identifier id'>collections</span><span class='div op'>/</span><span class='E20010101_CEEBEE constant id'>E20010101_CEEBEE</span>                                    <span class='comment val'># a collection</span>
+  <span class='dot3 op'>...</span><span class='data_root identifier id'>data_root</span><span class='div op'>/</span><span class='collections identifier id'>collections</span><span class='div op'>/</span><span class='E20010101_CEEBEE constant id'>E20010101_CEEBEE</span><span class='div op'>/</span><span class='float val'>74e5729189</span><span class='a158f105eb113be42a123a identifier id'>a158f105eb113be42a123a</span>   <span class='comment val'># a document record</span>
+  <span class='dot3 op'>...</span><span class='data_root identifier id'>data_root</span><span class='div op'>/</span><span class='collections identifier id'>collections</span><span class='div op'>/</span><span class='E20010101_CEEBEE constant id'>E20010101_CEEBEE</span><span class='div op'>/</span><span class='d25504bfb5986db329e02b2d447cc4e7 identifier id'>d25504bfb5986db329e02b2d447cc4e7</span>
+  <span class='dot3 op'>...</span>
+  <span class='dot3 op'>...</span><span class='data_root identifier id'>data_root</span><span class='div op'>/</span><span class='collections identifier id'>collections</span><span class='div op'>/</span><span class='E20010101_DEADER constant id'>E20010101_DEADER</span>                                    <span class='comment val'># another collection</span>
+  <span class='dot3 op'>...</span><span class='data_root identifier id'>data_root</span><span class='div op'>/</span><span class='collections identifier id'>collections</span><span class='div op'>/</span><span class='E20010101_DEADER constant id'>E20010101_DEADER</span><span class='div op'>/</span><span class='e6720c9ea7e7f2a70d8dd20b1af84020 identifier id'>e6720c9ea7e7f2a70d8dd20b1af84020</span>   <span class='comment val'># its document records</span>
+  <span class='dot3 op'>...</span><span class='data_root identifier id'>data_root</span><span class='div op'>/</span><span class='collections identifier id'>collections</span><span class='div op'>/</span><span class='E20010101_DEADER constant id'>E20010101_DEADER</span><span class='div op'>/</span><span class='e68ac0fe9f938ccf339afe4a76bfd26b identifier id'>e68ac0fe9f938ccf339afe4a76bfd26b</span>
+  <span class='dot3 op'>...</span><span class='data_root identifier id'>data_root</span><span class='div op'>/</span><span class='collections identifier id'>collections</span><span class='div op'>/</span><span class='E20010101_DEADER constant id'>E20010101_DEADER</span><span class='div op'>/</span><span class='ee209b5a6c70b495a130cad8d20eb779 identifier id'>ee209b5a6c70b495a130cad8d20eb779</span>
+  <span class='dot3 op'>...</span>
+  <span class='dot3 op'>...</span><span class='data_root identifier id'>data_root</span><span class='div op'>/</span><span class='schemas identifier id'>schemas</span>                                                         <span class='comment val'># where the schemas live</span>
+  <span class='dot3 op'>...</span><span class='data_root identifier id'>data_root</span><span class='div op'>/</span><span class='schemas identifier id'>schemas</span><span class='div op'>/</span><span class='integer val'>005</span><span class='aead63fe2e6a13152ecad7e702a21 identifier id'>aead63fe2e6a13152ecad7e702a21</span>                        <span class='comment val'># a dowmloaded schema</span>
+  <span class='dot3 op'>...</span><span class='data_root identifier id'>data_root</span><span class='div op'>/</span><span class='schemas identifier id'>schemas</span><span class='div op'>/</span><span class='integer val'>025</span><span class='integer val'>92</span><span class='d8f2bb29d7f4f8e413fdb22c3e0 identifier id'>d8f2bb29d7f4f8e413fdb22c3e0</span>
+  <span class='dot3 op'>...</span><span class='data_root identifier id'>data_root</span><span class='div op'>/</span><span class='schemas identifier id'>schemas</span><span class='div op'>/</span><span class='integer val'>0</span><span class='bfe4d177184c3e01c674951481be6af identifier id'>bfe4d177184c3e01c674951481be6af</span>
+  <span class='dot3 op'>...</span><span class='data_root identifier id'>data_root</span><span class='div op'>/</span><span class='schemas identifier id'>schemas</span><span class='div op'>/</span><span class='integer val'>15</span><span class='fa7e3aedef6801c565bfbf621fdc5b identifier id'>fa7e3aedef6801c565bfbf621fdc5b</span>
+  <span class='dot3 op'>...</span><span class='data_root identifier id'>data_root</span><span class='div op'>/</span><span class='schemas identifier id'>schemas</span><span class='div op'>/</span><span class='integer val'>1</span><span class='ad7d28cc5587a80cfde5e47b3265e39 identifier id'>ad7d28cc5587a80cfde5e47b3265e39</span>
+  <span class='dot3 op'>...</span>
+      <span class='dot3 op'>...</span><span class='lots identifier id'>lots</span> <span class='more identifier id'>more</span> <span class='schemas identifier id'>schemas</span><span class='dot3 op'>...</span>
+</pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+73
+74
+75</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 73</span>
+
+<span class='def def kw'>def</span> <span class='data_path identifier id'>data_path</span>
+  <span class='@data_path ivar id'>@data_path</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <span id="schemas_path-instance_method"></span>
+      <div class="method_details ">
+  <p class="signature " id="schemas_path-instance_method">
+  
+    - (<tt>Object</tt>) <strong>schemas_path</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+The top-level path where we store downloaded schemas.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+82
+83
+84</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 82</span>
+
+<span class='def def kw'>def</span> <span class='schemas_path identifier id'>schemas_path</span>
+  <span class='@schemas_path ivar id'>@schemas_path</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="age_out_collections-class_method">
+  
+    + (<tt>Object</tt>) <strong>age_out_collections</strong>(collections_pathname)  <span class="extras">(private)</span>
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+age_out_collections COLLECTIONS_PATHNAME
+</p>
+<p>
+Check all of the collections under COLLECTIONS_PATHNAME, deleting those
+that haven&#8217;t been updated in a while.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+334
+335
+336
+337
+338
+339
+340
+341
+342</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 334</span>
+
+<span class='def def kw'>def</span> <span class='ResolverCollection constant id'>ResolverCollection</span><span class='dot token'>.</span><span class='age_out_collections identifier id'>age_out_collections</span>  <span class='collections_pathname identifier id'>collections_pathname</span>
+  <span class='Dir constant id'>Dir</span><span class='lbrack token'>[</span><span class='dstring node'>&quot;#{collections_pathname}/*&quot;</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='dir identifier id'>dir</span><span class='bitor op'>|</span>
+    <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span>  <span class='File constant id'>File</span><span class='dot token'>.</span><span class='directory? fid id'>directory?</span> <span class='dir identifier id'>dir</span>
+    <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span>  <span class='ResolverUtils constant id'>ResolverUtils</span><span class='dot token'>.</span><span class='collection_name_ok? fid id'>collection_name_ok?</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='split identifier id'>split</span><span class='lparen token'>(</span><span class='dir identifier id'>dir</span><span class='rparen token'>)</span><span class='lbrack token'>[</span><span class='integer val'>-1</span><span class='rbrack token'>]</span>
+    <span class='if if kw'>if</span> <span class='lparen token'>(</span><span class='Time constant id'>Time</span><span class='dot token'>.</span><span class='now identifier id'>now</span> <span class='minus op'>-</span> <span class='File constant id'>File</span><span class='colon2 op'>::</span><span class='stat identifier id'>stat</span><span class='lparen token'>(</span><span class='dir identifier id'>dir</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='mtime identifier id'>mtime</span><span class='rparen token'>)</span> <span class='gt op'>&gt;</span> <span class='TOO_LONG_SINCE_LAST_MODIFIED constant id'>TOO_LONG_SINCE_LAST_MODIFIED</span>
+      <span class='FileUtils constant id'>FileUtils</span><span class='dot token'>.</span><span class='rm_rf identifier id'>rm_rf</span> <span class='dir identifier id'>dir</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="collections-class_method">
+  
+    + (<tt>Object</tt>) <strong>collections</strong>(pathname) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+ResolverCollection.collections pathname
+</p>
+<p>
+This class method returns a list of collection names currently present on
+the system. The top-level collections directory exists as a subdirectory
+under PATHNAME, a string. This is equivalent to the data_path used by the
+constructor.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Raises:</h3>
+<ul class="raise">
+  
+    <li>
+      
+        <span class='type'>(<tt><span class='object_link'><a href="ConfigurationError.html" title="XmlResolution::ConfigurationError (class)">XmlResolution::ConfigurationError</a></span></tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+91
+92
+93
+94
+95
+96
+97</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 91</span>
+
+<span class='def def kw'>def</span> <span class='ResolverCollection constant id'>ResolverCollection</span><span class='dot token'>.</span><span class='collections identifier id'>collections</span> <span class='pathname identifier id'>pathname</span>
+  <span class='raise identifier id'>raise</span> <span class='XmlResolution constant id'>XmlResolution</span><span class='colon2 op'>::</span><span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='string val'>&quot;The root data path has not been set&quot;</span> <span class='unless unless_mod kw'>unless</span> <span class='pathname identifier id'>pathname</span>
+  <span class='collections_pathname identifier id'>collections_pathname</span> <span class='assign token'>=</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='pathname identifier id'>pathname</span><span class='comma token'>,</span> <span class='string val'>'collections'</span><span class='rparen token'>)</span>
+  <span class='ResolverUtils constant id'>ResolverUtils</span><span class='dot token'>.</span><span class='check_directory identifier id'>check_directory</span> <span class='string val'>&quot;The directory for storing the collections&quot;</span><span class='comma token'>,</span>  <span class='collections_pathname identifier id'>collections_pathname</span>
+  <span class='ResolverCollection constant id'>ResolverCollection</span><span class='dot token'>.</span><span class='age_out_collections identifier id'>age_out_collections</span> <span class='collections_pathname identifier id'>collections_pathname</span>
+  <span class='Dir constant id'>Dir</span><span class='lbrack token'>[</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='collections_pathname identifier id'>collections_pathname</span><span class='comma token'>,</span> <span class='string val'>'*'</span><span class='rparen token'>)</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='path identifier id'>path</span><span class='bitor op'>|</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='split identifier id'>split</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span><span class='lbrack token'>[</span><span class='integer val'>-1</span><span class='rbrack token'>]</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='sort identifier id'>sort</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="collection_documents-instance_method">
+  
+    - (<tt>Object</tt>) <strong>collection_documents</strong>  <span class="extras">(private)</span>
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+collection_documents
+</p>
+<p>
+Retun an array of all of the document identifiers associated with this
+collection.  The identifier is the MD5 digest of the original document
+contents; it is used as the filename of simple text file containg
+information about the original document.  See the documentation for
+data_path for information on the file layout that includes these files; see
+the XmlReslolver#dump method for documentation on its contents.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 354</span>
+
+<span class='def def kw'>def</span> <span class='collection_documents identifier id'>collection_documents</span>
+  <span class='ResolverCollection constant id'>ResolverCollection</span><span class='dot token'>.</span><span class='age_out_collections identifier id'>age_out_collections</span> <span class='collections_path identifier id'>collections_path</span>
+  <span class='ResolverUtils constant id'>ResolverUtils</span><span class='dot token'>.</span><span class='check_directory identifier id'>check_directory</span> <span class='dstring node'>&quot;The document directory for #{collection_name}&quot;</span><span class='comma token'>,</span> <span class='collection_documents_path identifier id'>collection_documents_path</span>
+  <span class='ids identifier id'>ids</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='Dir constant id'>Dir</span><span class='lbrack token'>[</span><span class='dstring node'>&quot;#{collection_documents_path}/*&quot;</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='path identifier id'>path</span><span class='bitor op'>|</span>
+    <span class='next next kw'>next</span> <span class='if if_mod kw'>if</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='directory? fid id'>directory?</span> <span class='path identifier id'>path</span> 
+    <span class='filename identifier id'>filename</span> <span class='assign token'>=</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='basename identifier id'>basename</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
+    <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='filename identifier id'>filename</span> <span class='match op'>=~</span> <span class='regexp val'>/^[a-f0-9]{32}$/</span>
+    <span class='ids identifier id'>ids</span><span class='dot token'>.</span><span class='push identifier id'>push</span> <span class='filename identifier id'>filename</span>
+  <span class='end end kw'>end</span>
+  <span class='ids identifier id'>ids</span><span class='dot token'>.</span><span class='sort identifier id'>sort</span><span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='a identifier id'>a</span><span class='comma token'>,</span><span class='b identifier id'>b</span><span class='bitor op'>|</span> <span class='a identifier id'>a</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span> <span class='cmp op'>&lt;=&gt;</span> <span class='b identifier id'>b</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span> <span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="collection_documents_path-instance_method">
+  
+    - (<tt>Object</tt>) <strong>collection_documents_path</strong>  <span class="extras">(private)</span>
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+collection_documents_path
+</p>
+<p>
+The directory where we keep all of our documents for this particular
+collection.  See the documentation above on data_path for the overall
+filesystem layout.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+325
+326
+327</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 325</span>
+
+<span class='def def kw'>def</span> <span class='collection_documents_path identifier id'>collection_documents_path</span>
+  <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='collections_path identifier id'>collections_path</span><span class='comma token'>,</span> <span class='collection_name identifier id'>collection_name</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="manifest-instance_method">
+  
+    - (<tt>Object</tt>) <strong>manifest</strong>(collection_resolutions = nil) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+manifest [ COLLECTION_RESOLUTIONS ]
+</p>
+<p>
+Create and return the XML manifest document for this collection. If
+COLLECTION_RESOLTIONS, an array of XmlResolver objects associated with this
+collection, is provided, use that. Otherwise, create it ourselves. (We do
+this because manifest is used within the tar method, which already has
+created the array of XmlResolver objects for its own use).
+</p>
+<pre class="code">
+ <span class='Annotated constant id'>Annotated</span> <span class='portions identifier id'>portions</span> <span class='of identifier id'>of</span> <span class='an identifier id'>an</span> <span class='example identifier id'>example</span> <span class='manifest identifier id'>manifest</span> <span class='document identifier id'>document</span><span class='colon op'>:</span>
+
+ <span class='lt op'>&lt;</span><span class='integer val'>?x</span><span class='ml identifier id'>ml</span> <span class='version identifier id'>version</span><span class='assign token'>=</span><span class='string val'>&quot;1.0&quot;</span> <span class='encoding identifier id'>encoding</span><span class='assign token'>=</span><span class='string val'>&quot;UTF-8&quot;</span><span class='question op'>?</span><span class='gt op'>&gt;</span>
+
+ <span class='lt op'>&lt;</span><span class='resolutions identifier id'>resolutions</span> <span class='collection identifier id'>collection</span><span class='assign token'>=</span><span class='string val'>&quot;E20100524_AAACAB&quot;</span><span class='gt op'>&gt;</span>
+
+  <span class='A constant id'>A</span> <span class='string val'>'resolution'</span> <span class='refers identifier id'>refers</span> <span class='to identifier id'>to</span> <span class='one identifier id'>one</span> <span class='document identifier id'>document</span><span class='comma token'>,</span> <span class='characterized identifier id'>characterized</span> <span class='as identifier id'>as</span> <span class='follows identifier id'>follows</span><span class='colon op'>:</span>
+
+   <span class='lt op'>&lt;</span><span class='resolution identifier id'>resolution</span> <span class='time identifier id'>time</span><span class='assign token'>=</span><span class='string val'>&quot;2010-05-15T01:20:23-04:00&quot;</span> 
+                <span class='md5 identifier id'>md5</span><span class='assign token'>=</span><span class='string val'>&quot;74e5729189a158f105eb113be42a123a&quot;</span> 
+               <span class='name identifier id'>name</span><span class='assign token'>=</span><span class='string val'>&quot;file://127.0.0.1/UF00028295_00729.xml&quot;</span><span class='gt op'>&gt;</span>
+
+  <span class='The constant id'>The</span> <span class='successfully identifier id'>successfully</span> <span class='retrieved identifier id'>retrieved</span> <span class='schemas identifier id'>schemas</span><span class='colon op'>:</span>
+
+     <span class='lt op'>&lt;</span><span class='schema identifier id'>schema</span> <span class='last_modified identifier id'>last_modified</span><span class='assign token'>=</span><span class='string val'>&quot;2010-04-21T11:44:40-04:00&quot;</span><span class='div op'>/</span>      
+                    <span class='status identifier id'>status</span><span class='assign token'>=</span><span class='string val'>&quot;success&quot;</span> 
+                       <span class='md5 identifier id'>md5</span><span class='assign token'>=</span><span class='string val'>&quot;15fa7e3aedef6801c565bfbf621fdc5b&quot;</span> 
+                 <span class='namespace identifier id'>namespace</span><span class='assign token'>=</span><span class='string val'>&quot;http://www.fcla.edu/dls/md/daitss/&quot;</span>
+                  <span class='location identifier id'>location</span><span class='assign token'>=</span><span class='string val'>&quot;http://www.fcla.edu/dls/md/daitss/daitss.xsd&quot;</span><span class='gt op'>&gt;</span>
+
+     <span class='lt op'>&lt;</span><span class='schema identifier id'>schema</span> <span class='last_modified identifier id'>last_modified</span><span class='assign token'>=</span><span class='string val'>&quot;2010-04-21T11:44:40-04:00&quot;</span><span class='div op'>/</span>
+                    <span class='status identifier id'>status</span><span class='assign token'>=</span><span class='string val'>&quot;success&quot;</span> 
+                       <span class='md5 identifier id'>md5</span><span class='assign token'>=</span><span class='string val'>&quot;1e07ae0bf17cb5ef171f087f2155f038&quot;</span> 
+                  <span class='location identifier id'>location</span><span class='assign token'>=</span><span class='string val'>&quot;http://www.fcla.edu/dls/md/daitss/daitssAccount.xsd&quot;</span> 
+                 <span class='namespace identifier id'>namespace</span><span class='assign token'>=</span><span class='string val'>&quot;http://www.fcla.edu/dls/md/daitss/&quot;</span><span class='gt op'>&gt;</span>
+
+     <span class='lt op'>&lt;</span><span class='schema identifier id'>schema</span> <span class='last_modified identifier id'>last_modified</span><span class='assign token'>=</span><span class='string val'>&quot;2010-04-21T11:44:40-04:00&quot;</span><span class='div op'>/</span>
+                    <span class='status identifier id'>status</span><span class='assign token'>=</span><span class='string val'>&quot;success&quot;</span> 
+                       <span class='md5 identifier id'>md5</span><span class='assign token'>=</span><span class='string val'>&quot;e3b452af1c0b4c9c3b696cf1bf3fdb19&quot;</span> 
+                  <span class='location identifier id'>location</span><span class='assign token'>=</span><span class='string val'>&quot;http://www.fcla.edu/dls/md/daitss/daitssAccountProject.xsd&quot;</span> 
+                 <span class='namespace identifier id'>namespace</span><span class='assign token'>=</span><span class='string val'>&quot;http://www.fcla.edu/dls/md/daitss/&quot;</span><span class='gt op'>&gt;</span>
+
+     <span class='lt op'>&lt;</span><span class='schema identifier id'>schema</span> <span class='last_modified identifier id'>last_modified</span><span class='assign token'>=</span><span class='string val'>&quot;2010-04-21T11:44:40-04:00&quot;</span><span class='div op'>/</span>
+                    <span class='status identifier id'>status</span><span class='assign token'>=</span><span class='string val'>&quot;success&quot;</span> 
+                       <span class='md5 identifier id'>md5</span><span class='assign token'>=</span><span class='string val'>&quot;56ac338a8916c7099b8c5563721db9bd&quot;</span> 
+                  <span class='location identifier id'>location</span><span class='assign token'>=</span><span class='string val'>&quot;http://www.fcla.edu/dls/md/daitss/daitssActionPlan.xsd&quot;</span> 
+                 <span class='namespace identifier id'>namespace</span><span class='assign token'>=</span><span class='string val'>&quot;http://www.fcla.edu/dls/md/daitss/&quot;</span><span class='gt op'>&gt;</span>
+
+ <span class='Redirected constant id'>Redirected</span> <span class='schemas identifier id'>schemas</span><span class='colon op'>:</span>
+
+     <span class='lt op'>&lt;</span><span class='schema identifier id'>schema</span>      <span class='status identifier id'>status</span><span class='assign token'>=</span><span class='string val'>&quot;redirect&quot;</span> 
+                <span class='location identifier id'>location</span><span class='assign token'>=</span><span class='string val'>&quot;http://www.loc.gov/mods/v3/mods-3-3.xsd&quot;</span> 
+               <span class='namespace identifier id'>namespace</span><span class='assign token'>=</span><span class='string val'>&quot;http://www.loc.gov/mods/v3&quot;</span> 
+                  <span class='actual identifier id'>actual</span><span class='assign token'>=</span><span class='string val'>&quot;http://www.loc.gov/standards/mods/v3/mods-3-3.xsd&quot;</span><span class='div op'>/</span><span class='gt op'>&gt;</span>
+
+     <span class='lt op'>&lt;</span><span class='schema identifier id'>schema</span>      <span class='status identifier id'>status</span><span class='assign token'>=</span><span class='string val'>&quot;redirect&quot;</span> 
+                <span class='location identifier id'>location</span><span class='assign token'>=</span><span class='string val'>&quot;http://www.loc.gov/mods/v3/mods-3-3.xsd&quot;</span> 
+               <span class='namespace identifier id'>namespace</span><span class='assign token'>=</span><span class='string val'>&quot;http://www.loc.gov/mods/v3&quot;</span> 
+                 <span class='actual identifier id'>actual</span><span class='assign token'>=</span><span class='string val'>&quot;http://www.loc.gov/standards/mods/v3/mods-3-3.xsd&quot;</span><span class='div op'>/</span><span class='gt op'>&gt;</span>
+
+ <span class='Unresolved constant id'>Unresolved</span><span class='colon op'>:</span>
+
+     <span class='lt op'>&lt;</span><span class='schema identifier id'>schema</span>     <span class='status identifier id'>status</span><span class='assign token'>=</span><span class='string val'>&quot;unresolved&quot;</span> 
+              <span class='namespace identifier id'>namespace</span><span class='assign token'>=</span><span class='string val'>&quot;http://www.w3.org/1999/xhtml&quot;</span><span class='div op'>/</span><span class='gt op'>&gt;</span>
+
+     <span class='lt op'>&lt;</span><span class='schema identifier id'>schema</span>    <span class='status identifier id'>status</span><span class='assign token'>=</span><span class='string val'>&quot;unresolved&quot;</span> 
+              <span class='namespace identifier id'>namespace</span><span class='assign token'>=</span><span class='string val'>&quot;http://www.w3.org/2001/XMLSchema-hasFacetAndProperty&quot;</span><span class='div op'>/</span><span class='gt op'>&gt;</span>
+
+ <span class='Error constant id'>Error</span> <span class='container identifier id'>container</span> <span class='if if_mod kw'>if</span> <span class='errors identifier id'>errors</span> <span class='were identifier id'>were</span> <span class='reported identifier id'>reported</span> <span class='for for kw'>for</span> <span class='the identifier id'>the</span> <span class='instance identifier id'>instance</span> <span class='document identifier id'>document</span><span class='colon op'>:</span>
+
+     <span class='lt op'>&lt;</span><span class='errors identifier id'>errors</span><span class='gt op'>&gt;</span>
+       <span class='lt op'>&lt;</span><span class='error identifier id'>error</span><span class='gt op'>&gt;</span><span class='StartTag constant id'>StartTag</span><span class='colon op'>:</span> <span class='invalid identifier id'>invalid</span> <span class='element identifier id'>element</span> <span class='name identifier id'>name</span><span class='lt op'>&lt;</span><span class='regexp val'>/error&gt;
+     &lt;/e</span><span class='rrors identifier id'>rrors</span><span class='gt op'>&gt;</span>
+
+   <span class='lt op'>&lt;</span><span class='regexp val'>/resolution&gt;
+
+ More resolutions:
+   
+   &lt;resolution time=&quot;2010-05-14T00:46:56-04:00&quot; 
+                md5=&quot;d25504bfb5986db329e02b2d447cc4e7&quot; 
+                name=&quot;file:/</span><span class='div op'>/</span><span class='float val'>127.0</span><span class='float val'>.0.1</span><span class='div op'>/</span><span class='example identifier id'>example</span><span class='dot token'>.</span><span class='xml identifier id'>xml</span><span class='string val'>&quot;&gt;
+     ....
+
+   &lt;/resolution&gt;
+</span></pre>
+<p>
+</resolutions>
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 220</span>
+
+<span class='def def kw'>def</span> <span class='manifest identifier id'>manifest</span> <span class='collection_resolutions identifier id'>collection_resolutions</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
+  <span class='collection_resolutions identifier id'>collection_resolutions</span> <span class='opasgn op'>||=</span> <span class='resolutions identifier id'>resolutions</span><span class='lparen token'>(</span><span class='rparen token'>)</span>  
+
+  <span class='$KCODE gvar id'>$KCODE</span> <span class='eq op'>==</span> <span class='string val'>'UTF8'</span> <span class='or or kw'>or</span> <span class='raise identifier id'>raise</span> <span class='XmlResolution constant id'>XmlResolution</span><span class='colon2 op'>::</span><span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Ruby $KCODE == #{$KCODE}, but it must be UTF8&quot;</span>
+  
+  <span class='xml identifier id'>xml</span> <span class='assign token'>=</span> <span class='Builder constant id'>Builder</span><span class='colon2 op'>::</span><span class='XmlMarkup constant id'>XmlMarkup</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='symbol val'>:indent</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>2</span><span class='rparen token'>)</span>
+  <span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='instruct! fid id'>instruct!</span><span class='lparen token'>(</span><span class='symbol val'>:xml</span><span class='comma token'>,</span> <span class='symbol val'>:encoding</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'UTF-8'</span><span class='rparen token'>)</span>
+  <span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='resolutions identifier id'>resolutions</span><span class='lparen token'>(</span><span class='symbol val'>:collection</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='collection_name identifier id'>collection_name</span><span class='rparen token'>)</span> <span class='lbrace token'>{</span>
+    <span class='collection_resolutions identifier id'>collection_resolutions</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='res identifier id'>res</span><span class='bitor op'>|</span>
+      <span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='resolution identifier id'>resolution</span><span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='res identifier id'>res</span><span class='dot token'>.</span><span class='document_uri identifier id'>document_uri</span><span class='comma token'>,</span> <span class='symbol val'>:md5</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='res identifier id'>res</span><span class='dot token'>.</span><span class='document_identifier identifier id'>document_identifier</span><span class='comma token'>,</span> <span class='symbol val'>:time</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='res identifier id'>res</span><span class='dot token'>.</span><span class='resolution_time identifier id'>resolution_time</span><span class='dot token'>.</span><span class='iso8601 identifier id'>iso8601</span><span class='rparen token'>)</span> <span class='lbrace token'>{</span>       
+        <span class='res identifier id'>res</span><span class='dot token'>.</span><span class='schema_dictionary identifier id'>schema_dictionary</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='s identifier id'>s</span><span class='bitor op'>|</span>
+          <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='retrieval_status identifier id'>retrieval_status</span> <span class='eq op'>==</span> <span class='symbol val'>:success</span>
+          <span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='schema identifier id'>schema</span><span class='lparen token'>(</span><span class='symbol val'>:status</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'success'</span><span class='comma token'>,</span> <span class='symbol val'>:location</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='location identifier id'>location</span><span class='comma token'>,</span> <span class='symbol val'>:namespace</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='namespace identifier id'>namespace</span><span class='comma token'>,</span> <span class='symbol val'>:md5</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='digest identifier id'>digest</span><span class='comma token'>,</span> <span class='symbol val'>:last_modified</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='last_modified identifier id'>last_modified</span><span class='dot token'>.</span><span class='iso8601 identifier id'>iso8601</span><span class='rparen token'>)</span>
+        <span class='end end kw'>end</span>
+        <span class='res identifier id'>res</span><span class='dot token'>.</span><span class='schema_dictionary identifier id'>schema_dictionary</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='s identifier id'>s</span><span class='bitor op'>|</span>
+          <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='retrieval_status identifier id'>retrieval_status</span> <span class='eq op'>==</span> <span class='symbol val'>:failure</span>
+          <span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='schema identifier id'>schema</span><span class='lparen token'>(</span><span class='symbol val'>:status</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'failure'</span><span class='comma token'>,</span> <span class='symbol val'>:location</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='location identifier id'>location</span><span class='comma token'>,</span> <span class='symbol val'>:namespace</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='namespace identifier id'>namespace</span><span class='comma token'>,</span> <span class='symbol val'>:message</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='error_message identifier id'>error_message</span><span class='rparen token'>)</span>
+        <span class='end end kw'>end</span>
+        <span class='res identifier id'>res</span><span class='dot token'>.</span><span class='schema_dictionary identifier id'>schema_dictionary</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='s identifier id'>s</span><span class='bitor op'>|</span>
+          <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='retrieval_status identifier id'>retrieval_status</span> <span class='eq op'>==</span> <span class='symbol val'>:redirect</span>
+          <span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='schema identifier id'>schema</span><span class='lparen token'>(</span><span class='symbol val'>:status</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'redirect'</span><span class='comma token'>,</span> <span class='symbol val'>:location</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='location identifier id'>location</span><span class='comma token'>,</span> <span class='symbol val'>:namespace</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='namespace identifier id'>namespace</span><span class='comma token'>,</span> <span class='symbol val'>:actual</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='redirected_location identifier id'>redirected_location</span><span class='rparen token'>)</span>
+        <span class='end end kw'>end</span>
+        <span class='res identifier id'>res</span><span class='dot token'>.</span><span class='unresolved_namespaces identifier id'>unresolved_namespaces</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='ns identifier id'>ns</span><span class='bitor op'>|</span> <span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='schema identifier id'>schema</span><span class='lparen token'>(</span><span class='symbol val'>:status</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'unresolved'</span><span class='comma token'>,</span> <span class='symbol val'>:namespace</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='ns identifier id'>ns</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
+        <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='res identifier id'>res</span><span class='dot token'>.</span><span class='errors identifier id'>errors</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
+          <span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='errors identifier id'>errors</span> <span class='lbrace token'>{</span>
+            <span class='res identifier id'>res</span><span class='dot token'>.</span><span class='errors identifier id'>errors</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='mess identifier id'>mess</span><span class='bitor op'>|</span> <span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='error identifier id'>error</span><span class='lparen token'>(</span><span class='mess identifier id'>mess</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
+          <span class='rbrace token'>}</span>
+        <span class='end end kw'>end</span>
+      <span class='rbrace token'>}</span>
+    <span class='end end kw'>end</span>
+  <span class='rbrace token'>}</span>
+  <span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='target! fid id'>target!</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="manifest_file-instance_method">
+  
+    - (<tt>Object</tt>) <strong>manifest_file</strong>(collection_resolutions)  <span class="extras">(private)</span>
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+manifest_file COLLECTION_RESOLUTIONS
+</p>
+<p>
+Save the manifest report (an XML document) to a temporary file, and yield
+that files pathname.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+309
+310
+311
+312
+313
+314
+315
+316
+317</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 309</span>
+
+<span class='def def kw'>def</span> <span class='manifest_file identifier id'>manifest_file</span> <span class='collection_resolutions identifier id'>collection_resolutions</span>
+  <span class='Tempfile constant id'>Tempfile</span><span class='dot token'>.</span><span class='open identifier id'>open</span><span class='lparen token'>(</span><span class='dstring node'>&quot;manifest-#{collection_name}-xml-&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='tmp identifier id'>tmp</span><span class='bitor op'>|</span>
+    <span class='tmp identifier id'>tmp</span><span class='dot token'>.</span><span class='write identifier id'>write</span> <span class='manifest identifier id'>manifest</span><span class='lparen token'>(</span><span class='collection_resolutions identifier id'>collection_resolutions</span><span class='rparen token'>)</span>
+    <span class='tmp identifier id'>tmp</span><span class='dot token'>.</span><span class='close identifier id'>close</span>
+    <span class='FileUtils constant id'>FileUtils</span><span class='dot token'>.</span><span class='chmod identifier id'>chmod</span><span class='lparen token'>(</span><span class='integer val'>0644</span><span class='comma token'>,</span> <span class='tmp identifier id'>tmp</span><span class='dot token'>.</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
+    <span class='yield yield kw'>yield</span> <span class='tmp identifier id'>tmp</span><span class='dot token'>.</span><span class='path identifier id'>path</span>
+    <span class='tmp identifier id'>tmp</span><span class='dot token'>.</span><span class='unlink identifier id'>unlink</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="resolutions-instance_method">
+  
+    - (<tt>Object</tt>) <strong>resolutions</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+resolutions
+</p>
+<p>
+Return an array of XmlResolver objects, one associated with each of the
+documents that have been successfully submitted to this collection.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+298
+299
+300</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 298</span>
+
+<span class='def def kw'>def</span> <span class='resolutions identifier id'>resolutions</span>
+  <span class='collection_documents identifier id'>collection_documents</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='id identifier id'>id</span><span class='bitor op'>|</span>  <span class='XmlResolverReloaded constant id'>XmlResolverReloaded</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='data_path identifier id'>data_path</span><span class='comma token'>,</span> <span class='collection_name identifier id'>collection_name</span><span class='comma token'>,</span> <span class='id identifier id'>id</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="schemas-instance_method">
+  
+    - (<tt>Object</tt>) <strong>schemas</strong>(document_resolutions)  <span class="extras">(private)</span>
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+schemas DOCUMENT_RESOLUTIONS
+</p>
+<p>
+Given the array of XmlResolver (or XmlResolverReloaded) objects,
+DOCUMENT_RESOLUTIONS, trundle through all of the successfully retrieved
+schemas for this collection.
+</p>
+<p>
+Yields the unique list of the schemas; for each one, yield the path to the
+local copy we have of them, and their original URLs. Duplicates are weeded
+out.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 377</span>
+
+<span class='def def kw'>def</span> <span class='schemas identifier id'>schemas</span> <span class='document_resolutions identifier id'>document_resolutions</span>
+  <span class='seen identifier id'>seen</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>      
+  <span class='resolutions identifier id'>resolutions</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='res identifier id'>res</span><span class='bitor op'>|</span>
+    <span class='res identifier id'>res</span><span class='dot token'>.</span><span class='schema_dictionary identifier id'>schema_dictionary</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='record identifier id'>record</span><span class='bitor op'>|</span>
+      <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='record identifier id'>record</span><span class='dot token'>.</span><span class='retrieval_status identifier id'>retrieval_status</span> <span class='eq op'>==</span> <span class='symbol val'>:success</span>
+      <span class='next next kw'>next</span> <span class='if if_mod kw'>if</span> <span class='seen identifier id'>seen</span><span class='lbrack token'>[</span><span class='record identifier id'>record</span><span class='dot token'>.</span><span class='location identifier id'>location</span><span class='rbrack token'>]</span>
+      <span class='yield yield kw'>yield</span> <span class='record identifier id'>record</span><span class='dot token'>.</span><span class='localpath identifier id'>localpath</span><span class='comma token'>,</span> <span class='record identifier id'>record</span><span class='dot token'>.</span><span class='location identifier id'>location</span>
+      <span class='seen identifier id'>seen</span><span class='lbrack token'>[</span><span class='record identifier id'>record</span><span class='dot token'>.</span><span class='location identifier id'>location</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="tar-instance_method">
+  
+    - (<tt>Object</tt>) <strong>tar</strong> {|io| ... }
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+tar
+</p>
+<p>
+Create a tar file of all the schemas we&#8217;ve found when resolving xml
+documents sent to this collection. We use the schema location as the
+filename in the tarfile.  We include a manifest of the results of
+performing the resolutions; each document is listed in a section of the
+manifest, with references to schemas included in the tarfile.  If the name
+of the collection is &#8216;FOO&#8217;, then the contents of the tarfile
+for the collection has the following layout:
+</p>
+<pre class="code">
+ <span class='FOO constant id'>FOO</span><span class='div op'>/</span><span class='manifest identifier id'>manifest</span><span class='dot token'>.</span><span class='xml identifier id'>xml</span>
+ <span class='FOO constant id'>FOO</span><span class='div op'>/</span><span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.fcla.edu/</span><span class='dls identifier id'>dls</span><span class='div op'>/</span><span class='md identifier id'>md</span><span class='div op'>/</span><span class='daitss identifier id'>daitss</span><span class='div op'>/</span><span class='daitss identifier id'>daitss</span><span class='dot token'>.</span><span class='xsd identifier id'>xsd</span>
+ <span class='FOO constant id'>FOO</span><span class='div op'>/</span><span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.fcla.edu/</span><span class='dls identifier id'>dls</span><span class='div op'>/</span><span class='md identifier id'>md</span><span class='div op'>/</span><span class='daitss identifier id'>daitss</span><span class='div op'>/</span><span class='daitssAccount identifier id'>daitssAccount</span><span class='dot token'>.</span><span class='xsd identifier id'>xsd</span>
+ <span class='FOO constant id'>FOO</span><span class='div op'>/</span><span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.fcla.edu/</span><span class='dls identifier id'>dls</span><span class='div op'>/</span><span class='md identifier id'>md</span><span class='div op'>/</span><span class='daitss identifier id'>daitss</span><span class='div op'>/</span><span class='daitssAccountProject identifier id'>daitssAccountProject</span><span class='dot token'>.</span><span class='xsd identifier id'>xsd</span>
+ <span class='FOO constant id'>FOO</span><span class='div op'>/</span><span class='dot3 op'>...</span><span class='more identifier id'>more</span> <span class='schemas identifier id'>schemas</span><span class='dot3 op'>...</span>
+</pre>
+<p>
+We yield an open tempfile containg the contents of the tarfile. The
+tempfile is deleted after exiting the tar block.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Yields:</h3>
+<ul class="yield">
+  
+    <li>
+      
+        <span class='type'>(<tt>io</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 275</span>
+
+<span class='def def kw'>def</span> <span class='tar identifier id'>tar</span>
+  <span class='io identifier id'>io</span> <span class='assign token'>=</span> <span class='Tempfile constant id'>Tempfile</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='string val'>'XmlResolution-TarFile-'</span>
+  <span class='rs identifier id'>rs</span>  <span class='assign token'>=</span> <span class='resolutions identifier id'>resolutions</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
+
+  <span class='tarwriter identifier id'>tarwriter</span> <span class='assign token'>=</span> <span class='XmlResolution constant id'>XmlResolution</span><span class='colon2 op'>::</span><span class='TarWriter constant id'>TarWriter</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='io identifier id'>io</span><span class='comma token'>,</span> <span class='lbrace token'>{</span> <span class='symbol val'>:uid</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>80</span><span class='comma token'>,</span> <span class='symbol val'>:gid</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>80</span><span class='comma token'>,</span> <span class='symbol val'>:username</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'daitss'</span><span class='comma token'>,</span> <span class='symbol val'>:groupname</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'daitss'</span> <span class='rbrace token'>}</span><span class='rparen token'>)</span>
+  <span class='manifest_file identifier id'>manifest_file</span><span class='lparen token'>(</span><span class='rs identifier id'>rs</span><span class='rparen token'>)</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='path identifier id'>path</span><span class='bitor op'>|</span> <span class='tarwriter identifier id'>tarwriter</span><span class='dot token'>.</span><span class='write identifier id'>write</span> <span class='path identifier id'>path</span><span class='comma token'>,</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='collection_name identifier id'>collection_name</span><span class='comma token'>,</span> <span class='string val'>'manifest.xml'</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
+  <span class='schemas identifier id'>schemas</span><span class='lparen token'>(</span><span class='rs identifier id'>rs</span><span class='rparen token'>)</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='localpath identifier id'>localpath</span><span class='comma token'>,</span> <span class='url identifier id'>url</span><span class='bitor op'>|</span>  <span class='tarwriter identifier id'>tarwriter</span><span class='dot token'>.</span><span class='write identifier id'>write</span> <span class='localpath identifier id'>localpath</span><span class='comma token'>,</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='collection_name identifier id'>collection_name</span><span class='comma token'>,</span> <span class='url identifier id'>url</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
+
+  <span class='tarwriter identifier id'>tarwriter</span><span class='dot token'>.</span><span class='close identifier id'>close</span>  <span class='comment val'># closes io as side effect</span>
+
+  <span class='io identifier id'>io</span><span class='dot token'>.</span><span class='open identifier id'>open</span><span class='dot token'>.</span><span class='rewind identifier id'>rewind</span>
+  <span class='yield yield kw'>yield</span> <span class='io identifier id'>io</span>
+<span class='ensure ensure kw'>ensure</span>
+  <span class='io identifier id'>io</span><span class='dot token'>.</span><span class='close identifier id'>close</span>
+  <span class='io identifier id'>io</span><span class='dot token'>.</span><span class='unlink identifier id'>unlink</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Tue Sep 14 16:31:07 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.0 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

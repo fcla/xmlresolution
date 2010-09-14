@@ -1,0 +1,1024 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Class: XmlResolution::Logger</title>
+<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (L)</a> &raquo; 
+    <span class='title'><span class='object_link'><a href="../XmlResolution.html" title="XmlResolution (module)">XmlResolution</a></span></span>
+     &raquo; 
+    <span class="title">Logger</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: XmlResolution::Logger
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">XmlResolution::Logger</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/logger.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+Initial Author: Randy Fischer (rf@ufl.edu) for DAITSS
+</p>
+<p>
+Logging web service actions using using log4r with a Rack::CommonLogger
+tie-in.
+</p>
+<p>
+Example use:
+</p>
+<pre class="code">
+ <span class='require identifier id'>require</span> <span class='string val'>'logger'</span>
+
+ <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='logname identifier id'>logname</span>  <span class='assign token'>=</span> <span class='string val'>&quot;XmlResolution&quot;</span>
+ <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='filename identifier id'>filename</span> <span class='assign token'>=</span> <span class='string val'>&quot;myfile.log&quot;</span>
+ <span class='dot3 op'>...</span>
+ <span class='get identifier id'>get</span> <span class='string val'>'/tmp'</span> <span class='do do kw'>do</span>
+    <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span> <span class='string val'>&quot;can't create temporary file for request.&quot;</span><span class='comma token'>,</span> <span class='@env ivar id'>@env</span>
+    <span class='halt identifier id'>halt</span> <span class='lbrack token'>[</span> <span class='integer val'>400</span><span class='comma token'>,</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='comma token'>,</span> <span class='string val'>'oops'</span> <span class='rbrack token'>]</span>
+ <span class='end end kw'>end</span>
+ <span class='dot3 op'>...</span>
+ <span class='get identifier id'>get</span> <span class='string val'>'/temp'</span> <span class='do do kw'>do</span>
+    <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='err identifier id'>err</span>  <span class='string val'>&quot;the machine room appears to be on fire.&quot;</span><span class='comma token'>,</span> <span class='@env ivar id'>@env</span>
+    <span class='string val'>&quot;451 degrees Fahrenheit&quot;</span>
+ <span class='end end kw'>end</span>
+</pre>
+<p>
+This might produce in &#8220;myfile.log&#8221; the following:
+</p>
+<pre class="code">
+  <span class='WARN constant id'>WARN</span> <span class='XmlResolution constant id'>XmlResolution</span><span class='colon op'>:</span> <span class='string val'>&quot;GET /tmp&quot;</span> <span class='can identifier id'>can</span><span class='string val'>'t create temporary file for request.
+ ERROR XmlResolution: &quot;GET /temp&quot; the machine room appears to be on fire.
+</span></pre>
+<p>
+The env variable is a hash, typically you&#8217;ll use @env from the
+Sinatra environment.  Anything that provides the PEP 333 standard set of
+CGI environment variables is best (HTTP_SERVER, PATH_INFO, etc), but an
+empty hash will work in a pinch (and is the default).
+</p>
+<p>
+Here&#8217;s an example of using a Logger object to direct
+Rack::CommonLogger to write to both a file and syslog.
+</p>
+<pre class="code">
+ <span class='require identifier id'>require</span> <span class='string val'>'logger'</span>
+
+ <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='logname identifier id'>logname</span>  <span class='assign token'>=</span> <span class='string val'>'XmlResolution'</span>
+ <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='filename identifier id'>filename</span> <span class='assign token'>=</span> <span class='string val'>'/tmp/myfile.log'</span>
+ <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='facility identifier id'>facility</span> <span class='assign token'>=</span> <span class='symbol val'>:LOG_LOCAL2</span>
+ <span class='use identifier id'>use</span> <span class='Rack constant id'>Rack</span><span class='colon2 op'>::</span><span class='CommonLogger constant id'>CommonLogger</span><span class='comma token'>,</span> <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+</pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div>
+  <h2>Constant Summary</h2>
+  
+    <dl class="constants">
+      
+        <dt id="initialized-classvariable" class="">@@initialized =
+          <div class="docstring">
+  <div class="discussion">
+    <p>
+This class variable lets us know if is safe to proceed; a Log4r logging
+object has been set up and registered.  It must be set by a call to
+Logger.initialize_maybe - which one of the class initializers -
+Logger.filename=, Logger.facility= or Logger.stderr - will take care of.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div>
+        </dt>
+        <dd><pre class="code"><span class='false false kw'>false</span>
+</pre></dd>
+      
+        <dt id="logname-classvariable" class="">@@logname =
+          
+        </dt>
+        <dd><pre class="code"><span class='string val'>'XmlResolution'</span>
+</pre></dd>
+      
+    </dl>
+  
+
+
+
+  
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#err-class_method" title="err (class method)">+ (Object) <strong>err</strong>(message, env = {}) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+Logger.err MESSAGE, [ ENV ].
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#facility%3D-class_method" title="facility= (class method)">+ (Object) <strong>facility=</strong>(facility) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+Logger.facility = FACILITY.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#filename%3D-class_method" title="filename= (class method)">+ (Object) <strong>filename=</strong>(filepath) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+Logger.filename = FILEPATH.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#info-class_method" title="info (class method)">+ (Object) <strong>info</strong>(message, env = {}) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+Logger.info MESSAGE, [ ENV ].
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize_maybe-class_method" title="initialize_maybe (class method)">+ (Object) <strong>initialize_maybe</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+Logger.logname = NAME.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="private ">
+  <span class="summary_signature">
+    
+      <a href="#prefix-class_method" title="prefix (class method)">+ (Object) <strong>prefix</strong>(env) </a>
+    
+
+    
+  </span>
+  
+  
+  <span class="note title private">private</span>
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+prefix ENV.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="private ">
+  <span class="summary_signature">
+    
+      <a href="#process_name-class_method" title="process_name (class method)">+ (Object) <strong>process_name</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  <span class="note title private">private</span>
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#stderr-class_method" title="stderr (class method)">+ (Object) <strong>stderr</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+Logger.stderr.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#warn-class_method" title="warn (class method)">+ (Object) <strong>warn</strong>(message, env = {}) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+Logger.warn MESSAGE, [ ENV ].
+</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (Logger) <strong>initialize</strong> </a>
+    
+
+    
+  </span>
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+While we normally use the class methods to write our own log entries, we
+also have an object we can instantiate for Rack::CommonLogger to use.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#write-instance_method" title="#write (instance method)">- (Object) <strong>write</strong>(message) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+log.write MESSAGE.
+</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+<div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <p class="signature first" id="initialize-instance_method">
+  
+    - (<tt><span class='object_link'><a href="" title="XmlResolution::Logger (class)">Logger</a></span></tt>) <strong>initialize</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+While we normally use the class methods to write our own log entries, we
+also have an object we can instantiate for Rack::CommonLogger to use. For
+example:
+</p>
+<pre class="code">
+ <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='logname identifier id'>logname</span>  <span class='assign token'>=</span> <span class='string val'>'XmlResolutionService'</span>
+ <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='filename identifier id'>filename</span> <span class='assign token'>=</span> <span class='string val'>'my.log'</span>
+ <span class='use identifier id'>use</span> <span class='Rack constant id'>Rack</span><span class='symbol val'>:CommonLogger</span><span class='comma token'>,</span> <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+</pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+181
+182</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/logger.rb', line 181</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="err-class_method">
+  
+    + (<tt>Object</tt>) <strong>err</strong>(message, env = {}) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Logger.err MESSAGE, [ ENV ]
+</p>
+<p>
+Log an error message MESSAGE, a string; The hash ENV is typically the
+Sinatra @env object, but any hash with the common PEP 333 keys could be
+used.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+149</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/logger.rb', line 149</span>
+
+<span class='def def kw'>def</span> <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='err identifier id'>err</span> <span class='message identifier id'>message</span><span class='comma token'>,</span> <span class='env identifier id'>env</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="facility=-class_method">
+  
+    + (<tt>Object</tt>) <strong>facility=</strong>(facility) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Logger.facility = FACILITY
+</p>
+<p>
+Intialize the logging system to write to syslog, using the the symbol
+FACILTIY to specify the facility to use. Normally one uses a local facility
+code (but strings will work):
+</p>
+<pre class="code">
+   <span class='symbol val'>:LOG_LOCAL0</span>
+   <span class='symbol val'>:LOG_LOCAL1</span>
+      <span class='dot3 op'>...</span>
+   <span class='symbol val'>:LOG_LOCAL7</span>
+</pre>
+<p>
+A typical syslog.conf entry using :LOG_LOCAL2 might look like this:
+</p>
+<pre class="code">
+   <span class='local2 identifier id'>local2</span><span class='dot token'>.</span><span class='error identifier id'>error</span>   <span class='regexp val'>/var/</span><span class='log identifier id'>log</span><span class='div op'>/</span><span class='xmlresolution identifier id'>xmlresolution</span><span class='dot token'>.</span><span class='error identifier id'>error</span><span class='dot token'>.</span><span class='log identifier id'>log</span>
+   <span class='local2 identifier id'>local2</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span>    <span class='regexp val'>/var/</span><span class='log identifier id'>log</span><span class='div op'>/</span><span class='xmlresolution identifier id'>xmlresolution</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span><span class='dot token'>.</span><span class='log identifier id'>log</span>
+   <span class='local2 identifier id'>local2</span><span class='dot token'>.</span><span class='info identifier id'>info</span>    <span class='regexp val'>/var/</span><span class='log identifier id'>log</span><span class='div op'>/</span><span class='xmlresolution identifier id'>xmlresolution</span><span class='dot token'>.</span><span class='info identifier id'>info</span><span class='dot token'>.</span><span class='log identifier id'>log</span>
+</pre>
+<p>
+In the case of Mac OSX Snow Leopard, the above syslog.conf entry means that
+a Logger.error(message) will get logged to xmlresolution.error.log,
+xmlresolution.warn.log, and xmlresolution.info.log.  Logger.warn(message)
+gets logged to xmlresolution.warn.log and xmlresolution.info.log.
+Logger.info(message) will go to xmlresolution.info.log.  Other syslog
+deamons on other systems and alternative configurations behave
+significantly differently.  But that&#8217;s not your problem.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Raises:</h3>
+<ul class="raise">
+  
+    <li>
+      
+        <span class='type'>(<tt><span class='object_link'><a href="ConfigurationError.html" title="XmlResolution::ConfigurationError (class)">XmlResolution::ConfigurationError</a></span></tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+134
+135
+136
+137
+138
+139
+140
+141</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/logger.rb', line 134</span>
+
+<span class='def def kw'>def</span> <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='facility identifier id'>facility</span><span class='assign token'>=</span> <span class='facility identifier id'>facility</span>
+  <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='initialize_maybe identifier id'>initialize_maybe</span>
+  <span class='Log4r constant id'>Log4r</span><span class='colon2 op'>::</span><span class='Logger constant id'>Logger</span><span class='lbrack token'>[</span><span class='@@logname ivar id'>@@logname</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='add identifier id'>add</span> <span class='Log4r constant id'>Log4r</span><span class='colon2 op'>::</span><span class='SyslogOutputter constant id'>SyslogOutputter</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='process_name identifier id'>process_name</span><span class='comma token'>,</span> <span class='string val'>'facility'</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='eval identifier id'>eval</span><span class='lparen token'>(</span><span class='dstring node'>&quot;Syslog::#{facility.to_s.upcase}&quot;</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+<span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
+  <span class='raise identifier id'>raise</span> <span class='XmlResolution constant id'>XmlResolution</span><span class='colon2 op'>::</span><span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Error initializing syslog logging using facility code #{facility}: e.message&quot;</span>
+<span class='else else kw'>else</span>
+  <span class='facility identifier id'>facility</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="filename=-class_method">
+  
+    + (<tt>Object</tt>) <strong>filename=</strong>(filepath) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Logger.filename = FILEPATH
+</p>
+<p>
+Intialize the logging system to write to the file named by string FILEPATH.
+</p>
+<p>
+We envision a number of ways to initialize this class before use. We can
+set up for logging to files, syslog, stderr, or any combination. At least
+one of them must be done before any actual logging occurs.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+92
+93
+94
+95
+96
+97</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/logger.rb', line 92</span>
+
+<span class='def def kw'>def</span> <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='filename identifier id'>filename</span><span class='assign token'>=</span> <span class='filepath identifier id'>filepath</span>
+  <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='initialize_maybe identifier id'>initialize_maybe</span>
+  <span class='ResolverUtils constant id'>ResolverUtils</span><span class='dot token'>.</span><span class='check_directory identifier id'>check_directory</span> <span class='string val'>&quot;The log directory&quot;</span><span class='comma token'>,</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='dirname identifier id'>dirname</span><span class='lparen token'>(</span><span class='filepath identifier id'>filepath</span><span class='rparen token'>)</span>
+  <span class='Log4r constant id'>Log4r</span><span class='colon2 op'>::</span><span class='Logger constant id'>Logger</span><span class='lbrack token'>[</span><span class='@@logname ivar id'>@@logname</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='add identifier id'>add</span> <span class='Log4r constant id'>Log4r</span><span class='colon2 op'>::</span><span class='FileOutputter constant id'>FileOutputter</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='process_name identifier id'>process_name</span><span class='comma token'>,</span> <span class='lbrace token'>{</span> <span class='symbol val'>:filename</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='filepath identifier id'>filepath</span><span class='comma token'>,</span> <span class='symbol val'>:trunc</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='false false kw'>false</span> <span class='rbrace token'>}</span><span class='rparen token'>)</span>
+  <span class='filepath identifier id'>filepath</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="info-class_method">
+  
+    + (<tt>Object</tt>) <strong>info</strong>(message, env = {}) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Logger.info MESSAGE, [ ENV ]
+</p>
+<p>
+Log an informative message MESSAGE, a string; The hash ENV is typically the
+Sinatra @env object, but any hash with the common PEP 333 keys could be
+used.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+169</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/logger.rb', line 169</span>
+
+<span class='def def kw'>def</span> <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='info identifier id'>info</span> <span class='message identifier id'>message</span><span class='comma token'>,</span> <span class='env identifier id'>env</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="initialize_maybe-class_method">
+  
+    + (<tt>Object</tt>) <strong>initialize_maybe</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Logger.logname = NAME
+</p>
+<p>
+Intialize the logging system with the identifier NAME, required before
+anything else is done.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+75
+76
+77
+78
+79
+80</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/logger.rb', line 75</span>
+
+<span class='def def kw'>def</span> <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='initialize_maybe identifier id'>initialize_maybe</span>
+  <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='@@initialized ivar id'>@@initialized</span>
+    <span class='Log4r constant id'>Log4r</span><span class='colon2 op'>::</span><span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='@@logname ivar id'>@@logname</span>
+    <span class='@@initialized ivar id'>@@initialized</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="prefix-class_method">
+  
+    + (<tt>Object</tt>) <strong>prefix</strong>(env)  <span class="extras">(private)</span>
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+prefix ENV
+</p>
+<p>
+Create an apache-style &#8220;METHOD /uri&#8221;  string, if possible, from
+the environment ENV. ENV is expected to be @env from a rack application,
+</p>
+<p>
+Note that the object method #write will not use this.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+202
+203
+204
+205
+206
+207
+208</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/logger.rb', line 202</span>
+
+<span class='def def kw'>def</span> <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='prefix identifier id'>prefix</span> <span class='env identifier id'>env</span>
+  <span class='return return kw'>return</span> <span class='string val'>''</span> <span class='if if_mod kw'>if</span> <span class='env identifier id'>env</span><span class='lbrack token'>[</span><span class='string val'>'REQUEST_METHOD'</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> <span class='and and kw'>and</span> <span class='env identifier id'>env</span><span class='lbrack token'>[</span><span class='string val'>'PATH_INFO'</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+  <span class='sprintf identifier id'>sprintf</span><span class='lparen token'>(</span><span class='string val'>'&quot;%s %s%s&quot; '</span><span class='comma token'>,</span>
+          <span class='env identifier id'>env</span><span class='lbrack token'>[</span><span class='string val'>'REQUEST_METHOD'</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
+          <span class='env identifier id'>env</span><span class='lbrack token'>[</span><span class='string val'>'PATH_INFO'</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
+          <span class='lparen token'>(</span><span class='env identifier id'>env</span><span class='lbrack token'>[</span><span class='string val'>'QUERY_STRING'</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> <span class='or or kw'>or</span> <span class='env identifier id'>env</span><span class='lbrack token'>[</span><span class='string val'>'QUERY_STRING'</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span><span class='rparen token'>)</span> <span class='question op'>?</span> <span class='string val'>''</span> <span class='colon op'>:</span> <span class='string val'>'?'</span> <span class='plus op'>+</span> <span class='env identifier id'>env</span><span class='lbrack token'>[</span><span class='string val'>'QUERY_STRING'</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="process_name-class_method">
+  
+    + (<tt>Object</tt>) <strong>process_name</strong>  <span class="extras">(private)</span>
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+210
+211
+212</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/logger.rb', line 210</span>
+
+<span class='def def kw'>def</span> <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='process_name identifier id'>process_name</span>
+  <span class='File constant id'>File</span><span class='dot token'>.</span><span class='basename identifier id'>basename</span><span class='lparen token'>(</span><span class='$0 gvar id'>$0</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="stderr-class_method">
+  
+    + (<tt>Object</tt>) <strong>stderr</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Logger.stderr
+</p>
+<p>
+Initialize the logging system to write to STDERR.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+103
+104
+105
+106</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/logger.rb', line 103</span>
+
+<span class='def def kw'>def</span> <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='stderr identifier id'>stderr</span>
+  <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='initialize_maybe identifier id'>initialize_maybe</span>
+  <span class='Log4r constant id'>Log4r</span><span class='colon2 op'>::</span><span class='Logger constant id'>Logger</span><span class='lbrack token'>[</span><span class='@@logname ivar id'>@@logname</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='add identifier id'>add</span> <span class='Log4r constant id'>Log4r</span><span class='colon2 op'>::</span><span class='StderrOutputter constant id'>StderrOutputter</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='process_name identifier id'>process_name</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="warn-class_method">
+  
+    + (<tt>Object</tt>) <strong>warn</strong>(message, env = {}) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Logger.warn MESSAGE, [ ENV ]
+</p>
+<p>
+Log a warning message MESSAGE, a string; The hash ENV is typically the
+Sinatra @env object, but any hash with the common PEP 333 keys could be
+used.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+159</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/logger.rb', line 159</span>
+
+<span class='def def kw'>def</span> <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span> <span class='message identifier id'>message</span><span class='comma token'>,</span> <span class='env identifier id'>env</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="write-instance_method">
+  
+    - (<tt>Object</tt>) <strong>write</strong>(message) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+log.write MESSAGE
+</p>
+<p>
+Rack::CommonLogger can be told to use as a logger any object that has a
+write method on it. See the Logger#new method for an example of its use.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+189
+190
+191</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/logger.rb', line 189</span>
+
+<span class='def def kw'>def</span> <span class='write identifier id'>write</span> <span class='message identifier id'>message</span>
+  <span class='Log4r constant id'>Log4r</span><span class='colon2 op'>::</span><span class='Logger constant id'>Logger</span><span class='lbrack token'>[</span><span class='@@logname ivar id'>@@logname</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='info identifier id'>info</span> <span class='message identifier id'>message</span><span class='dot token'>.</span><span class='chomp identifier id'>chomp</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Tue Sep 14 16:31:04 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.0 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

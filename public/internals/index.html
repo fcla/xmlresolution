@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>XML Resolution Service</title>
+<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html" title="Index">Index</a> &raquo; 
+    <span class="title">File: README</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><div id='filecontents'><h1>XML Resolution Service</h1>
+
+<p>Consider a collection of XML documents.  You would like to gather up
+all of the schemas necessary to understand those documents for
+preservation purposes.  This web service helps you do that, in three
+RESTful steps:</p>
+
+<ol>
+<li>Create a collection resource.</li>
+<li>POST some XML documents to the collection.</li>
+<li>GET the collection, retrieving a tar file of the XML schemas and a manifest of what was found.</li>
+</ol>
+
+
+<p>The original XML documents are not returned.  It is recommended that
+you employ a caching proxy such as squid when used in a production
+environment.</p>
+
+<h2>Envronment</h2>
+
+<p>In your web server you should set up some environment variables:</p>
+
+<ul>
+<li>SetEnv DATA_ROOT - where you'll save information about the schemas and document collections.</li>
+<li>SetEnv RESOLVER_PROXY squid.example.com:3128 - an optional squid caching proxy.</li>
+<li>SetEnv LOG_FACILITY LOG_LOCAL1 - optionally set a facility code if you use syslog for logging; STDERR will be used otherwise.</li>
+</ul>
+
+
+<h2>Requirements</h2>
+
+<p>Known to work with with ruby 1.8.7. The following packages (beyond the
+standards)</p>
+
+<ul>
+<li>sinatra &amp; rack</li>
+<li>nokogiri, libxml-ruby &amp; builder</li>
+<li>rake, rspec, cucumber &amp; ci/reporter for testing.</li>
+<li>log4r</li>
+<li>capistrano &amp; railsless-deploy.</li>
+</ul>
+
+
+<h2>Quickstart</h2>
+
+<ol>
+<li>Retrieve a copy of the xmlresolution service.</li>
+<li>Test the installation:
+<code>% rake spec</code></li>
+<li>Run from rackup, specifying your environment:
+<code>% RESOLVER_PROXY=squid.example.com:3128  rackup config.ru</code>
+or run under a web server.  I'm using passenger phusion under apache:</li>
+</ol>
+
+
+<p>`</p>
+
+<pre class="code"><span class='lt op'>&lt;</span><span class='VirtualHost constant id'>VirtualHost</span><span class='gt op'>&gt;</span>
+  <span class='ServerName constant id'>ServerName</span> <span class='xmlresolution identifier id'>xmlresolution</span><span class='dot token'>.</span><span class='example identifier id'>example</span><span class='dot token'>.</span><span class='com identifier id'>com</span>
+  <span class='DocumentRoot constant id'>DocumentRoot</span> <span class='string val'>&quot;/.../xmlresolution/public&quot;</span>
+  <span class='SetEnv constant id'>SetEnv</span> <span class='DATA_ROOT constant id'>DATA_ROOT</span> <span class='div op'>/</span><span class='var identifier id'>var</span><span class='div op'>/</span><span class='resolutions identifier id'>resolutions</span>
+  <span class='SetEnv constant id'>SetEnv</span> <span class='RESOLVER_PROXY constant id'>RESOLVER_PROXY</span> <span class='squid identifier id'>squid</span><span class='dot token'>.</span><span class='example identifier id'>example</span><span class='dot token'>.</span><span class='com identifier id'>com</span><span class='symbol val'>:3128</span>
+  <span class='SetEnv constant id'>SetEnv</span> <span class='LOG_FACILITY constant id'>LOG_FACILITY</span> <span class='LOG_LOCAL2 constant id'>LOG_LOCAL2</span>
+  <span class='lt op'>&lt;</span><span class='Directory constant id'>Directory</span> <span class='string val'>&quot;/.../xmlresolution/public&quot;</span><span class='gt op'>&gt;</span>
+    <span class='Order constant id'>Order</span> <span class='allow identifier id'>allow</span><span class='comma token'>,</span><span class='deny identifier id'>deny</span>
+    <span class='Allow constant id'>Allow</span> <span class='from identifier id'>from</span> <span class='all identifier id'>all</span>
+  <span class='lt op'>&lt;</span><span class='regexp val'>/Directory&gt;
+&lt;/</span><span class='VirtualHost constant id'>VirtualHost</span><span class='gt op'>&gt;</span><span class='xstring val'>`
+</span></pre>
+
+<h2>Directory Structure</h2>
+
+<p>You can use the supplied Capfile to set up. Adjust
+the top few lines in that file to match your installation.</p>
+
+<ul>
+<li>config.ru &amp; app.rb - the Sinatra setup</li>
+<li>public/            - programming docs will land in public/internals here via % rake yard; otherwise empty</li>
+<li>views/             - instructional erb pages and forms</li>
+<li>lib/app/           - root of the sinatra stuff - helpers and routes</li>
+<li>lib/xmlresolution/ - root of the xmlresolution libraries</li>
+<li>spec/              - tests</li>
+<li>data/              - example DATA_ROOT which must have the directories:</li>
+<li>data/schemas       - where cached schemas live</li>
+<li>data/collections   - where collections, and information about submitted documents for a collection, live</li>
+<li>tmp/               - phusion checks the restart.txt file here.  Rake has a restart target for this, capistrano uses it</li>
+</ul>
+
+
+<h2>Usage</h2>
+
+<p>The following assumes you've a running server at xmlresolution.example.com.
+There are built-in test forms for exploring the system; see http://xmlresolution.example.com/ for
+instructions.  The following models how your RESTful clients should access the service.</p>
+
+<ul>
+<li><p>Create a collection (some versions of curl require you to use an empty document here):</p>
+
+<p> <code>curl --upload-file /dev/null -X PUT http://xmlresolution.example.com/ieids/collection-001</code></p></li>
+<li><p>Submit some XML documents to it (note trailing slash):</p>
+
+<p><code>curl -F xmlfile=@myfile.xml http://xmlresolution.example.com/ieids/collection-001/</code></p>
+
+<p><code>curl -F xmlfile=@myotherfile.xml http://xmlresolution.example.com/ieids/collection-001/</code></p></li>
+<li><p>Get the tarfile of the associated schemas and a manifest</p>
+
+<p><code>curl http://xmlresolution.example.com/ieids/collection-001/</code></p></li>
+</ul>
+
+
+<h2>Documentation</h2>
+
+<p>See the root of the running service for a web page of instructions on
+use and testing; there is a Rake task that will install the
+application documentation under public/internals.</p></div></div>
+    
+    <div id="footer">
+  Generated on Tue Sep 14 16:31:01 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.0 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

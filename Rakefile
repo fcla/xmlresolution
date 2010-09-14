@@ -39,6 +39,10 @@ Spec::Rake::SpecTask.new do |task|
 end
 
 
+# The following technique is deprecated;  bundler makes this a bit harder than it should be (hanna
+# might be installed, say, but bundler won't let us use it unless we've bundled it).  Instead,
+# just include the yardocs with the git distribution.
+
 desc "Generate documentation from libraries - try yardoc, hanna, rdoc, in that order."
 task :docs do
 

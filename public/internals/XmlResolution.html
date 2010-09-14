@@ -1,0 +1,263 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Module: XmlResolution</title>
+<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index (X)</a> &raquo; 
+    
+    
+    <span class="title">XmlResolution</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Module: XmlResolution
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution.rb<span class="defines">,<br />
+  /Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/logger.rb,<br /> /Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/exceptions.rb,<br /> /Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/tar_writer.rb,<br /> /Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb,<br /> /Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/schema_catalog.rb,<br /> /Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb</span>
+</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+Consider a collection of XML documents.  You&#8217;d like to gather up all
+of the information necessary to understand them, and gather up that
+information into one tidy bundle.  The XMLResolution classes help you to do
+just that: they will locate and download all of the schemas that your
+documents depend on. (Coming will be DTD and Stylesheet support)
+</p>
+<p>
+We have several classes to effect this:
+</p>
+<ul>
+<li><p>
+SchemaCatalog  downloads schemas and maintains basic metadata about them
+(location, namespace, modification times, etc.)
+</p>
+</li>
+<li><p>
+PlainXmlDocument and SchemaDocument  are SAX-based XML processors that
+analyze XML instance documents and schemas, respectively.
+</p>
+</li>
+<li><p>
+XmlResolver orchestrates the above components to recursively find all the
+schema dependencies for an XML instance document.
+</p>
+</li>
+<li><p>
+ResolverCollection associates a Collection ID with one or more XML
+documents and all of the XmlResolver-based information obtained about those
+documents.
+</p>
+</li>
+</ul>
+<p>
+There are a few helper classes as well:
+</p>
+<ul>
+<li><p>
+Logger for logging to Syslog, Standard Error, or a plain file.
+</p>
+</li>
+<li><p>
+ResolverUtils for the assorted unsortables.
+</p>
+</li>
+<li><p>
+TarWriter for creating tar files on the fly.
+</p>
+</li>
+<li><p>
+A hierarchical set of exceptions, rooted at the HttpError class.
+</p>
+</li>
+</ul>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><h2>Defined Under Namespace</h2>
+<p class="children">
+   
+    
+   
+    
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="XmlResolution/BadBadXmlDocument.html" title="XmlResolution::BadBadXmlDocument (class)">BadBadXmlDocument</a></span>, <span class='object_link'><a href="XmlResolution/BadCollectionID.html" title="XmlResolution::BadCollectionID (class)">BadCollectionID</a></span>, <span class='object_link'><a href="XmlResolution/BadXmlDocument.html" title="XmlResolution::BadXmlDocument (class)">BadXmlDocument</a></span>, <span class='object_link'><a href="XmlResolution/BadXmlVersion.html" title="XmlResolution::BadXmlVersion (class)">BadXmlVersion</a></span>, <span class='object_link'><a href="XmlResolution/ConfigurationError.html" title="XmlResolution::ConfigurationError (class)">ConfigurationError</a></span>, <span class='object_link'><a href="XmlResolution/Http400.html" title="XmlResolution::Http400 (class)">Http400</a></span>, <span class='object_link'><a href="XmlResolution/Http400Error.html" title="XmlResolution::Http400Error (class)">Http400Error</a></span>, <span class='object_link'><a href="XmlResolution/Http401.html" title="XmlResolution::Http401 (class)">Http401</a></span>, <span class='object_link'><a href="XmlResolution/Http403.html" title="XmlResolution::Http403 (class)">Http403</a></span>, <span class='object_link'><a href="XmlResolution/Http404.html" title="XmlResolution::Http404 (class)">Http404</a></span>, <span class='object_link'><a href="XmlResolution/Http405.html" title="XmlResolution::Http405 (class)">Http405</a></span>, <span class='object_link'><a href="XmlResolution/Http406.html" title="XmlResolution::Http406 (class)">Http406</a></span>, <span class='object_link'><a href="XmlResolution/Http408.html" title="XmlResolution::Http408 (class)">Http408</a></span>, <span class='object_link'><a href="XmlResolution/Http409.html" title="XmlResolution::Http409 (class)">Http409</a></span>, <span class='object_link'><a href="XmlResolution/Http410.html" title="XmlResolution::Http410 (class)">Http410</a></span>, <span class='object_link'><a href="XmlResolution/Http411.html" title="XmlResolution::Http411 (class)">Http411</a></span>, <span class='object_link'><a href="XmlResolution/Http412.html" title="XmlResolution::Http412 (class)">Http412</a></span>, <span class='object_link'><a href="XmlResolution/Http413.html" title="XmlResolution::Http413 (class)">Http413</a></span>, <span class='object_link'><a href="XmlResolution/Http414.html" title="XmlResolution::Http414 (class)">Http414</a></span>, <span class='object_link'><a href="XmlResolution/Http415.html" title="XmlResolution::Http415 (class)">Http415</a></span>, <span class='object_link'><a href="XmlResolution/Http500.html" title="XmlResolution::Http500 (class)">Http500</a></span>, <span class='object_link'><a href="XmlResolution/Http500Error.html" title="XmlResolution::Http500Error (class)">Http500Error</a></span>, <span class='object_link'><a href="XmlResolution/Http501.html" title="XmlResolution::Http501 (class)">Http501</a></span>, <span class='object_link'><a href="XmlResolution/Http503.html" title="XmlResolution::Http503 (class)">Http503</a></span>, <span class='object_link'><a href="XmlResolution/Http505.html" title="XmlResolution::Http505 (class)">Http505</a></span>, <span class='object_link'><a href="XmlResolution/HttpError.html" title="XmlResolution::HttpError (class)">HttpError</a></span>, <span class='object_link'><a href="XmlResolution/InadequateDataError.html" title="XmlResolution::InadequateDataError (class)">InadequateDataError</a></span>, <span class='object_link'><a href="XmlResolution/LocationError.html" title="XmlResolution::LocationError (class)">LocationError</a></span>, <span class='object_link'><a href="XmlResolution/LockError.html" title="XmlResolution::LockError (class)">LockError</a></span>, <span class='object_link'><a href="XmlResolution/Logger.html" title="XmlResolution::Logger (class)">Logger</a></span>, <span class='object_link'><a href="XmlResolution/ResolverCollection.html" title="XmlResolution::ResolverCollection (class)">ResolverCollection</a></span>, <span class='object_link'><a href="XmlResolution/ResolverError.html" title="XmlResolution::ResolverError (class)">ResolverError</a></span>, <span class='object_link'><a href="XmlResolution/SchemaCatalog.html" title="XmlResolution::SchemaCatalog (class)">SchemaCatalog</a></span>, <span class='object_link'><a href="XmlResolution/TarWriter.html" title="XmlResolution::TarWriter (class)">TarWriter</a></span>, <span class='object_link'><a href="XmlResolution/TooManyDarnSchemas.html" title="XmlResolution::TooManyDarnSchemas (class)">TooManyDarnSchemas</a></span>, <span class='object_link'><a href="XmlResolution/XmlResolver.html" title="XmlResolution::XmlResolver (class)">XmlResolver</a></span>, <span class='object_link'><a href="XmlResolution/XmlResolverReloaded.html" title="XmlResolution::XmlResolverReloaded (class)">XmlResolverReloaded</a></span>
+    
+  
+</p>
+
+  <h2>Constant Summary</h2>
+  
+    <dl class="constants">
+      
+        <dt id="REVISION-constant" class="">REVISION =
+          
+        </dt>
+        <dd><pre class="code"><span class='get_capistrano_git_revision identifier id'>get_capistrano_git_revision</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
+</pre></dd>
+      
+        <dt id="RELEASE-constant" class="">RELEASE =
+          
+        </dt>
+        <dd><pre class="code"><span class='get_capistrano_release identifier id'>get_capistrano_release</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
+</pre></dd>
+      
+        <dt id="VERSION-constant" class="">VERSION =
+          
+        </dt>
+        <dd><pre class="code"><span class='string val'>'1.1.2'</span>
+</pre></dd>
+      
+        <dt id="NAME-constant" class="">NAME =
+          
+        </dt>
+        <dd><pre class="code"><span class='string val'>'XMLResolution'</span>
+</pre></dd>
+      
+    </dl>
+  
+
+
+
+  
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#version-class_method" title="version (class method)">+ (Object) <strong>version</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="version-class_method">
+  
+    + (<tt>Object</tt>) <strong>version</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+68
+69
+70
+71
+72
+73
+74
+75</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution.rb', line 68</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='version identifier id'>version</span>
+  <span class='os identifier id'>os</span> <span class='assign token'>=</span> <span class='OpenStruct constant id'>OpenStruct</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>&quot;rev&quot;</span>    <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='dstring node'>&quot;#{NAME} Version #{VERSION}, Git Revision #{REVISION}, Capistrano Release #{RELEASE}.&quot;</span><span class='comma token'>,</span>
+                      <span class='string val'>&quot;uri&quot;</span>    <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='dstring node'>&quot;info:fcla/daitss/xmlresolution/#{VERSION}&quot;</span><span class='rparen token'>)</span>
+  <span class='def def kw'>def</span> <span class='os identifier id'>os</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
+    <span class='self self kw'>self</span><span class='dot token'>.</span><span class='rev identifier id'>rev</span>
+  <span class='end end kw'>end</span>
+  <span class='os identifier id'>os</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Tue Sep 14 16:31:05 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.0 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>
