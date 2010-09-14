@@ -1,0 +1,66 @@
+58 TB in 29 partitions with 231,540 packages
+
+Call it 8000 packages/partition
+
+Issue: I download these, validators don't bother:
+
+Sample size: 15,357 XML files (11,019 pacakges, est.)
+
+[0] < http://www.w3.org/2001/XMLSchema.xsd          87,677 bytes  -  95% of xml files would include this
+[0] < http://www.w3.org/2001/xml.xsd                 8,836 bytes  -   4% of xml files would include this
+[1] < http://www.loc.gov/standards/mods/xlink.xsd    3,180 bytes  -   3% of xml files would include this
+[2] < http://www.loc.gov/standards/xlink.xsd         3,180 bytes  -  88% of xml files would include this
+
+Adding these up: overhead of these 'unnecessary' schemas  is 0.04% 
+
+For all tar'd schemas, we'd use around 5.2 GB per partition, 0.3%)
+
+---------
+
+[0] Validators skip downloading these
+
+---------
+
+[1] http://www.loc.gov/standards/mods/xlink.xsd (3180 bytes)
+
+ e.g. ./E20081121_AAAALI-WF00000011 has:
+
+   <METS:mets
+	LABEL="Florida Chautauqua, De Funiak Springs, Fla." 
+	OBJID="SN00000005" 
+	TYPE="serial" 
+
+   xmlns:METS="http://www.loc.gov/METS/"
+   xmlns:daitss="http://www.fcla.edu/dls/md/daitss/"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:mods="http://www.loc.gov/mods/v3"
+   xmlns:palmm="http://www.fcla.edu/dls/md/palmm/"
+   xmlns:rightsmd="http://www.fcla.edu/dls/md/rightsmd/"
+   xmlns:techmd="http://www.fcla.edu/dls/md/techmd/"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+   xsi:schemaLocation="http://www.loc.gov/METS/              http://www.loc.gov/standards/mets/mets.xsd 
+                       http://purl.org/dc/elements/1.1/      http://dublincore.org/schemas/xmls/simpledc20021212.xsd 
+     ** xmlns:mods =>  http://www.loc.gov/mods/v3            http://www.loc.gov/standards/mods/v3/mods-3-0.xsd  
+		       http://www.fcla.edu/dls/md/techmd/    http://www.fcla.edu/dls/md/techmd.xsd 
+                       http://www.fcla.edu/dls/md/palmm/     http://www.fcla.edu/dls/md/palmm.xsd 
+		       http://www.fcla.edu/dls/md/rightsmd/  http://www.fcla.edu/dls/md/rightsmd.xsd 
+                       http://www.fcla.edu/dls/md/daitss/    http://www.fcla.edu/dls/md/daitss/daitss.xsd">
+
+     mods namespace is used extensively in the instance doc, so in http://www.loc.gov/standards/mods/v3/mods-3-0.xsd  
+     we find:
+
+     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+     <xsd:import namespace="http://www.w3.org/1999/xlink" schemaLocation="http://www.loc.gov/standards/mods/xlink.xsd"/>
+
+---------
+
+[2] http://www.loc.gov/standards/xlink.xsd  (3180 bytes)
+
+  e.g. E20081124_AAABKM-UF00087294_00242.xml: 
+    refers to METS namespace, which is
+    http://www.loc.gov/METS/ => http://www.loc.gov/standards/mets/mets.xsd  
+
+    Now http://www.loc.gov/standards/mets/mets.xsd contains:
+    <xsd:import namespace="http://www.w3.org/1999/xlink" schemaLocation="http://www.loc.gov/standards/xlink/xlink.xsd"/>
