@@ -91,7 +91,7 @@ namespace :deploy do
 
     # Oh what a steaming pile of monkey shit bundler is turning out to be.
 
-    run "ln -s #{File.join(shared_path, 'vendor/bundle)} #{File.join(current_path, 'vendor/bundle')}"
+    run "ln -s #{File.join(shared_path, 'vendor/bundle')} #{File.join(current_path, 'vendor/bundle')}"
     run "cd #{current_path}; bundle install --path vendor/bundle"   # it works better than capistrano rules considering nokogiri issues
 
   end

@@ -6,8 +6,6 @@ require 'rake/rdoctask'
 require 'socket'
 require 'spec/rake/spectask'
 
-require 'bundler/setup'             # We need this for remote deploys where we want to run the spec tests.
-
 HOME    = File.expand_path(File.dirname(__FILE__))
 LIBDIR  = File.join(HOME, 'lib')
 TMPDIR  = File.join(HOME, 'tmp')
@@ -19,6 +17,9 @@ def dev_host
   Socket.gethostname =~ /romeo-foxtrot/
 end
 
+if not dev_host
+  require 'bundler/setup'             # We need this for remote deploys where we want to run the spec tests.
+end
 
 # Working with continuous integration.  The CI servers out
 # there.... Sigh... Something that should be so easy...let's start
