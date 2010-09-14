@@ -22,6 +22,9 @@ set :branch,            "master"
 set :user,              "xmlrez"    unless variables[:user]
 set :group,             "daitss"    unless variables[:group]
 
+set :bundle_flags,       "--deployment"
+set :bundle_without,      []
+
 # set :git_shallow_clone,  1  # doesn't work for some reason...maybe I'm not waiting long enough.
 #
 # set :domain,      "xmlresolution.ripple.sacred.net"
