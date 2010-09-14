@@ -8,10 +8,8 @@ REVISION
 TAGS
 \#*
 coverage
-docs
+data
 shared
 spec/reports
-# vendor/doc
-# vendor/gems
-# vendor/specifications
-vendor/bundle
+vendor
+Gemfile.lock
