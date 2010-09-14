@@ -11,9 +11,9 @@ gem 'pg',          '>= 0.9.0'
 gem 'cucumber',    '>= 0.6.1'
 
 
-case `hostname`
-when /romeo-foxtrot/
-   # just give up
-else
-   gem 'nokogiri',  '>= 1.4.1'
-end
+# case `hostname`
+# when /romeo-foxtrot/
+#    # just give up
+# else
+#    gem 'nokogiri',  '>= 1.4.1'
+# end
