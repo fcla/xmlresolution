@@ -1,5 +1,5 @@
-require 'bundler'
-Bundler.setup
+require 'nokogiri'
+require 'bundler/setup'
 
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
 

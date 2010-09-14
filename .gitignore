@@ -11,6 +11,7 @@ coverage
 docs
 shared
 spec/reports
-vendor/doc
-vendor/gems
-vendor/specifications
+# vendor/doc
+# vendor/gems
+# vendor/specifications
+vendor/bundle

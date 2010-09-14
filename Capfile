@@ -10,6 +10,8 @@
 load    'deploy'
 require 'rubygems'
 require 'railsless-deploy'
+require 'bundler/capistrano'
+
 
 set :application,       "xmlresolution"
 set :repository,        "http://github.com/daitss/xmlresolution.git"
