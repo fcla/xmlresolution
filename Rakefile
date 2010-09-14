@@ -5,7 +5,7 @@ require 'rake'
 require 'rake/rdoctask'
 require 'socket'
 require 'spec/rake/spectask'
-require 'nokogiri'                  # currently don't know how to get bundler to install this cleanly on Mac
+
 require 'bundler/setup'             # We need this for remote deploys where we want to run the spec tests.
 
 HOME    = File.expand_path(File.dirname(__FILE__))
@@ -19,32 +19,16 @@ def dev_host
   Socket.gethostname =~ /romeo-foxtrot/
 end
 
-# cleanup handling of CI & spec dependencies
-
-spec_dependencies = []
 
 # Working with continuous integration.  The CI servers out
 # there.... Sigh... Something that should be so easy...let's start
 # with ci/reporter...
-#
-# TODO: conditionally add to the spec tests, and send the output to
-# a web service
 
-begin
-  require 'ci/reporter/rake/rspec'
-rescue LoadError => e
-else
-  spec_dependencies.push "ci:setup:rspec"
-end
 
-begin
-  require 'ci/reporter/rake/cucumber'
-rescue LoadError => e
-else
-  spec_dependencies.push "ci:setup:cucumber"
-end
+require 'ci/reporter/rake/rspec'
+require 'ci/reporter/rake/cucumber'
 
-task :spec => spec_dependencies
+task :spec => [ "ci:setup:rspec", "ci:setup:cucumber" ]
 
 Spec::Rake::SpecTask.new do |task|
   task.spec_opts = [ '--format', 'specdoc' ]    # ci/reporter is getting in the way of this being used.

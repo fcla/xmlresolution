@@ -10,8 +10,11 @@
 load    'deploy'
 require 'rubygems'
 require 'railsless-deploy'
-require 'bundler/capistrano'
 
+# bundler's too broken to be used directly on Mac and Linux (issues deriving from complex nokogiri installs)
+# require 'bundler/capistrano' 
+# set :bundle_flags,       "--deployment"
+# set :bundle_without,      []
 
 set :application,       "xmlresolution"
 set :repository,        "http://github.com/daitss/xmlresolution.git"
@@ -22,8 +25,6 @@ set :branch,            "master"
 set :user,              "xmlrez"    unless variables[:user]
 set :group,             "daitss"    unless variables[:group]
 
-set :bundle_flags,       "--deployment"
-set :bundle_without,      []
 
 # set :git_shallow_clone,  1  # doesn't work for some reason...maybe I'm not waiting long enough.
 #
@@ -69,17 +70,15 @@ namespace :deploy do
   desc "Create the directory hierarchy, as necessary, on the target host"
   task :layout, :roles => :app do
 
-    ['data', 'public'].each do |dir|                    # might not be in git since these directories are usually empty - create if necessary
+    ['public', 'vendor'].each do |dir|                    
       pathname = File.join(current_path, dir)
       run "mkdir -p #{pathname}"
       run "chmod -R ug+rwX #{pathname}"
     end
 
-    ['collections', 'schemas'].each do |dir|  # want to preserve existing data, so keep in the shared directory and link into them.
+    ['collections', 'schemas', 'vendor/bundle'].each do |dir|  # want to preserve existing data, so keep state files in the shared directory
       realname = File.join(shared_path, dir)
-      linkname = File.join(current_path, 'data')
       run "mkdir -p #{realname}"
-      run "ln -s #{realname} #{linkname}"
       run "chmod -R ug+rwX #{realname}"
     end
 
@@ -89,6 +88,12 @@ namespace :deploy do
 
     run "find #{shared_path} #{release_path} -type d | xargs chmod 2775"
     run "find #{shared_path} #{release_path}  | xargs chgrp #{group}"
+
+    # Oh what a steaming pile of monkey shit bundler is turning out to be.
+
+    run "ln -s #{File.join(shared_path, 'vendor/bundle)} #{File.join(current_path, 'vendor/bundle')}"
+    run "cd #{current_path}; bundle install --path vendor/bundle"   # it works better than capistrano rules considering nokogiri issues
+
   end
 
   desc "Create documentation in public/internals via a rake task - tries yard, hanna, and rdoc"
