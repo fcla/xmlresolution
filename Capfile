@@ -72,15 +72,13 @@ namespace :deploy do
       run "chmod -R ug+rwX #{pathname}"
     end
 
-    ['vendor', 'collections', 'schemas'].each do |dir|  # want to preserve existing data, so keep in the shared directory and link into them.
+    ['collections', 'schemas'].each do |dir|  # want to preserve existing data, so keep in the shared directory and link into them.
       realname = File.join(shared_path, dir)
       linkname = File.join(current_path, 'data')
       run "mkdir -p #{realname}"
       run "ln -s #{realname} #{linkname}"
       run "chmod -R ug+rwX #{realname}"
     end
-
-    run "cd #{current_path}; bundle install #{File.join(shared_path, "vendor")}"   # extract gems if necessary
 
     # For production we'll want to keep our hands off, but it seems
     # reasonable, for now, to let anyone in the #{group} group tweak

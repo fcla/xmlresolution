@@ -5,9 +5,8 @@ require 'rake'
 require 'rake/rdoctask'
 require 'socket'
 require 'spec/rake/spectask'
-
-require 'bundler'             # We need this for remote deploys where we want to run the spec tests.
-Bundler.setup
+require 'nokogiri'                  # currently don't know how to get bundler to install this cleanly on Mac
+require 'bundler/setup'             # We need this for remote deploys where we want to run the spec tests.
 
 HOME    = File.expand_path(File.dirname(__FILE__))
 LIBDIR  = File.join(HOME, 'lib')
