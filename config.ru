@@ -1,4 +1,6 @@
-require 'bundler/setup'
+# -*- mode: ruby; -*-
+
+# require 'bundler/setup'  TODO: fix bundler setup
 
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
 
@@ -28,9 +30,7 @@ $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
 require 'socket'
 
 ENV['LOG_FACILITY']   ||= nil  # default to stderr; may be apache error log or console depending on how started
-
-ENV['DATA_PATH']      ||= File.expand_path(File.join(File.dirname(__FILE__), 'data'))
-
+ENV['DATA_ROOT']      ||= File.expand_path(File.join(File.dirname(__FILE__), 'data'))
 ENV['RESOLVER_PROXY'] ||= case Socket.gethostname
                           when /sacred.net/          ; 'satyagraha.sacred.net:3128'
                           when /fcla.edu/, /local/   ; 'sake.fcla.edu:3128'

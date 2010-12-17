@@ -17,10 +17,6 @@ def dev_host
   Socket.gethostname =~ /romeo-foxtrot/
 end
 
-if not dev_host
-  require 'bundler/setup'             # We need this for remote deploys where we want to run the spec tests.
-end
-
 # Working with continuous integration.  The CI servers out
 # there.... Sigh... Something that should be so easy...let's start
 # with ci/reporter...

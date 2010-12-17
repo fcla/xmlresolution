@@ -203,15 +203,17 @@ module XmlResolution
     # Permit up to five redirections by default.
 
     def fetch location, limit = 5
-      uri = URI.parse location
 
-      # TODO: Branch to handle file URLs here, maybe.
-      # TODO: create an XML document that uses an FTP scheme, to check this error occurs.
+      # TODO: add logging here
+
+      uri = URI.parse location
 
       raise LocationError, "#{uri.scheme} is not a supported protocol - #{location} not retrieved."  unless uri.scheme == 'http'
       raise LocationError, "#{location} can't be retrieved, there were too many redirects."          if limit < 1
 
       # Note that if proxy_addr & proxy_port are nil,  Net::HTTP::Proxy is equivalent to Net::HTTP
+
+      # TODO: set aggressive timeout
 
       Net::HTTP::Proxy(@proxy_addr, @proxy_port).start(uri.host, uri.port) do |http|
         response  = http.get(uri.path)

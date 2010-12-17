@@ -12,20 +12,21 @@ configure do
 
   set :environment,  :production            # Get some exceptional defaults.
 
+  set :raise_errors, false                  # We'll handle our own errors, thanks
+
   set :proxy,       ENV['RESOLVER_PROXY']   # Where to find the tape robot (see SiloTape and TsmExecutor).
   set :data_path,   ENV['DATA_ROOT']        # The collections and schema data live here.
 
-  if ENV['LOG_FACILITY'].nil?
-    Logger.stderr
-  else
-    Logger.facility  = ENV['LOG_FACILITY']
-  end
+  Logger.setup('XmlResolution')  # TODO: add vhost second arg
+
+  ENV['LOG_FACILITY'].nil? ? Logger.stderr : Logger.facility  = ENV['LOG_FACILITY']
 
   use Rack::CommonLogger, Logger.new  # Bend CommonLogger to our will...
 
   Logger.info "Starting #{XmlResolution.version.rev}."
   Logger.info "Initializing with data directory #{ENV['DATA_ROOT']}; caching proxy is #{ENV['RESOLVER_PROXY'] || 'off' }."
 end
+
 
 begin
   load 'lib/app/helpers.rb'

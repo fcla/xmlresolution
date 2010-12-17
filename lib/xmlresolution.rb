@@ -53,7 +53,7 @@ module XmlResolution
 
   REVISION = get_capistrano_git_revision()
   RELEASE  = get_capistrano_release()
-  VERSION  = '1.1.2'
+  VERSION  = '1.1.3'
   NAME     = 'XMLResolution'
 
   require 'xmlresolution/exceptions'
@@ -66,7 +66,7 @@ module XmlResolution
   require 'xmlresolution/xml_resolver'
 
   def self.version
-    os = OpenStruct.new("rev"    => "#{NAME} Version #{VERSION}, Git Revision #{REVISION}, Capistrano Release #{RELEASE}.",
+    os = OpenStruct.new("rev"    => "#{NAME} Version #{VERSION}, Git Revision #{REVISION}, Capistrano Release #{RELEASE}",
                         "uri"    => "info:fcla/daitss/xmlresolution/#{VERSION}")
     def os.to_s
       self.rev

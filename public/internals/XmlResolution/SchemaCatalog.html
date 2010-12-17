@@ -457,21 +457,25 @@ to five redirections by default.
 222
 223
 224
-225</pre>
+225
+226
+227</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/schema_catalog.rb', line 205</span>
 
 <span class='def def kw'>def</span> <span class='fetch identifier id'>fetch</span> <span class='location identifier id'>location</span><span class='comma token'>,</span> <span class='limit identifier id'>limit</span> <span class='assign token'>=</span> <span class='integer val'>5</span>
-  <span class='uri identifier id'>uri</span> <span class='assign token'>=</span> <span class='URI constant id'>URI</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span> <span class='location identifier id'>location</span>
 
-  <span class='comment val'># TODO: Branch to handle file URLs here, maybe.</span>
-  <span class='comment val'># TODO: create an XML document that uses an FTP scheme, to check this error occurs.</span>
+  <span class='comment val'># TODO: add logging here</span>
+
+  <span class='uri identifier id'>uri</span> <span class='assign token'>=</span> <span class='URI constant id'>URI</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span> <span class='location identifier id'>location</span>
 
   <span class='raise identifier id'>raise</span> <span class='LocationError constant id'>LocationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{uri.scheme} is not a supported protocol - #{location} not retrieved.&quot;</span>  <span class='unless unless_mod kw'>unless</span> <span class='uri identifier id'>uri</span><span class='dot token'>.</span><span class='scheme identifier id'>scheme</span> <span class='eq op'>==</span> <span class='string val'>'http'</span>
   <span class='raise identifier id'>raise</span> <span class='LocationError constant id'>LocationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{location} can't be retrieved, there were too many redirects.&quot;</span>          <span class='if if_mod kw'>if</span> <span class='limit identifier id'>limit</span> <span class='lt op'>&lt;</span> <span class='integer val'>1</span>
 
   <span class='comment val'># Note that if proxy_addr &amp; proxy_port are nil,  Net::HTTP::Proxy is equivalent to Net::HTTP</span>
+
+  <span class='comment val'># TODO: set aggressive timeout</span>
 
   <span class='Net constant id'>Net</span><span class='colon2 op'>::</span><span class='HTTP constant id'>HTTP</span><span class='colon2 op'>::</span><span class='Proxy constant id'>Proxy</span><span class='lparen token'>(</span><span class='@proxy_addr ivar id'>@proxy_addr</span><span class='comma token'>,</span> <span class='@proxy_port ivar id'>@proxy_port</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='start identifier id'>start</span><span class='lparen token'>(</span><span class='uri identifier id'>uri</span><span class='dot token'>.</span><span class='host identifier id'>host</span><span class='comma token'>,</span> <span class='uri identifier id'>uri</span><span class='dot token'>.</span><span class='port identifier id'>port</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='http identifier id'>http</span><span class='bitor op'>|</span>
     <span class='response identifier id'>response</span>  <span class='assign token'>=</span> <span class='http identifier id'>http</span><span class='dot token'>.</span><span class='get identifier id'>get</span><span class='lparen token'>(</span><span class='uri identifier id'>uri</span><span class='dot token'>.</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
@@ -531,13 +535,13 @@ readable.
       <pre class="lines">
 
 
-232
-233
 234
-235</pre>
+235
+236
+237</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/schema_catalog.rb', line 232</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/schema_catalog.rb', line 234</span>
 
 <span class='def def kw'>def</span> <span class='file_recorded? fid id'>file_recorded?</span> <span class='filename identifier id'>filename</span><span class='comma token'>,</span> <span class='mtime identifier id'>mtime</span><span class='comma token'>,</span> <span class='digest identifier id'>digest</span>
   <span class='return return kw'>return</span> <span class='false false kw'>false</span> <span class='unless unless_mod kw'>unless</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='exists? fid id'>exists?</span><span class='lparen token'>(</span><span class='filename identifier id'>filename</span><span class='rparen token'>)</span>
@@ -813,7 +817,7 @@ while being iterated over, as in the following example:
 </div>
     
     <div id="footer">
-  Generated on Tue Sep 14 16:31:02 2010 by 
+  Generated on Fri Dec 17 14:14:21 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

@@ -1,9 +1,9 @@
 require 'tempfile'
 require 'xmlresolution/logger'
 
-include XmlResolution
 
 describe Logger do
+
 
   @@tmpfile = nil
 
@@ -19,8 +19,12 @@ describe Logger do
     Hash.new
   end
 
-  it "should throw an exception if it has not been initialized" do
-    lambda { Logger.info 'testing...', env  }.should raise_error
+  it "should not throw an exception if it has not been initialized" do
+    lambda { Logger.info 'testing...', env  }.should_not raise_error
+  end
+
+  it "should allow initialization with one argument" do
+    lambda { Logger.setup('LoggerRspec') }.should_not raise_error
   end
 
   it "should allow initialization to a file" do

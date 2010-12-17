@@ -1,54 +1,45 @@
 # -*- mode:ruby; -*-
 #
-#  Set domain and test proxy to use from cap command line as so:
+#  Set deploy target host/filesystem and test proxy to use from cap command line as so:
 #
-#  cap deploy  -S domain=xmlresolution.ripple.fcla.edu  -S test_proxy=sake.fcla.edu:3128
+#  cap deploy  -S target=ripple.fcla.edu:/opt/web-services/sies/xmlresolution  -S test_proxy=sake.fcla.edu:3128
 #
 #  The test-proxy is used only in remote spec tests.
-#  One can over-ride user and group settings the same way.
+#  One can over-ride user and group settings using -S who=user:group
 
-load    'deploy'
 require 'rubygems'
 require 'railsless-deploy'
 
-# bundler's too broken to be used directly on Mac and Linux (issues deriving from complex nokogiri installs)
-# require 'bundler/capistrano' 
-# set :bundle_flags,       "--deployment"
-# set :bundle_without,      []
+# require 'bundler/capistrano'   - can't get nokogiri to be compiled nor used from the system gems. more work to do.
 
-set :application,       "xmlresolution"
+set :bundle_flags,       "--deployment"
+set :bundle_without,      []
+
 set :repository,        "http://github.com/daitss/xmlresolution.git"
-set :use_sudo,          false
-set :deploy_to,         "/opt/web-services/sites/#{application}"
 set :scm,               "git"
 set :branch,            "master"
-set :user,              "xmlrez"    unless variables[:user]
-set :group,             "daitss"    unless variables[:group]
 
+set :use_sudo,          false
+set :user,              "xmlrez" #     unless variables[:user] - deprecated, see below
+set :group,             "daitss"
 
-# set :git_shallow_clone,  1  # doesn't work for some reason...maybe I'm not waiting long enough.
-#
-# set :domain,      "xmlresolution.ripple.sacred.net"
-# set :domain,      "xmlresolution.ripple.daitss.net"
-
-def usage(messages)
-  STDERR.puts "Usage: deploy cap -S domain=<target domain> -S test_proxy=<target proxy>"  
+def usage(*messages)
+  STDERR.puts "Usage: cap deploy -S target=<host:filesystem> -S test_proxy=sake.fcla.edu:3128"  
   STDERR.puts messages.join("\n")
-  STDERR.puts "You may also set the remote user and group similarly (defaults to #{user} and #{group}, respectively)."
-  STDERR.puts "If you set the user, you must be able to ssh to the domain as that user."
+  STDERR.puts "You may set the remote user and group by using -S who=<user:group>. Defaults to #{user}:#{group}."
+  STDERR.puts "If you set the user, you must be able to ssh to the target host as that user."
+  STDERR.puts "You may set the branch in a similar manner: -S branch=<branch name> (defaults to #{variables[:branch]})."
   exit
 end
 
-errors = []
-if not variables[:domain]
-  errors.push 'The domain was not set (e.g., domain=ripple.fcla.edu).'
-end
+usage('The deployment target was not set (e.g., target=ripple.fcla.edu:/opt/web-services/sites/silos).') unless (variables[:target] and variables[:target] =~ %r{.*:.*})
 
-if not variables[:test_proxy]
-  errors.push 'The test_proxy was not set (e.g. test_proxy=sake.fcla.edu:3128).'
-end
+_domain, _filesystem = variables[:target].split(':', 2)
 
-usage(errors) unless errors.empty?
+set :deploy_to,  _filesystem
+set :domain,     _domain
+
+usage 'The test_proxy was not set (e.g. test_proxy=sake.fcla.edu:3128).' unless variables[:test_proxy]
 
 role :app, domain
 
@@ -58,7 +49,9 @@ role :app, domain
 # public/internals/; restart touches the file that instructs passenger
 # phusion to restart the app; spec runs the spec tests.
 
-after "deploy:update", "deploy:layout", "deploy:spec", "deploy:restart"
+# after "deploy:update", "deploy:layout", "deploy:spec", "deploy:restart"
+
+after "deploy:update", "deploy:layout", "deploy:restart"
 
 namespace :deploy do
 
@@ -70,41 +63,21 @@ namespace :deploy do
   desc "Create the directory hierarchy, as necessary, on the target host"
   task :layout, :roles => :app do
 
-    ['public', 'vendor'].each do |dir|                    
-      pathname = File.join(current_path, dir)
-      run "mkdir -p #{pathname}"
-      run "chmod -R ug+rwX #{pathname}"
-    end
-
     ['collections', 'schemas', 'vendor/bundle'].each do |dir|  # want to preserve existing data, so keep state files in the shared directory
       realname = File.join(shared_path, dir)
       run "mkdir -p #{realname}"
       run "chmod -R ug+rwX #{realname}"
     end
 
-    # For production we'll want to keep our hands off, but it seems
-    # reasonable, for now, to let anyone in the #{group} group tweak
-    # the files on the server.
-
     run "find #{shared_path} #{release_path} -type d | xargs chmod 2775"
     run "find #{shared_path} #{release_path}  | xargs chgrp #{group}"
 
-    # Oh what a steaming pile of monkey shit bundler is turning out to be.
-
-    run "ln -s #{File.join(shared_path, 'vendor/bundle')} #{File.join(current_path, 'vendor/bundle')}"
-    run "cd #{current_path}; bundle install --path vendor/bundle"   # it works better than capistrano rules considering nokogiri issues
-
   end
 
-  # We're giving up on doing this on remotely deployed systems - they are just too flaky.
-  # desc "Create documentation in public/internals via a rake task - tries yard, hanna, and rdoc"
-  # task :docs, :roles => :app do                     # generate fresh rdoc.
-  #   run "cd #{current_path}; rake docs"
-  #   run "chmod -R ug+rwX #{File.join(current_path, 'public', 'internals')}"
-  # end
+  # deprecated for now...
 
   desc "Run spec tests on the target host via rake - will use ci/reporter if available"
-  task :spec, :roles => :app do                     # run spec tests, ci
+  task :spec, :roles => :app 
     run "cd #{current_path}; RESOLVER_PROXY=#{test_proxy} rake spec"
   end
 end

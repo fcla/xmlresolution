@@ -14,8 +14,8 @@ you employ a caching proxy such as squid when used in a production
 environment.
 
 
-Envronment
-----------
+Environment
+-----------
 
 In your web server you should set up some environment variables:
 

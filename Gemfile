@@ -1,6 +1,21 @@
+# -*- mode: ruby; -*-
+
 source "http://rubygems.org"
 
 gem 'libxml-ruby', :require => 'libxml'
+
+# case RUBY_PLATFORM
+# when /darwin/i
+#   gem 'nokogiri', :path => '/Library/Ruby/Gems/1.8/gems/nokogiri-1.4.3.1/'
+# when /linux/i
+#   gem 'nokogiri', :path => '/opt/ruby-1.8.7/lib/ruby/gems/1.8/gems/nokogiri-1.4.4/'
+# else
+#   gem 'nokogiri',    '>= 1.4.1'
+# end
+
+# gemspec :name => 'nokogiri', :path => '/Library/Ruby/Gems/1.8/specifications/nokogiri-1.4.3.1.gemspec'
+# gem 'nokogiri', :path => '/Library/Ruby/Gems/1.8/gems/nokogiri-1.4.3.1/'
+# gem 'nokogiri', :path => '/Library/Ruby/Gems/1.8/specifications/'
 
 gem 'nokogiri',    '>= 1.4.1'
 gem 'sinatra',     '>= 1.0.0'

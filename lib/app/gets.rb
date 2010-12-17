@@ -11,7 +11,7 @@ get '/ieids' do
 end
 
 get '/ieids/' do
-  erb :ieids , :locals => { :collections =>  ResolverCollection.collections(options.data_path).sort }
+  erb :ieids , :locals => { :collections =>  ResolverCollection.collections(settings.data_path).sort }
 end
 
 # Return a tarfile of all of the schemas we've collected for the xml documents submitted
@@ -22,11 +22,11 @@ get '/ieids/:collection_id' do |collection_id|
 end
 
 get '/ieids/:collection_id/' do |collection_id|
-  raise Http404, "No such IEID #{collection_id}" unless ResolverCollection.collections(options.data_path).include? collection_id 
+  raise Http404, "No such IEID #{collection_id}" unless ResolverCollection.collections(settings.data_path).include? collection_id 
 
   attachment   "#{collection_id}.tar"
   content_type "application/x-tar"
-  ResolverCollection.new(options.data_path, collection_id).tar do |io|
+  ResolverCollection.new(settings.data_path, collection_id).tar do |io|
     io.read
   end
 end
@@ -34,10 +34,10 @@ end
 # Just the manifest xml file from a collection.
 
 get '/ieids/:collection_id/manifest.xml' do |collection_id|
-  raise Http404, "No such IEID #{collection_id}" unless ResolverCollection.collections(options.data_path).include? collection_id 
+  raise Http404, "No such IEID #{collection_id}" unless ResolverCollection.collections(settings.data_path).include? collection_id 
 
   content_type 'application/xml'
-  ResolverCollection.new(options.data_path, collection_id).manifest
+  ResolverCollection.new(settings.data_path, collection_id).manifest
 end
 
 # Documentation, built by rake and placed in the public folder.
@@ -53,7 +53,7 @@ get '/test' do
 end
 
 get '/test/' do
-  erb :test, :locals => { :collections => ResolverCollection.collections(options.data_path).sort }
+  erb :test, :locals => { :collections => ResolverCollection.collections(settings.data_path).sort }
 end
 
 get '/test-form/:collection_id/' do |collection_id|

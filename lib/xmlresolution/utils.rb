@@ -69,7 +69,7 @@ module ResolverUtils
   # write_lock FILEPATH [ WAIT_TIME = LOCK_TIMEOUT ]
   #
   # Access the file named by FILEPATH exclusively. FILEPATH does not
-  # have to exiust. Times out after LOCK_TIMEOUT (or the optional
+  # have to exist. Times out after LOCK_TIMEOUT (or the optional
   # WAIT_TIME, if specified) seconds, raising a LockError exception.
   # On successfully obtaining a lock we truncate the file, and yield a
   # file descriptor ready for writing.  On exiting the block the file

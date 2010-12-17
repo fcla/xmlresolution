@@ -8,6 +8,8 @@ require 'tmpdir'
 require 'xmlresolution/xml_resolver'
 require 'xmlresolution'                   # required for version.
 
+$KCODE = 'UTF8'
+
 include XmlResolution
 
 describe XmlResolver do  # and XmlResolverReloaded
@@ -75,11 +77,11 @@ describe XmlResolver do  # and XmlResolverReloaded
     @@resolver.document_text.should == text
     @@resolver.document_size.should == text.length
     @@resolver.document_identifier.should == Digest::MD5.hexdigest(text)
-    @@resolver.resolution_time.should be_close(Time.now, 30)
+    @@resolver.resolution_time.should be_within(30).of(Time.now)
   end
 
-  it "should not have any unresolved namespaces for our sample DAITSS descriptor XML file." do
-    @@resolver.unresolved_namespaces.should == []
+  it "should not have only UFLIB's unresolved namespace for our sample DAITSS descriptor XML file." do
+    @@resolver.unresolved_namespaces.should == ['http://digital.uflib.ufl.edu/metadata/ufdc2/']
   end
 
   it "should have a few unresolved namespaces for our example normalized file descriptor." do
@@ -98,6 +100,7 @@ describe XmlResolver do  # and XmlResolverReloaded
     # used the DAITSS validation tool to get what a standard XML validator would retrieve.
 
     required_successes = [
+                          "http://digital.uflib.ufl.edu/metadata/ufdc2/ufdc2.xsd",
                           "http://www.fcla.edu/dls/md/daitss/daitss.xsd",
                           "http://www.fcla.edu/dls/md/daitss/daitssAccount.xsd",
                           "http://www.fcla.edu/dls/md/daitss/daitssAccountProject.xsd",
@@ -170,7 +173,7 @@ describe XmlResolver do  # and XmlResolverReloaded
                           "http://www.loc.gov/standards/mods/v3/mods-3-3.xsd",
                           "http://www.loc.gov/standards/mods/xml.xsd",
                           "http://www.loc.gov/standards/xlink/xlink.xsd",
-                          "http://www.uflib.ufl.edu/digital/metadata/ufdc2/ufdc2.xsd",
+#                         "http://www.uflib.ufl.edu/digital/metadata/ufdc2/ufdc2.xsd", => replaced by http://digital.uflib.ufl.edu/... above
                           "http://www.w3.org/2001/XMLSchema.xsd",
                           "http://www.w3.org/2001/xml.xsd",
                          ]
@@ -179,7 +182,8 @@ describe XmlResolver do  # and XmlResolverReloaded
 
     required_redirects =  [
                            "http://www.loc.gov/mods/v3/mods-3-3.xsd",
-                           "http://www.loc.gov/mods/xml.xsd"
+                           "http://www.loc.gov/mods/xml.xsd",
+                           "http://www.uflib.ufl.edu/digital/metadata/ufdc2/ufdc2.xsd"
                           ]
 
     success_results  = []

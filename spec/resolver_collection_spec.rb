@@ -3,7 +3,7 @@ require 'xmlresolution/xml_resolver'
 require 'socket'
 require 'tempfile'
 
-# Hey Manny!
+$KCODE = 'UTF8'
 
 include XmlResolution
 

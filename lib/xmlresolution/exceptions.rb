@@ -1,6 +1,6 @@
 module XmlResolution
 
-  # Most named exceptions in the XmlResolution service we assign here
+  # Most named exceptions in the XmlResolution service we subclass here
   # to one of the HTTP classes.  Libraries are designed specifically
   # to be unaware of this mapping: they only use their specific low level
   # exceptions classes.
