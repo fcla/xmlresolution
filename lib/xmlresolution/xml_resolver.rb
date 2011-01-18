@@ -190,7 +190,7 @@ module XmlResolution
     #
     #   <?xml version="1.0" encoding="UTF-8"?>
     #   <premis xsi:schemaLocation="info:lc/xmlns/premis-v2 http://www.loc.gov/standards/premis/premis.xsd" 
-    #           version="2.0" 
+    #           version="2.1" 
     #           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     #           xmlns="info:lc/xmlns/premis-v2">
     #
@@ -257,7 +257,7 @@ module XmlResolution
     #     </agentIdentifier>
     #     <agentName>XML Resolution Service</agentName>
     #     <agentType>Web Service</agentType>
-    #     <agentNote xmlns="info:lc/xmlns/premis-v2-beta">
+    #     <agentNote>
     #        Version 1.0.0, Git Revision 8160e74815a0b633af5f03ee3b629e335a42960f, Capistrano Release 20100517050854.
     #     </agentNote>
     #   </agent>
@@ -295,7 +295,7 @@ module XmlResolution
       xml.premis('xmlns'              => 'info:lc/xmlns/premis-v2',
                  'xmlns:xsi'          => 'http://www.w3.org/2001/XMLSchema-instance',
                  'xsi:schemaLocation' => 'info:lc/xmlns/premis-v2 http://www.loc.gov/standards/premis/premis.xsd',
-                 'version'            => '2.0') {
+                 'version'            => '2.1') {
 
         # The object portion, strictly speaking, is not needed by DAITSS 2, it will be replaced.
         # However, it turns out to be useful validating the output, and may be useful in other
@@ -365,7 +365,7 @@ module XmlResolution
           }
           xml.agentName('XML Resolution Service')
           xml.agentType('Web Service')
-          xml.agentNote(XmlResolution.version.rev, :xmlns => 'info:lc/xmlns/premis-v2-beta')  # xmlns won't work: marker for Franco's tests.
+          xml.agentNote(XmlResolution.version.rev)                        
         }
       }
       xml.target!
