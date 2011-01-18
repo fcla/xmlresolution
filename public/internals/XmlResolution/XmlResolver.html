@@ -1689,7 +1689,7 @@ cause parsing problems.
   <span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='premis identifier id'>premis</span><span class='lparen token'>(</span><span class='string val'>'xmlns'</span>              <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'info:lc/xmlns/premis-v2'</span><span class='comma token'>,</span>
              <span class='string val'>'xmlns:xsi'</span>          <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'http://www.w3.org/2001/XMLSchema-instance'</span><span class='comma token'>,</span>
              <span class='string val'>'xsi:schemaLocation'</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'info:lc/xmlns/premis-v2 http://www.loc.gov/standards/premis/premis.xsd'</span><span class='comma token'>,</span>
-             <span class='string val'>'version'</span>            <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'2.0'</span><span class='rparen token'>)</span> <span class='lbrace token'>{</span>
+             <span class='string val'>'version'</span>            <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'2.1'</span><span class='rparen token'>)</span> <span class='lbrace token'>{</span>
 
     <span class='comment val'># The object portion, strictly speaking, is not needed by DAITSS 2, it will be replaced.</span>
     <span class='comment val'># However, it turns out to be useful validating the output, and may be useful in other</span>
@@ -1759,7 +1759,7 @@ cause parsing problems.
       <span class='rbrace token'>}</span>
       <span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='agentName identifier id'>agentName</span><span class='lparen token'>(</span><span class='string val'>'XML Resolution Service'</span><span class='rparen token'>)</span>
       <span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='agentType identifier id'>agentType</span><span class='lparen token'>(</span><span class='string val'>'Web Service'</span><span class='rparen token'>)</span>
-      <span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='agentNote identifier id'>agentNote</span><span class='lparen token'>(</span><span class='XmlResolution constant id'>XmlResolution</span><span class='dot token'>.</span><span class='version identifier id'>version</span><span class='dot token'>.</span><span class='rev identifier id'>rev</span><span class='comma token'>,</span> <span class='symbol val'>:xmlns</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'info:lc/xmlns/premis-v2-beta'</span><span class='rparen token'>)</span>  <span class='comment val'># xmlns won't work: marker for Franco's tests.</span>
+      <span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='agentNote identifier id'>agentNote</span><span class='lparen token'>(</span><span class='XmlResolution constant id'>XmlResolution</span><span class='dot token'>.</span><span class='version identifier id'>version</span><span class='dot token'>.</span><span class='rev identifier id'>rev</span><span class='rparen token'>)</span>                        
     <span class='rbrace token'>}</span>
   <span class='rbrace token'>}</span>
   <span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='target! fid id'>target!</span>
@@ -2009,7 +2009,7 @@ resolve.
 </div>
     
     <div id="footer">
-  Generated on Fri Dec 17 14:14:24 2010 by 
+  Generated on Tue Jan 18 17:34:51 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>
