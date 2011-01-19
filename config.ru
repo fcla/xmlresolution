@@ -1,6 +1,6 @@
 # -*- mode: ruby; -*-
 
-# require 'bundler/setup'  TODO: fix bundler setup
+require 'bundler/setup'
 
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
 

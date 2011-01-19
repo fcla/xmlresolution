@@ -12,4 +12,3 @@ data
 shared
 spec/reports
 vendor
-Gemfile.lock

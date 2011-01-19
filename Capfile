@@ -10,7 +10,7 @@
 require 'rubygems'
 require 'railsless-deploy'
 
-# require 'bundler/capistrano'   - can't get nokogiri to be compiled nor used from the system gems. more work to do.
+require 'bundler/capistrano'
 
 set :bundle_flags,       "--deployment"
 set :bundle_without,      []
