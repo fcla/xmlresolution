@@ -41,6 +41,13 @@ set :domain,     _domain
 
 usage 'The test_proxy was not set (e.g. test_proxy=sake.fcla.edu:3128).' unless variables[:test_proxy]
 
+
+if (variables[:who] and variables[:who] =~ %r{.*:.*})
+  _user, _group = variables[:who].split(':', 2)
+  set :user,  _user
+  set :group, _group
+end
+
 role :app, domain
 
 # After we've successfully updated, we run these tasks: layout sets up
