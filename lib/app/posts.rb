@@ -19,7 +19,7 @@ post '/ieids/:collection_id/' do |collection_id|
 
     client = ResolverUtils.remote_name env['REMOTE_ADDR']
 
-    file_url = "file://#{client}/#{filename.gsub(%r(^/+), '')}"
+    file_url = "file://#{client}/#{collection_id}/#{filename.gsub(%r(^/+), '')}"
 
     Logger.info "Handling uploaded document #{file_url}.", @env
 
