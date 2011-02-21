@@ -1,30 +1,27 @@
 # -*- mode:ruby; -*-
 #
-#  Set deploy target host/filesystem and test proxy to use from cap command line as so:
+#  Set deploy target host/filesystem and install user/group to use from cap command line as so:
 #
-#  cap deploy  -S target=ripple.fcla.edu:/opt/web-services/sies/xmlresolution  -S test_proxy=sake.fcla.edu:3128
+#  cap deploy  -S target=ripple.fcla.edu:/opt/web-services/sies/xmlresolution -S who=daitss:daitss
 #
-#  The test-proxy is used only in remote spec tests.
-#  One can over-ride user and group settings using -S who=user:group
 
 require 'rubygems'
 require 'railsless-deploy'
-
 require 'bundler/capistrano'
 
-set :bundle_flags,       "--deployment"
-set :bundle_without,      []
+set :bundle_flags,      "--deployment"
+set :bundle_without,    []
 
 set :repository,        "http://github.com/daitss/xmlresolution.git"
 set :scm,               "git"
 set :branch,            "master"
 
 set :use_sudo,          false
-set :user,              "xmlrez" #     unless variables[:user] - deprecated, see below
+set :user,              "xmlrez"
 set :group,             "daitss"
 
 def usage(*messages)
-  STDERR.puts "Usage: cap deploy -S target=<host:filesystem> -S test_proxy=sake.fcla.edu:3128"  
+  STDERR.puts "Usage: cap deploy -S target=<host:filesystem> -S who=<user:group>"
   STDERR.puts messages.join("\n")
   STDERR.puts "You may set the remote user and group by using -S who=<user:group>. Defaults to #{user}:#{group}."
   STDERR.puts "If you set the user, you must be able to ssh to the target host as that user."
@@ -38,9 +35,6 @@ _domain, _filesystem = variables[:target].split(':', 2)
 
 set :deploy_to,  _filesystem
 set :domain,     _domain
-
-usage 'The test_proxy was not set (e.g. test_proxy=sake.fcla.edu:3128).' unless variables[:test_proxy]
-
 
 if (variables[:who] and variables[:who] =~ %r{.*:.*})
   _user, _group = variables[:who].split(':', 2)
