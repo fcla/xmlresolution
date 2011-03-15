@@ -458,15 +458,12 @@ to five redirections by default.
 223
 224
 225
-226
-227</pre>
+226</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/schema_catalog.rb', line 205</span>
 
 <span class='def def kw'>def</span> <span class='fetch identifier id'>fetch</span> <span class='location identifier id'>location</span><span class='comma token'>,</span> <span class='limit identifier id'>limit</span> <span class='assign token'>=</span> <span class='integer val'>5</span>
-
-  <span class='comment val'># TODO: add logging here</span>
 
   <span class='uri identifier id'>uri</span> <span class='assign token'>=</span> <span class='URI constant id'>URI</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span> <span class='location identifier id'>location</span>
 
@@ -486,6 +483,7 @@ to five redirections by default.
       <span class='response identifier id'>response</span><span class='dot token'>.</span><span class='error! fid id'>error!</span>
     <span class='end end kw'>end</span>
   <span class='end end kw'>end</span>
+
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -535,13 +533,13 @@ readable.
       <pre class="lines">
 
 
+233
 234
 235
-236
-237</pre>
+236</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/schema_catalog.rb', line 234</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/schema_catalog.rb', line 233</span>
 
 <span class='def def kw'>def</span> <span class='file_recorded? fid id'>file_recorded?</span> <span class='filename identifier id'>filename</span><span class='comma token'>,</span> <span class='mtime identifier id'>mtime</span><span class='comma token'>,</span> <span class='digest identifier id'>digest</span>
   <span class='return return kw'>return</span> <span class='false false kw'>false</span> <span class='unless unless_mod kw'>unless</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='exists? fid id'>exists?</span><span class='lparen token'>(</span><span class='filename identifier id'>filename</span><span class='rparen token'>)</span>
@@ -640,7 +638,7 @@ description of the @schema_dictionary instance variable for the details.
 
   <span class='return return kw'>return</span> <span class='record identifier id'>record</span>
 
-<span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
+<span class='rescue rescue kw'>rescue</span> <span class='Exception constant id'>Exception</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
   <span class='record identifier id'>record</span><span class='dot token'>.</span><span class='retrieval_status identifier id'>retrieval_status</span> <span class='assign token'>=</span> <span class='symbol val'>:failure</span>
   <span class='record identifier id'>record</span><span class='dot token'>.</span><span class='error_message identifier id'>error_message</span>    <span class='assign token'>=</span> <span class='e identifier id'>e</span><span class='dot token'>.</span><span class='message identifier id'>message</span>   <span class='comment val'># It is the calling program's responsibility to log this error</span>
   <span class='return return kw'>return</span> <span class='record identifier id'>record</span>                         <span class='comment val'># when appropriate; use the schemas method for iterating over</span>
@@ -817,7 +815,7 @@ while being iterated over, as in the following example:
 </div>
     
     <div id="footer">
-  Generated on Tue Jan 18 17:34:47 2011 by 
+  Generated on Tue Mar 15 15:44:13 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

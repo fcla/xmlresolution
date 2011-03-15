@@ -56,11 +56,6 @@ after "deploy:update", "deploy:layout", "deploy:restart"
 
 namespace :deploy do
 
-  desc "Touch the tmp/restart.txt file on the target host, which signals passenger phusion to reload the app"
-  task :restart, :roles => :app, :except => { :no_release => true } do  # passenger phusion restarts when it detects this sentinel file  has changed mtime
-    run "touch #{File.join(current_path, 'tmp', 'restart.txt')}"
-  end
-  
   desc "Create the directory hierarchy, as necessary, on the target host"
   task :layout, :roles => :app do
 
@@ -74,12 +69,6 @@ namespace :deploy do
     run "find #{shared_path} #{release_path}  | xargs chgrp #{group}"
   end
 
-  # deprecated for now in the above 'after' clause:
-
-  desc "Run spec tests on the target host via rake - will use ci/reporter if available"
-  task :spec, :roles => :app do
-    run "cd #{current_path}; RESOLVER_PROXY=#{test_proxy} rake spec"
-  end
 
 end
 

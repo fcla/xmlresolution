@@ -1,0 +1,6 @@
+This directory is for passenger phusion (aka apache mod_ruby) support. If you 
+
+   touch restart.txt
+
+then the web application will be restarted automatically.  It can be safely
+removed if you are not using phusion.

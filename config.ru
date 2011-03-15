@@ -13,6 +13,7 @@ $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
 # defaults in this file:
 #
 # <VirtualHost *:80>
+#   KeppAlive Off
 #   ServerName xmlresolution.example.com
 #   DocumentRoot ".../xmlresolution/public"
 #   SetEnv RESOLVER_PROXY sake.fcla.edu:3128

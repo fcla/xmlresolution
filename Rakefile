@@ -34,10 +34,12 @@ Spec::Rake::SpecTask.new do |task|
   task.rcov = true if dev_host   # do coverage tests on my devlopment box
 end
 
+desc "deploy to darchive's production xmlresolver"
+task :darchive do
+    sh "cap deploy -S target=darchive:/opt/web-services/sites/xmlresolution -S who=fischer:daitss"
+end
 
-# The following technique is deprecated;  bundler makes this a bit harder than it should be (hanna
-# might be installed, say, but bundler won't let us use it unless we've bundled it).  Instead,
-# just include the yardocs with the git distribution.
+# Documentation support on deployed hosts is so iffy that we distribute our own
 
 desc "Generate documentation from libraries - try yardoc, hanna, rdoc, in that order."
 task :docs do
