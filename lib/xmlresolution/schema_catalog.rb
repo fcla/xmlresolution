@@ -190,7 +190,7 @@ module XmlResolution
 
       return record
 
-    rescue => e
+    rescue Exception => e
       record.retrieval_status = :failure
       record.error_message    = e.message   # It is the calling program's responsibility to log this error
       return record                         # when appropriate; use the schemas method for iterating over
@@ -203,8 +203,6 @@ module XmlResolution
     # Permit up to five redirections by default.
 
     def fetch location, limit = 5
-
-      # TODO: add logging here
 
       uri = URI.parse location
 
@@ -224,6 +222,7 @@ module XmlResolution
           response.error!
         end
       end
+
     end # of fetch
 
     # file_recorded? FILENAME, MTIME, DIGEST

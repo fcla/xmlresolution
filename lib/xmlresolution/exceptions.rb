@@ -165,7 +165,7 @@ module XmlResolution
   
   # BadXmlDocument exception, client's fault (subclasses Http400): Instance document could not be parsed..
 
-  class BadXmlDocument      < Http400; end            
+  class BadXmlDocument      < Http415; end            
 
   # BadBadXmlDocument exception, client's fault (subclasses BadXmlDocument): ..it *really* could not be parsed
 
