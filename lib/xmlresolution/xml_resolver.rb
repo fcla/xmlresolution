@@ -167,8 +167,8 @@ module XmlResolution
       @schemas_storage_directory     = File.join(data_root, 'schemas')
       @collections_storage_directory = File.join(data_root, 'collections')
       
-      ResolverUtils.check_directory "The schemas storage directory",     schemas_storage_directory  # raise ConfigurationError if issue
-      ResolverUtils.check_directory "The document collection directory", collections_storage_directory
+      ResolverUtils.check_directory "The schemas storage directory",     schemas_storage_directory        # raises ConfigurationError if permissions issues
+      ResolverUtils.check_directory "The document collection directory", collections_storage_directory    # ditto
       
       raise InadequateDataError, "XML document #{document_uri} was empty" if document_size == 0
 

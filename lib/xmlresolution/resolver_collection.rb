@@ -278,7 +278,7 @@ module XmlResolution
 
       tarwriter = XmlResolution::TarWriter.new(io, { :uid => 80, :gid => 80, :username => 'daitss', :groupname => 'daitss' })
       manifest_file(rs) { |path| tarwriter.write path, File.join(collection_name, 'manifest.xml') }
-      schemas(rs) { |localpath, url|  tarwriter.write localpath, File.join(collection_name, url) }
+      schemas(rs) { |localpath, url|  tarwriter.write localpath, File.join(collection_name, url.gsub(':', '/').gsub(%r{//+}, '/')) }
 
       tarwriter.close  # closes io as side effect
 

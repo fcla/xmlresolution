@@ -44,15 +44,8 @@ end
 
 role :app, domain
 
-# After we've successfully updated, we run these tasks: layout sets up
-# the directory structure and runs bundle to install our own gem
-# dependencies; docs builds library documentation into
-# public/internals/; restart touches the file that instructs passenger
-# phusion to restart the app; spec runs the spec tests.
 
-# after "deploy:update", "deploy:layout", "deploy:spec", "deploy:restart"
-
-after "deploy:update", "deploy:layout", "deploy:restart"
+after "deploy:update", "deploy:layout"
 
 namespace :deploy do
 

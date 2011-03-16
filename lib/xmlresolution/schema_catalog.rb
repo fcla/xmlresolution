@@ -186,8 +186,6 @@ module XmlResolution
         end
       end
 
-      ### TODO: write a log in the schemas directory with time, location, and digest
-
       return record
 
     rescue Exception => e
