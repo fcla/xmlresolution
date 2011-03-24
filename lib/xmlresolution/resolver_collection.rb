@@ -13,8 +13,9 @@ module XmlResolution
   # service.  It maintains a set of collection identifiers supplied by
   # the client, and uses the XmlResolution::XmlResolver class to
   # associate documents and the schemas necessary to validate them
-  # with this collection identifier. All of a set of documents
-  # resolved schemas can be retrieved in a per-collection tarfile.
+  # with this collection identifier. The resolved schemas for an
+  # entire set of documents can be retrieved in a per-collection
+  # tarfile.
   #
   # Example usage: write a mainfest file for the collection 'foo'; the
   # collections are stored under '/var/data'
@@ -40,7 +41,7 @@ module XmlResolution
 
     # Last-modified time after which we'll delete collections as being stale.
 
-    TOO_LONG_SINCE_LAST_MODIFIED = 14 * 24 * 60 * 60  # One fortnight
+    TOO_LONG_SINCE_LAST_MODIFIED = 24 * 60 * 60  # One Day
 
     # The client-supplied id for grouping a collection of XML documents.
 
