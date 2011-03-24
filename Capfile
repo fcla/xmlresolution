@@ -52,7 +52,7 @@ namespace :deploy do
   desc "Create the directory hierarchy, as necessary, on the target host"
   task :layout, :roles => :app do
 
-    ['collections', 'schemas', 'vendor/bundle'].each do |dir|  # want to preserve existing data, so keep state files in the shared directory
+    ['collections', 'schemas', 'bundle'].each do |dir|  # want to preserve existing data, so keep state files in the shared directory
       realname = File.join(shared_path, dir)
       run "mkdir -p #{realname}"
       run "chmod -R ug+rwX #{realname}"

@@ -84,6 +84,18 @@ task :etags do
   `xctags -e #{files}`
 end
 
+desc "deploy to darchive's production site (xmlresolution.fda.fcla.edu)"
+task :darchive_production do
+    sh "cap deploy -S target=darchive:/opt/web-services/sites/xmlresolution -S who=fischer:daitss"
+end
+
+desc "deploy to ripple's test site (xmlresolution.ripple.fcla.edu)"
+task :ripple_test do
+    sh "cap deploy -S target=ripple:/opt/web-services/sites/xmlresolution -S who=xmlrez:daitss"
+end
+
+
+
 defaults = [:restart, :spec]
 defaults.push :etags   if dev_host
 
