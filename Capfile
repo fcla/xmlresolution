@@ -17,7 +17,7 @@ set :scm,               "git"
 set :branch,            "master"
 
 set :use_sudo,          false
-set :user,              "xmlrez"
+set :user,              "daitss"
 set :group,             "daitss"
 
 def usage(*messages)

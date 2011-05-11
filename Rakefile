@@ -36,7 +36,7 @@ end
 
 desc "deploy to darchive's production xmlresolver"
 task :darchive do
-    sh "cap deploy -S target=darchive:/opt/web-services/sites/xmlresolution -S who=fischer:daitss"
+    sh "cap deploy -S target=darchive:/opt/web-services/sites/xmlresolution -S who=daitss:daitss"
 end
 
 # Documentation support on deployed hosts is so iffy that we distribute our own
@@ -77,6 +77,14 @@ task :restart do
   end
 end
 
+# Build local bundled Gems; 
+
+desc "Gem bundles"
+task :bundle do
+  sh "bundle install --path vendor/bundle"
+end
+
+
 desc "Make emacs tags files"
 task :etags do
   files = (FileList['lib/**/*', "tools/**/*", 'views/**/*', 'spec/**/*', 'bin/**/*']).exclude('*/xmlvalidator.jar', 'spec/files', 'spec/reports')        # run yard/hanna/rdoc on these and..
@@ -86,12 +94,22 @@ end
 
 desc "deploy to darchive's production site (xmlresolution.fda.fcla.edu)"
 task :darchive_production do
-    sh "cap deploy -S target=darchive:/opt/web-services/sites/xmlresolution -S who=fischer:daitss"
+    sh "cap deploy -S target=darchive.fcla.edu:/opt/web-services/sites/xmlresolution -S who=fischer:daitss"
+end
+
+desc "deploy to development site (xmlresolution.dev.fcla.edu)"
+task :retsina do
+    sh "cap deploy -S target=retsina.fcla.edu:/opt/web-services/sites/xmlresolution -S who=fischer:daitss"
 end
 
 desc "deploy to ripple's test site (xmlresolution.ripple.fcla.edu)"
 task :ripple_test do
-    sh "cap deploy -S target=ripple:/opt/web-services/sites/xmlresolution -S who=xmlrez:daitss"
+    sh "cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/xmlresolution -S who=xmlrez:daitss"
+end
+
+desc "deploy to tarchive's coop (xmlresolution.tarchive.fcla.edu?)"
+task :tarchive_coop do
+    sh "cap deploy -S target=tarchive.fcla.edu:/opt/web-services/sites/xmlresolution -S who=daitss:daitss"
 end
 
 
