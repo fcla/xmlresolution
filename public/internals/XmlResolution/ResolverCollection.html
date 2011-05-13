@@ -88,9 +88,9 @@ Initial Author: Randy Fischer (rf@ufl.edu) for DAITSS
 This class stores and retrieves information for the XmlResolution service. 
 It maintains a set of collection identifiers supplied by the client, and
 uses the XmlResolution::XmlResolver class to associate documents and the
-schemas necessary to validate them with this collection identifier. All of
-a set of documents resolved schemas can be retrieved in a per-collection
-tarfile.
+schemas necessary to validate them with this collection identifier. The
+resolved schemas for an entire set of documents can be retrieved in a
+per-collection tarfile.
 </p>
 <p>
 Example usage: write a mainfest file for the collection &#8216;foo&#8217;;
@@ -141,7 +141,7 @@ stale.
   
 </div>
         </dt>
-        <dd><pre class="code"><span class='integer val'>14</span> <span class='mult op'>*</span> <span class='integer val'>24</span> <span class='mult op'>*</span> <span class='integer val'>60</span> <span class='mult op'>*</span> <span class='integer val'>60</span>
+        <dd><pre class="code"><span class='integer val'>24</span> <span class='mult op'>*</span> <span class='integer val'>60</span> <span class='mult op'>*</span> <span class='integer val'>60</span>
 </pre></dd>
       
     </dl>
@@ -579,7 +579,6 @@ end
       <pre class="lines">
 
 
-117
 118
 119
 120
@@ -595,10 +594,11 @@ end
 130
 131
 132
-133</pre>
+133
+134</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 117</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 118</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='pathname identifier id'>pathname</span><span class='comma token'>,</span> <span class='collection_name identifier id'>collection_name</span>
 
@@ -655,12 +655,12 @@ The client-supplied id for grouping a collection of XML documents.
       <pre class="lines">
 
 
-47
 48
-49</pre>
+49
+50</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 47</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 48</span>
 
 <span class='def def kw'>def</span> <span class='collection_name identifier id'>collection_name</span>
   <span class='@collection_name ivar id'>@collection_name</span>
@@ -699,12 +699,12 @@ will be a subdirectory of this.
       <pre class="lines">
 
 
-78
 79
-80</pre>
+80
+81</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 78</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 79</span>
 
 <span class='def def kw'>def</span> <span class='collections_path identifier id'>collections_path</span>
   <span class='@collections_path ivar id'>@collections_path</span>
@@ -765,12 +765,12 @@ schemas and collections all live. Say it is named
       <pre class="lines">
 
 
-73
 74
-75</pre>
+75
+76</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 73</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 74</span>
 
 <span class='def def kw'>def</span> <span class='data_path identifier id'>data_path</span>
   <span class='@data_path ivar id'>@data_path</span>
@@ -808,12 +808,12 @@ The top-level path where we store downloaded schemas.
       <pre class="lines">
 
 
-82
 83
-84</pre>
+84
+85</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 82</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 83</span>
 
 <span class='def def kw'>def</span> <span class='schemas_path identifier id'>schemas_path</span>
   <span class='@schemas_path ivar id'>@schemas_path</span>
@@ -859,7 +859,6 @@ that haven&#8217;t been updated in a while.
       <pre class="lines">
 
 
-334
 335
 336
 337
@@ -867,10 +866,11 @@ that haven&#8217;t been updated in a while.
 339
 340
 341
-342</pre>
+342
+343</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 334</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 335</span>
 
 <span class='def def kw'>def</span> <span class='ResolverCollection constant id'>ResolverCollection</span><span class='dot token'>.</span><span class='age_out_collections identifier id'>age_out_collections</span>  <span class='collections_pathname identifier id'>collections_pathname</span>
   <span class='Dir constant id'>Dir</span><span class='lbrack token'>[</span><span class='dstring node'>&quot;#{collections_pathname}/*&quot;</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='dir identifier id'>dir</span><span class='bitor op'>|</span>
@@ -930,16 +930,16 @@ constructor.
       <pre class="lines">
 
 
-91
 92
 93
 94
 95
 96
-97</pre>
+97
+98</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 91</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 92</span>
 
 <span class='def def kw'>def</span> <span class='ResolverCollection constant id'>ResolverCollection</span><span class='dot token'>.</span><span class='collections identifier id'>collections</span> <span class='pathname identifier id'>pathname</span>
   <span class='raise identifier id'>raise</span> <span class='XmlResolution constant id'>XmlResolution</span><span class='colon2 op'>::</span><span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='string val'>&quot;The root data path has not been set&quot;</span> <span class='unless unless_mod kw'>unless</span> <span class='pathname identifier id'>pathname</span>
@@ -992,7 +992,6 @@ the XmlReslolver#dump method for documentation on its contents.
       <pre class="lines">
 
 
-354
 355
 356
 357
@@ -1003,10 +1002,11 @@ the XmlReslolver#dump method for documentation on its contents.
 362
 363
 364
-365</pre>
+365
+366</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 354</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 355</span>
 
 <span class='def def kw'>def</span> <span class='collection_documents identifier id'>collection_documents</span>
   <span class='ResolverCollection constant id'>ResolverCollection</span><span class='dot token'>.</span><span class='age_out_collections identifier id'>age_out_collections</span> <span class='collections_path identifier id'>collections_path</span>
@@ -1055,12 +1055,12 @@ filesystem layout.
       <pre class="lines">
 
 
-325
 326
-327</pre>
+327
+328</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 325</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 326</span>
 
 <span class='def def kw'>def</span> <span class='collection_documents_path identifier id'>collection_documents_path</span>
   <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='collections_path identifier id'>collections_path</span><span class='comma token'>,</span> <span class='collection_name identifier id'>collection_name</span><span class='rparen token'>)</span>
@@ -1181,7 +1181,6 @@ created the array of XmlResolver objects for its own use).
       <pre class="lines">
 
 
-220
 221
 222
 223
@@ -1213,10 +1212,11 @@ created the array of XmlResolver objects for its own use).
 249
 250
 251
-252</pre>
+252
+253</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 220</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 221</span>
 
 <span class='def def kw'>def</span> <span class='manifest identifier id'>manifest</span> <span class='collection_resolutions identifier id'>collection_resolutions</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
   <span class='collection_resolutions identifier id'>collection_resolutions</span> <span class='opasgn op'>||=</span> <span class='resolutions identifier id'>resolutions</span><span class='lparen token'>(</span><span class='rparen token'>)</span>  
@@ -1285,7 +1285,6 @@ that files pathname.
       <pre class="lines">
 
 
-309
 310
 311
 312
@@ -1293,10 +1292,11 @@ that files pathname.
 314
 315
 316
-317</pre>
+317
+318</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 309</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 310</span>
 
 <span class='def def kw'>def</span> <span class='manifest_file identifier id'>manifest_file</span> <span class='collection_resolutions identifier id'>collection_resolutions</span>
   <span class='Tempfile constant id'>Tempfile</span><span class='dot token'>.</span><span class='open identifier id'>open</span><span class='lparen token'>(</span><span class='dstring node'>&quot;manifest-#{collection_name}-xml-&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='tmp identifier id'>tmp</span><span class='bitor op'>|</span>
@@ -1341,12 +1341,12 @@ documents that have been successfully submitted to this collection.
       <pre class="lines">
 
 
-298
 299
-300</pre>
+300
+301</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 298</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 299</span>
 
 <span class='def def kw'>def</span> <span class='resolutions identifier id'>resolutions</span>
   <span class='collection_documents identifier id'>collection_documents</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='id identifier id'>id</span><span class='bitor op'>|</span>  <span class='XmlResolverReloaded constant id'>XmlResolverReloaded</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='data_path identifier id'>data_path</span><span class='comma token'>,</span> <span class='collection_name identifier id'>collection_name</span><span class='comma token'>,</span> <span class='id identifier id'>id</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
@@ -1391,7 +1391,6 @@ out.
       <pre class="lines">
 
 
-377
 378
 379
 380
@@ -1401,10 +1400,11 @@ out.
 384
 385
 386
-387</pre>
+387
+388</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 377</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 378</span>
 
 <span class='def def kw'>def</span> <span class='schemas identifier id'>schemas</span> <span class='document_resolutions identifier id'>document_resolutions</span>
   <span class='seen identifier id'>seen</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>      
@@ -1480,7 +1480,6 @@ tempfile is deleted after exiting the tar block.
       <pre class="lines">
 
 
-275
 276
 277
 278
@@ -1495,10 +1494,11 @@ tempfile is deleted after exiting the tar block.
 287
 288
 289
-290</pre>
+290
+291</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 275</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/resolver_collection.rb', line 276</span>
 
 <span class='def def kw'>def</span> <span class='tar identifier id'>tar</span>
   <span class='io identifier id'>io</span> <span class='assign token'>=</span> <span class='Tempfile constant id'>Tempfile</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='string val'>'XmlResolution-TarFile-'</span>
@@ -1506,7 +1506,7 @@ tempfile is deleted after exiting the tar block.
 
   <span class='tarwriter identifier id'>tarwriter</span> <span class='assign token'>=</span> <span class='XmlResolution constant id'>XmlResolution</span><span class='colon2 op'>::</span><span class='TarWriter constant id'>TarWriter</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='io identifier id'>io</span><span class='comma token'>,</span> <span class='lbrace token'>{</span> <span class='symbol val'>:uid</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>80</span><span class='comma token'>,</span> <span class='symbol val'>:gid</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>80</span><span class='comma token'>,</span> <span class='symbol val'>:username</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'daitss'</span><span class='comma token'>,</span> <span class='symbol val'>:groupname</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'daitss'</span> <span class='rbrace token'>}</span><span class='rparen token'>)</span>
   <span class='manifest_file identifier id'>manifest_file</span><span class='lparen token'>(</span><span class='rs identifier id'>rs</span><span class='rparen token'>)</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='path identifier id'>path</span><span class='bitor op'>|</span> <span class='tarwriter identifier id'>tarwriter</span><span class='dot token'>.</span><span class='write identifier id'>write</span> <span class='path identifier id'>path</span><span class='comma token'>,</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='collection_name identifier id'>collection_name</span><span class='comma token'>,</span> <span class='string val'>'manifest.xml'</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
-  <span class='schemas identifier id'>schemas</span><span class='lparen token'>(</span><span class='rs identifier id'>rs</span><span class='rparen token'>)</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='localpath identifier id'>localpath</span><span class='comma token'>,</span> <span class='url identifier id'>url</span><span class='bitor op'>|</span>  <span class='tarwriter identifier id'>tarwriter</span><span class='dot token'>.</span><span class='write identifier id'>write</span> <span class='localpath identifier id'>localpath</span><span class='comma token'>,</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='collection_name identifier id'>collection_name</span><span class='comma token'>,</span> <span class='url identifier id'>url</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
+  <span class='schemas identifier id'>schemas</span><span class='lparen token'>(</span><span class='rs identifier id'>rs</span><span class='rparen token'>)</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='localpath identifier id'>localpath</span><span class='comma token'>,</span> <span class='url identifier id'>url</span><span class='bitor op'>|</span>  <span class='tarwriter identifier id'>tarwriter</span><span class='dot token'>.</span><span class='write identifier id'>write</span> <span class='localpath identifier id'>localpath</span><span class='comma token'>,</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='collection_name identifier id'>collection_name</span><span class='comma token'>,</span> <span class='url identifier id'>url</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='string val'>':'</span><span class='comma token'>,</span> <span class='string val'>'/'</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='regexp val'>%r{//+}</span><span class='comma token'>,</span> <span class='string val'>'/'</span><span class='rparen token'>)</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
 
   <span class='tarwriter identifier id'>tarwriter</span><span class='dot token'>.</span><span class='close identifier id'>close</span>  <span class='comment val'># closes io as side effect</span>
 
@@ -1527,7 +1527,7 @@ tempfile is deleted after exiting the tar block.
 </div>
     
     <div id="footer">
-  Generated on Tue Mar 15 15:44:19 2011 by 
+  Generated on Thu May 12 23:35:19 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

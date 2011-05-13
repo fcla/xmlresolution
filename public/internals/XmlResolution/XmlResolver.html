@@ -818,8 +818,8 @@ proxy, to allow a caching proxy to be used.
   <span class='@schemas_storage_directory ivar id'>@schemas_storage_directory</span>     <span class='assign token'>=</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='data_root identifier id'>data_root</span><span class='comma token'>,</span> <span class='string val'>'schemas'</span><span class='rparen token'>)</span>
   <span class='@collections_storage_directory ivar id'>@collections_storage_directory</span> <span class='assign token'>=</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='data_root identifier id'>data_root</span><span class='comma token'>,</span> <span class='string val'>'collections'</span><span class='rparen token'>)</span>
   
-  <span class='ResolverUtils constant id'>ResolverUtils</span><span class='dot token'>.</span><span class='check_directory identifier id'>check_directory</span> <span class='string val'>&quot;The schemas storage directory&quot;</span><span class='comma token'>,</span>     <span class='schemas_storage_directory identifier id'>schemas_storage_directory</span>  <span class='comment val'># raise ConfigurationError if issue</span>
-  <span class='ResolverUtils constant id'>ResolverUtils</span><span class='dot token'>.</span><span class='check_directory identifier id'>check_directory</span> <span class='string val'>&quot;The document collection directory&quot;</span><span class='comma token'>,</span> <span class='collections_storage_directory identifier id'>collections_storage_directory</span>
+  <span class='ResolverUtils constant id'>ResolverUtils</span><span class='dot token'>.</span><span class='check_directory identifier id'>check_directory</span> <span class='string val'>&quot;The schemas storage directory&quot;</span><span class='comma token'>,</span>     <span class='schemas_storage_directory identifier id'>schemas_storage_directory</span>        <span class='comment val'># raises ConfigurationError if permissions issues</span>
+  <span class='ResolverUtils constant id'>ResolverUtils</span><span class='dot token'>.</span><span class='check_directory identifier id'>check_directory</span> <span class='string val'>&quot;The document collection directory&quot;</span><span class='comma token'>,</span> <span class='collections_storage_directory identifier id'>collections_storage_directory</span>    <span class='comment val'># ditto</span>
   
   <span class='raise identifier id'>raise</span> <span class='InadequateDataError constant id'>InadequateDataError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;XML document #{document_uri} was empty&quot;</span> <span class='if if_mod kw'>if</span> <span class='document_size identifier id'>document_size</span> <span class='eq op'>==</span> <span class='integer val'>0</span>
 
@@ -2009,7 +2009,7 @@ resolve.
 </div>
     
     <div id="footer">
-  Generated on Tue Mar 15 15:44:16 2011 by 
+  Generated on Thu May 12 23:35:10 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

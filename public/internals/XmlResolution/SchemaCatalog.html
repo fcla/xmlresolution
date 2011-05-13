@@ -437,6 +437,8 @@ to five redirections by default.
       <pre class="lines">
 
 
+203
+204
 205
 206
 207
@@ -456,12 +458,10 @@ to five redirections by default.
 221
 222
 223
-224
-225
-226</pre>
+224</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/schema_catalog.rb', line 205</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/schema_catalog.rb', line 203</span>
 
 <span class='def def kw'>def</span> <span class='fetch identifier id'>fetch</span> <span class='location identifier id'>location</span><span class='comma token'>,</span> <span class='limit identifier id'>limit</span> <span class='assign token'>=</span> <span class='integer val'>5</span>
 
@@ -533,13 +533,13 @@ readable.
       <pre class="lines">
 
 
+231
+232
 233
-234
-235
-236</pre>
+234</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/schema_catalog.rb', line 233</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/schema_catalog.rb', line 231</span>
 
 <span class='def def kw'>def</span> <span class='file_recorded? fid id'>file_recorded?</span> <span class='filename identifier id'>filename</span><span class='comma token'>,</span> <span class='mtime identifier id'>mtime</span><span class='comma token'>,</span> <span class='digest identifier id'>digest</span>
   <span class='return return kw'>return</span> <span class='false false kw'>false</span> <span class='unless unless_mod kw'>unless</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='exists? fid id'>exists?</span><span class='lparen token'>(</span><span class='filename identifier id'>filename</span><span class='rparen token'>)</span>
@@ -607,9 +607,7 @@ description of the @schema_dictionary instance variable for the details.
 192
 193
 194
-195
-196
-197</pre>
+195</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/schema_catalog.rb', line 169</span>
@@ -633,8 +631,6 @@ description of the @schema_dictionary instance variable for the details.
       <span class='File constant id'>File</span><span class='dot token'>.</span><span class='utime identifier id'>utime</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='atime identifier id'>atime</span><span class='lparen token'>(</span><span class='record identifier id'>record</span><span class='dot token'>.</span><span class='localpath identifier id'>localpath</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='record identifier id'>record</span><span class='dot token'>.</span><span class='last_modified identifier id'>last_modified</span><span class='comma token'>,</span> <span class='record identifier id'>record</span><span class='dot token'>.</span><span class='localpath identifier id'>localpath</span><span class='rparen token'>)</span>
     <span class='end end kw'>end</span>
   <span class='end end kw'>end</span>
-
-  <span class='comment val'>### TODO: write a log in the schemas directory with time, location, and digest</span>
 
   <span class='return return kw'>return</span> <span class='record identifier id'>record</span>
 
@@ -815,7 +811,7 @@ while being iterated over, as in the following example:
 </div>
     
     <div id="footer">
-  Generated on Tue Mar 15 15:44:13 2011 by 
+  Generated on Thu May 12 23:35:01 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>
