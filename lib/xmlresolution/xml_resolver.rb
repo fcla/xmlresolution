@@ -55,7 +55,8 @@ module XmlResolution
   # http://dublincore.org/schemas/xmls/simpledc20021212.xsd, that squid
   # cannot cache since there is no Last-Modified, Etag, or
   # caching/expiration information associated with it. These kinds of
-  # issues slow us down somewhat.
+  # issues will slow you down somewhat, unless you take special pains (see
+  # the refresh_pattern directive for squid)
 
   class XmlResolver
     
@@ -131,9 +132,13 @@ module XmlResolution
     
     attr_reader :schema_dictionary
     
-    # errors is an array of errors encountered in processing the docment.
+    # errors is an array of errors encountered in processing the docment; these are not necessarily fatal errors
     
     attr_reader :errors
+
+    # fatals is boolean indicating that the document could not be parsed at all
+
+    attr_reader :fatal
 
 
     # Be sure to keep the following somewhat in sync with the Sruct::Schema used in the SchemaCatalog.
@@ -162,7 +167,8 @@ module XmlResolution
       
       @used_namespaces      = {}
       @schema_dictionary    = []
-      @errors               = []   # only errors in the instance document
+      @errors               = []     # only errors in the instance document
+      @fatal                = false  # fatal errors.
 
       @schemas_storage_directory     = File.join(data_root, 'schemas')
       @collections_storage_directory = File.join(data_root, 'collections')
@@ -276,13 +282,15 @@ module XmlResolution
         when :success, :redirect ;  successes += 1
         end
       end
-      
-      if (successes > 0 and failures > 0)
+
+      if @fatal
+        outcome = 'error'
+      elsif (successes > 0 and failures > 0)
         outcome = 'mixed'
       elsif failures > 0
         outcome = 'failure'
       else
-        outcome = 'success'  # Vacuous case will be a success.
+        outcome = 'success'  # Vacuous case will be counted a success.
       end
       
       broken_links = schema_dictionary.map { |s| s.location if s.retrieval_status == :failure }.compact
@@ -339,7 +347,13 @@ module XmlResolution
           xml.eventDateTime(@resolution_time.iso8601)
           xml.eventOutcomeInformation { 
             xml.eventOutcome(outcome) 
-            if (unresolved_namespaces.count > 0) or (broken_links.count > 0)
+            if @fatal
+              xml.eventOutcomeDetail {
+                xml.eventOutcomeDetailExtension {
+                  @errors.each { |err| xml.error(err) }
+                }
+              }
+            elsif (unresolved_namespaces.count > 0) or (broken_links.count > 0)
               xml.eventOutcomeDetail {
                 xml.eventOutcomeDetailExtension {
                   broken_links.each { |loc| xml.broken_link(loc) }
@@ -407,18 +421,14 @@ module XmlResolution
       @resolution_time = Time.now
       
       instance_document   = analyze_xml_document(document_text)
-
-      if instance_document.version != '1.0'
-        raise XmlResolution::BadXmlVersion, "This service only supports XML Version 1.0. This document is XML Version #{instance_document.version}"
-      end
-
       namespace_locations = instance_document.namespace_locations   # a hash of Location-URL => Namespace-URN pairs
       @used_namespaces    = instance_document.used_namespaces       # a hash of Namespace-URN => 'true' pairs 
 
       @errors = instance_document.errors
 
       if (instance_document.errors.count > 0) and namespace_locations.empty? and @used_namespaces.empty?
-        raise XmlResolution::BadBadXmlDocument, "The XML document #{document_uri} had too many errors: " + instance_document.errors.join('; ')
+        @fatal = true
+        return
       end
       
       catalog = SchemaCatalog.new(namespace_locations, schemas_storage_directory, proxy)
