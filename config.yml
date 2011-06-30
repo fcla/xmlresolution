@@ -1,0 +1,4 @@
+log_syslog_facility: LOG_LOCAL4
+resolver_proxy:      localhost:3128
+data_root:           /Users/fischer/WorkProjects/daitss2/xmlresolution/data
+virtual_hostname:    xmlresolution.local
