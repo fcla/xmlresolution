@@ -151,7 +151,10 @@ describe ResolverCollection do
 
     # Is each of the locations we found represented in the tar file?
 
-    locations.each { |loc|  %r{#{collection.collection_name}/#{loc}}.should =~ tar_toc }
+    locations.each do |loc| 
+      tar_entry = "#{collection.collection_name}/#{loc}".sub('http://', 'http/')
+      %r{#{tar_entry}}.should =~ tar_toc
+    end
   end
 
 end # ResolverCollection

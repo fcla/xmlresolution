@@ -112,7 +112,6 @@ describe SchemaCatalog do
 
     @@catalog.schemas do |rec|
       locs.push rec.location
-
       case rec.retrieval_status
       when :success;  successes += 1
       when :failure;  failures  += 1

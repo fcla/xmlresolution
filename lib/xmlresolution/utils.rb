@@ -160,6 +160,10 @@ module ResolverUtils
              :virtual_hostname
              )
 
+  # read_config yaml_file
+  #
+  # Read a configuration data file, set reasonable defaults, and return a tasty struct.
+
   def ResolverUtils.read_config yaml_file
 
     conf = Struct::StartUpConfig.new
