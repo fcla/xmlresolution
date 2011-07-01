@@ -1,0 +1,14 @@
+These tests can depend on a resolving proxy being set, for the following hosts:
+
+	roemo-foxtrot
+	*.sacred.net
+	*.fcla.net
+
+In particular, on my laptop romeo-foxtrot, squid can get confused as
+it switches networks. If there are odd failures, restart squid, or
+adjust the spec tests (look for 'def proxy') or set the RESOLVER_PROXY
+environment variable to point to a different HTTP proxy.
+
+
+
+
