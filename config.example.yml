@@ -1,0 +1,32 @@
+# Configuration settings for the XML Resolution Service.  XML
+# Resolution will first look for a filename using the environment
+# variable XMLRESOLUTION_CONFIG_FILE, then will look in the install
+# directory (where app.rb is) for a file named 'config.yml'.
+
+# Please avoid using TAB characters in this file.
+
+# If log_syslog_facility is set, use the value as a syslog facility
+# code and log using syslog. Otherwise, log to STDERR.
+
+log_syslog_facility:
+
+# To avoid slamming the hosts of schema files (such as W3C, who may
+# blacklist you), we recommend using a caching proxy such as squid.
+# The resolver_proxy settings points to such a proxy; it is also much
+# faster.
+
+resolver_proxy:      squid.example.org:3128
+
+# The directory where we'll keep data files; old files are aged out
+# automatically.  If not set, the service will try to use the 'data'
+# subdirectory in the installation root.  N.B.: this directory must
+# have two subdirectories in it, names 'collections' and 'schemas',
+# and they must be writable by the user running the service.
+
+data_root:           /var/daitss/xmlresolution/
+
+# The virtual_hostname is used in logging; if not set, it will use the hostname
+# of the computer on which it is running:
+
+virtual_hostname:    xmlresolution.example.org
+

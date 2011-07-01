@@ -84,7 +84,6 @@ task :bundle do
   sh "bundle install --path vendor/bundle"
 end
 
-
 desc "Make emacs tags files"
 task :etags do
   files = (FileList['lib/**/*', "tools/**/*", 'views/**/*', 'spec/**/*', 'bin/**/*']).exclude('*/xmlvalidator.jar', 'spec/files', 'spec/reports')        # run yard/hanna/rdoc on these and..
@@ -93,7 +92,7 @@ task :etags do
 end
 
 desc "deploy to darchive's production site (xmlresolution.fda.fcla.edu)"
-task :darchive_production do
+task :darchive do
     sh "cap deploy -S target=darchive.fcla.edu:/opt/web-services/sites/xmlresolution -S who=fischer:daitss"
 end
 
@@ -103,16 +102,14 @@ task :retsina do
 end
 
 desc "deploy to ripple's test site (xmlresolution.ripple.fcla.edu)"
-task :ripple_test do
+task :ripple do
     sh "cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/xmlresolution -S who=xmlrez:daitss"
 end
 
 desc "deploy to tarchive's coop (xmlresolution.tarchive.fcla.edu?)"
 task :tarchive_coop do
-    sh "cap deploy -S target=tarchive.fcla.edu:/opt/web-services/sites/xmlresolution -S who=daitss:daitss"
+    sh "cap deploy -S target=tarchive.fcla.edu:/opt/web-services/sites/coop/xmlresolution -S who=daitss:daitss"
 end
-
-
 
 defaults = [:restart, :spec]
 defaults.push :etags   if dev_host

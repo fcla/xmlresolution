@@ -1,0 +1,6 @@
+This directory is a fallback for data files maintained by the XML
+Resolution service.  You almost certainly want to put them somewhere
+else so your data is maintained across upgrades.  The two required
+subdirectories, 'schemas' and 'collections', must be writable by the
+server. The data files in the 'collections' subdirectory are
+automatically deleted when old enough.

@@ -2,8 +2,14 @@ require 'xmlresolution'
 
 include XmlResolution
 
+def get_config
+  filename = ENV['XMLRESOLUTION_CONFIG_FILE'] || File.join(File.dirname(__FILE__), 'config.yml')
+  config = ResolverUtils.read_config(filename)
+end
+
+
 configure do
-  config = ResolverUtils.read_config(File.join(File.dirname(__FILE__), 'config.yml'))
+  config = get_config
 
   $KCODE = 'UTF8'         # Required for XML processing libraries.
 

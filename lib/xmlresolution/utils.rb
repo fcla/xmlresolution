@@ -50,19 +50,19 @@ module ResolverUtils
   def ResolverUtils.check_directory phrase, directory
 
     if not File.exists? directory
-      raise XmlResolution::ConfigurationError, "#{phrase} #{directory} doesn't exist or is unreadable by this user (#{ResolverUtils.user}) and group (#{ResolverUtils.group})."
+      raise XmlResolution::ConfigurationError, "#{phrase}, '#{directory}', doesn't exist or is unreadable by this user (#{ResolverUtils.user}) and group (#{ResolverUtils.group})."
     end
 
     if not File.directory? directory
-      raise XmlResolution::ConfigurationError, "#{phrase} #{directory} isn't a directory."
+      raise XmlResolution::ConfigurationError, "#{phrase}, '#{directory}', isn't a directory."
     end
 
     if not File.readable? directory
-      raise XmlResolution::ConfigurationError, "#{phrase} #{directory} isn't readable by this user (#{ResolverUtils.user}) or group (#{ResolverUtils.group})."
+      raise XmlResolution::ConfigurationError, "#{phrase}, '#{directory}', isn't readable by this user (#{ResolverUtils.user}) or group (#{ResolverUtils.group})."
     end
 
     if not File.writable? directory
-      raise XmlResolution::ConfigurationError, "#{phrase} #{directory} isn't writable by this user (#{ResolverUtils.user}) or group (#{ResolverUtils.group})."
+      raise XmlResolution::ConfigurationError, "#{phrase}, '#{directory}', isn't writable by this user (#{ResolverUtils.user}) or group (#{ResolverUtils.group})."
     end
   end
 
@@ -178,10 +178,10 @@ module ResolverUtils
 
     conf.members.each { |x| conf[x] = hash[x] }
 
-    # reasonable defaults
+    # reasonable defaults:
 
     conf.virtual_hostname ||= Socket.gethostname
-    conf.data_root        ||= File.expand_path(File.join(File.dirname(__FILE__), 'data'))
+    conf.data_root        ||= File.expand_path(File.join(File.dirname(__FILE__), '../../data'))
 
     return conf
   end
