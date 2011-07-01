@@ -90,9 +90,21 @@ describe XmlResolver do  # and XmlResolverReloaded
     text = File.read(name)
     res  = XmlResolver.new(text, file_url(name), store, proxy)
 
+    res.fatal.should == false
     res.unresolved_namespaces.sort.should == ["http://www.w3.org/2001/XMLSchema", "http://www.w3.org/XML/1998/namespace"]
 
   end
+
+
+  it "should show a fatal error for resolving a binary file" do
+    name = File.join(@@files, "binary.xml")
+    text = File.read(name)
+    res  = XmlResolver.new(text, file_url(name), store, proxy)
+
+    res.fatal.should == true
+    res.premis_report.should =~ %r{<error>Start tag expected, '&lt;' not found</error>}
+  end
+
 
   it "should correctly locate and download the 77 schemas our sample DAITSS descriptor XML file requires." do
 

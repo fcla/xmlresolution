@@ -116,7 +116,7 @@ describe ResolverCollection do
 
     # Create a uniquified list of all of the downloaded schemas... we
     # expect around 77 of them (lots of repeated schemas over the
-    # three document resolutionss):
+    # three document resolutions):
 
     schema_locs = {}
     collection.resolutions.each do |resolver|
