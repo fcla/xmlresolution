@@ -36,7 +36,7 @@ configure do
   use Rack::CommonLogger, Logger.new(:info, 'Rack:')  # Bend CommonLogger to our will...
 
   Logger.info "Starting #{XmlResolution.version.rev}"
-  Logger.info "Initializing with data directory #{config.data_root}; caching proxy is #{config.virtual_hostname || 'off' }"
+  Logger.info "Initializing with data directory #{config.data_root}; caching proxy is #{config.resolver_proxy || 'off' }"
 end
 
 
