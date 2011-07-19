@@ -30,3 +30,8 @@ data_root:           /var/daitss/xmlresolution/
 
 virtual_hostname:    xmlresolution.example.org
 
+# Where to store temporary files;  it should be able to store several of the 
+# largest xml file uploaded;  Ruby sets a default directory if you don't set
+# this (varies from system to system)
+
+temp_directory:      /var/tmp/
