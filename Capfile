@@ -9,6 +9,8 @@ require 'rubygems'
 require 'railsless-deploy'
 require 'bundler/capistrano'
 
+set :keep_releases, 5   # default is 5
+
 set :bundle_flags,      "--deployment"
 set :bundle_without,    []
 
