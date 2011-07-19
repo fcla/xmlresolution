@@ -10,4 +10,5 @@ TAGS
 coverage
 shared
 spec/reports
-vendor
+bundle
+config.romeo-foxtrot.yml
