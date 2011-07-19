@@ -157,6 +157,7 @@ module ResolverUtils
              :data_root,
              :log_syslog_facility,
              :resolver_proxy,
+             :temp_directory,
              :virtual_hostname
              )
 
