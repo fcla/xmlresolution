@@ -81,7 +81,9 @@ end
 
 desc "Gem bundles"
 task :bundle do
-  sh "bundle install --path vendor/bundle"
+  sh "rm -rf #{HOME}/bundle #{HOME}/.bundle #{HOME}/Gemfile.lock"
+  sh "mkdir -p #{HOME}/bundle"
+  sh "cd #{HOME}; bundle install --path bundle"
 end
 
 desc "Make emacs tags files"
