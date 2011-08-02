@@ -34,11 +34,6 @@ Spec::Rake::SpecTask.new do |task|
   task.rcov = true if dev_host   # do coverage tests on my devlopment box
 end
 
-desc "deploy to darchive's production xmlresolver"
-task :darchive do
-    sh "cap deploy -S target=darchive:/opt/web-services/sites/xmlresolution -S who=daitss:daitss"
-end
-
 # Documentation support on deployed hosts is so iffy that we distribute our own
 
 desc "Generate documentation from libraries - try yardoc, hanna, rdoc, in that order."
@@ -93,14 +88,15 @@ task :etags do
   `xctags -e #{files}`
 end
 
+
 desc "deploy to darchive's production site (xmlresolution.fda.fcla.edu)"
 task :darchive do
-    sh "cap deploy -S target=darchive.fcla.edu:/opt/web-services/sites/xmlresolution -S who=fischer:daitss"
+    sh "cap deploy -S target=darchive.fcla.edu:/opt/web-services/sites/xmlresolution -S who=daitss:daitss"
 end
 
-desc "deploy to development site (xmlresolution.dev.fcla.edu)"
+desc "deploy to development site (xmlresolution.retsinafcla.edu)"
 task :retsina do
-    sh "cap deploy -S target=retsina.fcla.edu:/opt/web-services/sites/xmlresolution -S who=fischer:daitss"
+    sh "cap deploy -S target=retsina.fcla.edu:/opt/web-services/sites/xmlresolution -S who=daitss:daitss"
 end
 
 desc "deploy to ripple's test site (xmlresolution.ripple.fcla.edu)"
