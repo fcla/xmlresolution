@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Class: SchemaDocument</title>
-<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: SchemaDocument
+  
+    &mdash; XML Resolution Service
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -85,24 +98,21 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>
-Class SchemaDocument subclasses PlainXmlDocument, which in turn is a
-subclass of Nokogiri::XML::SAX::Document.
-</p>
-<p>
-It adds no additional callbacks to those established by PlainXmlDocument.
+    
+<p>Class SchemaDocument subclasses PlainXmlDocument, which in turn is a
+subclass of Nokogiri::XML::SAX::Document.</p>
+
+<p>It adds no additional callbacks to those established by PlainXmlDocument.
 Instead, it adds specialized processing for schema documents, looking for
-the following elements:
-</p>
-<pre class="code">
-  <span class='string val'>'http://www.w3.org/2001/XMLSchema'</span><span class='symbol val'>:import</span>
-  <span class='string val'>'http://www.w3.org/2001/XMLSchema'</span><span class='symbol val'>:include</span>
-  <span class='string val'>'http://www.w3.org/2001/XMLSchema'</span><span class='symbol val'>:schema</span> 
+the following elements:</p>
+
+<pre class="code"><span class='string val'>'http://www.w3.org/2001/XMLSchema'</span><span class='symbol val'>:import</span>
+<span class='string val'>'http://www.w3.org/2001/XMLSchema'</span><span class='symbol val'>:include</span>
+<span class='string val'>'http://www.w3.org/2001/XMLSchema'</span><span class='symbol val'>:schema</span>
 </pre>
-<p>
-Attributes for these elements are mined for additional schema locations to
-process.
-</p>
+
+<p>Attributes for these elements are mined for additional schema locations to
+process.</p>
 
 
   </div>
@@ -115,6 +125,17 @@ process.
   
   
   
+  
+
+
+  
+  
+  
+  <h2>Instance Attribute Summary</h2>
+  
+  <h3 class="inherited">Attributes inherited from <span class='object_link'><a href="PlainXmlDocument.html" title="PlainXmlDocument (class)">PlainXmlDocument</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="PlainXmlDocument.html#errors-instance_method" title="PlainXmlDocument#errors (method)">errors</a></span>, <span class='object_link'><a href="PlainXmlDocument.html#version-instance_method" title="PlainXmlDocument#version (method)">version</a></span>, <span class='object_link'><a href="PlainXmlDocument.html#warnings-instance_method" title="PlainXmlDocument#warnings (method)">warnings</a></span></p>
+
   
 
   
@@ -141,9 +162,8 @@ process.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-absolutize LOCATION.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>absolutize LOCATION.</p>
 </div></span>
   
 </li>
@@ -165,9 +185,8 @@ absolutize LOCATION.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-get_import_location ATTRIBUTES.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>get_import_location ATTRIBUTES.</p>
 </div></span>
   
 </li>
@@ -189,9 +208,8 @@ get_import_location ATTRIBUTES.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-get_include_location ATTRIBUTES.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>get_include_location ATTRIBUTES.</p>
 </div></span>
   
 </li>
@@ -213,9 +231,8 @@ get_include_location ATTRIBUTES.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-get_target_namespace ATTRIBUTES.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>get_target_namespace ATTRIBUTES.</p>
 </div></span>
   
 </li>
@@ -239,9 +256,8 @@ get_target_namespace ATTRIBUTES.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-SchemaDocument.new LOCATION, USED_NAMESPACES.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>SchemaDocument.new LOCATION, USED_NAMESPACES.</p>
 </div></span>
   
 </li>
@@ -263,9 +279,8 @@ SchemaDocument.new LOCATION, USED_NAMESPACES.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-start_element_namespace ELEMENT_NAME, ATTRIBUTES, PREFIX, URI, NAMESPACE.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>start_element_namespace ELEMENT_NAME, ATTRIBUTES, PREFIX, URI, NAMESPACE.</p>
 </div></span>
   
 </li>
@@ -297,19 +312,16 @@ start_element_namespace ELEMENT_NAME, ATTRIBUTES, PREFIX, URI, NAMESPACE.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-SchemaDocument.new LOCATION, USED_NAMESPACES
-</p>
-<p>
-As in PlainXmlDocument, USED_NAMESPACES is a hash of namespaces URNs where
+    
+<p>SchemaDocument.new LOCATION, USED_NAMESPACES</p>
+
+<p>As in PlainXmlDocument, USED_NAMESPACES is a hash of namespaces URNs where
 the values are not important. It is used in the constructor so that calling
 applications can reuse it for subsequent invocations: effectively, we
-inherit the parent&#8217;s schema namespaces.
-</p>
-<p>
-Because schemaLocation declarations may include relative URLs, we must
-include the URL of the schema document, the string LOCATION.
-</p>
+inherit the parent’s schema namespaces.</p>
+
+<p>Because schemaLocation declarations may include relative URLs, we must
+include the URL of the schema document, the string LOCATION.</p>
 
 
   </div>
@@ -358,14 +370,12 @@ include the URL of the schema document, the string LOCATION.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-absolutize LOCATION
-</p>
-<p>
-Given the URL LOCATION, attempt to turn it into an absolute URL. It is done
-relative to our object&#8217;s schema_location, a required parameter in the
-contstructor.
-</p>
+    
+<p>absolutize LOCATION</p>
+
+<p>Given the URL LOCATION, attempt to turn it into an absolute URL. It is done
+relative to our object’s schema_location, a required parameter in the
+contstructor.</p>
 
 
   </div>
@@ -405,18 +415,16 @@ contstructor.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-get_import_location ATTRIBUTES
-</p>
-<p>
-Search through ATTRIBUTES (essentially an array of Struct.new(:localname,
+    
+<p>get_import_location ATTRIBUTES</p>
+
+<p>Search through ATTRIBUTES (essentially an array of Struct.new(:localname,
 :prefix, :uri, :value)). We extract the namespace/location mappings for
-schema import directives of the form:
-</p>
-<pre class="code">
-  <span class='lt op'>&lt;</span><span class='string val'>&quot;http://www.w3.org/2001/XMLSchema&quot;</span><span class='symbol val'>:import</span>
-         <span class='namespace identifier id'>namespace</span><span class='assign token'>=</span><span class='string val'>&quot;http://www.w3.org/XML/1998/namespace&quot;</span>
-         <span class='schemaLocation identifier id'>schemaLocation</span><span class='assign token'>=</span><span class='string val'>&quot;http://www.w3.org/2001/xml.xsd&quot;</span><span class='gt op'>&gt;</span>
+schema import directives of the form:</p>
+
+<pre class="code"><span class='lt op'>&lt;</span><span class='string val'>&quot;http://www.w3.org/2001/XMLSchema&quot;</span><span class='symbol val'>:import</span>
+       <span class='namespace identifier id'>namespace</span><span class='assign token'>=</span><span class='string val'>&quot;http://www.w3.org/XML/1998/namespace&quot;</span>
+       <span class='schemaLocation identifier id'>schemaLocation</span><span class='assign token'>=</span><span class='string val'>&quot;http://www.w3.org/2001/xml.xsd&quot;</span><span class='gt op'>&gt;</span>
 </pre>
 
 
@@ -483,20 +491,18 @@ schema import directives of the form:
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-get_include_location ATTRIBUTES
-</p>
-<p>
-Handle schema include directives, searching through the attributes
-associated with &#8220;<a
-href="http://www.w3.org/2001/XMLSchema":include">www.w3.org/2001/XMLSchema":include</a>
-elements.  By definition, includes import into the target namespace.
-</p>
-<pre class="code">
-  <span class='lt op'>&lt;</span><span class='xsd identifier id'>xsd</span><span class='symbol val'>:schema</span> <span class='dot3 op'>...</span><span class='dot token'>.</span> <span class='gt op'>&gt;</span>
-      <span class='lt op'>&lt;</span><span class='xsd identifier id'>xsd</span><span class='symbol val'>:include</span> <span class='schemaLocation identifier id'>schemaLocation</span><span class='assign token'>=</span><span class='string val'>&quot;daitssAccount.xsd&quot;</span><span class='div op'>/</span><span class='gt op'>&gt;</span>
-      <span class='lt op'>&lt;</span><span class='xsd identifier id'>xsd</span><span class='symbol val'>:include</span> <span class='schemaLocation identifier id'>schemaLocation</span><span class='assign token'>=</span><span class='string val'>&quot;daitssAccountProject.xsd&quot;</span><span class='div op'>/</span><span class='gt op'>&gt;</span>
-       <span class='dot3 op'>...</span><span class='dot token'>.</span>
+    
+<p>get_include_location ATTRIBUTES</p>
+
+<p>Handle schema include directives, searching through the attributes
+associated with “<a
+href="http://www.w3.org/2001/XMLSchema":include">www.w3.org/2001/XMLSchema”:include</a>
+elements.  By definition, includes import into the target namespace.</p>
+
+<pre class="code"><span class='lt op'>&lt;</span><span class='xsd identifier id'>xsd</span><span class='symbol val'>:schema</span> <span class='dot3 op'>...</span><span class='dot token'>.</span> <span class='gt op'>&gt;</span>
+    <span class='lt op'>&lt;</span><span class='xsd identifier id'>xsd</span><span class='symbol val'>:include</span> <span class='schemaLocation identifier id'>schemaLocation</span><span class='assign token'>=</span><span class='string val'>&quot;daitssAccount.xsd&quot;</span><span class='div op'>/</span><span class='gt op'>&gt;</span>
+    <span class='lt op'>&lt;</span><span class='xsd identifier id'>xsd</span><span class='symbol val'>:include</span> <span class='schemaLocation identifier id'>schemaLocation</span><span class='assign token'>=</span><span class='string val'>&quot;daitssAccountProject.xsd&quot;</span><span class='div op'>/</span><span class='gt op'>&gt;</span>
+     <span class='dot3 op'>...</span><span class='dot token'>.</span>
 </pre>
 
 
@@ -541,16 +547,14 @@ elements.  By definition, includes import into the target namespace.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-get_target_namespace ATTRIBUTES
-</p>
-<p>
-Extract the targeNamespace if found in ATTRIBUTES, an array of
-Nokogiri::XML::SAX::Parser::Attribute structs. We&#8217;re called when an
-element node named &#8220;<a
-href="http://www.w3.org/2001/XMLSchema":schema">www.w3.org/2001/XMLSchema":schema</a>
-is encountered.
-</p>
+    
+<p>get_target_namespace ATTRIBUTES</p>
+
+<p>Extract the targeNamespace if found in ATTRIBUTES, an array of
+Nokogiri::XML::SAX::Parser::Attribute structs. We’re called when an
+element node named “<a
+href="http://www.w3.org/2001/XMLSchema":schema">www.w3.org/2001/XMLSchema”:schema</a>
+is encountered.</p>
 
 
   </div>
@@ -598,14 +602,12 @@ is encountered.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-start_element_namespace ELEMENT_NAME, ATTRIBUTES, PREFIX, URI, NAMESPACE
-</p>
-<p>
-After the PlainXmlDocument superclass has it&#8217;s way, check for
+    
+<p>start_element_namespace ELEMENT_NAME, ATTRIBUTES, PREFIX, URI, NAMESPACE</p>
+
+<p>After the PlainXmlDocument superclass has it’s way, check for
 schema-specific  attributes that may cause us to add additional schema
-locations.
-</p>
+locations.</p>
 
 
   </div>
@@ -653,9 +655,9 @@ locations.
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:34:59 2011 by 
+  Generated on Fri Aug 19 15:30:04 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.2 (ruby-1.8.7).
 </div>
 
   </body>

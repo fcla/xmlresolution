@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Class: XmlResolution::SchemaCatalog</title>
-<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: XmlResolution::SchemaCatalog
+  
+    &mdash; XML Resolution Service
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -81,60 +94,49 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>
-Build up a catalog of schemas from a hash of { Location-URLs =>
+    
+<p>Build up a catalog of schemas from a hash of { Location-URLs =&gt;
 Namespace-URIs }, downloading the schemas. Only HTTP-schemed Location-URLs
 are supported.  SchemaCatalog does not, by itself,  analyze schemas for
 additional schemas to download - see our Nokogiri::XML::SAX::Document
-subclasses PlainXmlDocument and SchemaDocument for that functionality.
-</p>
-<p>
-SchemaCatalog builds a dictionary of interesting information about schemas.
+subclasses PlainXmlDocument and SchemaDocument for that functionality.</p>
+
+<p>SchemaCatalog builds a dictionary of interesting information about schemas.
 These are accessed with the SchemaCatalog#schemas iterator.  Each record
-yielded has the following methods:
-</p>
-<table>
-<tr><td valign="top">location</td><td><p>
-the location of the schema, an HTTP-schemed URL.
-</p>
-</td></tr>
-<tr><td valign="top">namespace</td><td><p>
-the namespace associated with this schema.
-</p>
-</td></tr>
-<tr><td valign="top">last_modified</td><td><p>
-on a successful retrieval, this is the last-modified time of the schema (a
-Time object). If last-modified wasn&#8217;t available, this is the current
-datetime.
-</p>
-</td></tr>
-<tr><td valign="top">digest</td><td><p>
-on a successful retrieval, the MD5 digest of the retrieved text of the
-schema.
-</p>
-</td></tr>
-<tr><td valign="top">localpath</td><td><p>
-on a successful retrieval, the filename of the locally-stored copy of the
-schema.
-</p>
-</td></tr>
-<tr><td valign="top">retrieval_status</td><td><p>
-the outcome of retrieving the schema: one of :success, :failure, or
-:redirect.
-</p>
-</td></tr>
-<tr><td valign="top">error_message</td><td><p>
-if retrieval_status is :failure, this will be the associated error message.
+yielded has the following methods:</p>
+<table class="rdoc-list"><tr><td class="rdoc-term"><p>location</p></td>
+<td>
+<p>the location of the schema, an HTTP-schemed URL.</p>
+</td></tr><tr><td class="rdoc-term"><p>namespace</p></td>
+<td>
+<p>the namespace associated with this schema.</p>
+</td></tr><tr><td class="rdoc-term"><p>last_modified</p></td>
+<td>
+<p>on a successful retrieval, this is the last-modified time of the schema (a
+Time object). If last-modified wasn’t available, this is the current
+datetime.</p>
+</td></tr><tr><td class="rdoc-term"><p>digest</p></td>
+<td>
+<p>on a successful retrieval, the MD5 digest of the retrieved text of the
+schema.</p>
+</td></tr><tr><td class="rdoc-term"><p>localpath</p></td>
+<td>
+<p>on a successful retrieval, the filename of the locally-stored copy of the
+schema.</p>
+</td></tr><tr><td class="rdoc-term"><p>retrieval_status</p></td>
+<td>
+<p>the outcome of retrieving the schema: one of :success, :failure, or
+:redirect.</p>
+</td></tr><tr><td class="rdoc-term"><p>error_message</p></td>
+<td>
+<p>if retrieval_status is :failure, this will be the associated error message.
 Usually a Net::HTTP exception, it could also represent a run-time
-exception.
-</p>
-</td></tr>
-<tr><td valign="top">redirected_location</td><td><p>
-if retrieval_status is :redirect, this will be the initial Location URL;
-the location slot contains the address of the retrieved schema text.
-</p>
-</td></tr>
-</table>
+exception.</p>
+</td></tr><tr><td class="rdoc-term"><p>redirected_location</p></td>
+<td>
+<p>if retrieval_status is :redirect, this will be the initial Location URL;
+the location slot contains the address of the retrieved schema text.</p>
+</td></tr></table>
 
 
   </div>
@@ -142,6 +144,8 @@ the location slot contains the address of the retrieved schema text.
 <div class="tags">
   
 </div>
+
+
 
 
   
@@ -168,9 +172,8 @@ the location slot contains the address of the retrieved schema text.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-fetch LOCATION [ REDIRECT-LIMIT ].
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>fetch LOCATION [ REDIRECT-LIMIT ].</p>
 </div></span>
   
 </li>
@@ -192,9 +195,8 @@ fetch LOCATION [ REDIRECT-LIMIT ].
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-file_recorded? FILENAME, MTIME, DIGEST.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>file_recorded? FILENAME, MTIME, DIGEST.</p>
 </div></span>
   
 </li>
@@ -216,9 +218,8 @@ file_recorded? FILENAME, MTIME, DIGEST.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-get_schema_record LOCATION, NAMESPACE.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>get_schema_record LOCATION, NAMESPACE.</p>
 </div></span>
   
 </li>
@@ -242,9 +243,8 @@ get_schema_record LOCATION, NAMESPACE.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-SchemaCatalog.new(NAMESPACE_LOCATIONS, DATA_STORAGE_PATH, [ PROXY ]).
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>SchemaCatalog.new(NAMESPACE_LOCATIONS, DATA_STORAGE_PATH, [ PROXY ]).</p>
 </div></span>
   
 </li>
@@ -266,9 +266,8 @@ SchemaCatalog.new(NAMESPACE_LOCATIONS, DATA_STORAGE_PATH, [ PROXY ]).
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-merge NAMESPACE_LOCATIONS.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>merge NAMESPACE_LOCATIONS.</p>
 </div></span>
   
 </li>
@@ -290,9 +289,8 @@ merge NAMESPACE_LOCATIONS.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-schemas.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>schemas.</p>
 </div></span>
   
 </li>
@@ -313,32 +311,28 @@ schemas.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-SchemaCatalog.new(NAMESPACE_LOCATIONS, DATA_STORAGE_PATH, [ PROXY ])
-</p>
-<p>
-Creates a catalog of schemas.  DATA_STORAGE_PATH provides a path to where
-downloaded schemas can be saved. PROXY, if supplied, is the address and
-port of a caching web proxy, e.g. squid.example.com:3128.
-</p>
-<p>
-NAMESPACE_LOCATIONS is a hash of Location-URL/Namespace-URN key/value pairs
-of schemas that will downloaded; the SchemaCatalog provides a convenient
-data structure to recursively analyze a set of schemas:
-</p>
-<pre class="code">
-  <span class='catalog identifier id'>catalog</span> <span class='assign token'>=</span> <span class='SchemaCatalog constant id'>SchemaCatalog</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='namespace_locations identifier id'>namespace_locations</span><span class='comma token'>,</span> <span class='string val'>'/tmp/'</span><span class='rparen token'>)</span>
+    
+<p>SchemaCatalog.new(NAMESPACE_LOCATIONS, DATA_STORAGE_PATH, [ PROXY ])</p>
 
-  <span class='catalog identifier id'>catalog</span><span class='dot token'>.</span><span class='schemas identifier id'>schemas</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='schema_record identifier id'>schema_record</span><span class='bitor op'>|</span>
-    <span class='more_namespace_locations identifier id'>more_namespace_locations</span> <span class='assign token'>=</span>  <span class='analyze_schema identifier id'>analyze_schema</span><span class='lparen token'>(</span><span class='schema_record identifier id'>schema_record</span><span class='dot token'>.</span><span class='localpath identifier id'>localpath</span><span class='rparen token'>)</span>
-    <span class='catalog identifier id'>catalog</span><span class='dot token'>.</span><span class='merge identifier id'>merge</span><span class='lparen token'>(</span><span class='more_namespace_locations identifier id'>more_namespace_locations</span><span class='rparen token'>)</span>
-   <span class='end end kw'>end</span>
+<p>Creates a catalog of schemas.  DATA_STORAGE_PATH provides a path to where
+downloaded schemas can be saved. PROXY, if supplied, is the address and
+port of a caching web proxy, e.g. squid.example.com:3128.</p>
+
+<p>NAMESPACE_LOCATIONS is a hash of Location-URL/Namespace-URN key/value pairs
+of schemas that will downloaded; the SchemaCatalog provides a convenient
+data structure to recursively analyze a set of schemas:</p>
+
+<pre class="code"><span class='catalog identifier id'>catalog</span> <span class='assign token'>=</span> <span class='SchemaCatalog constant id'>SchemaCatalog</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='namespace_locations identifier id'>namespace_locations</span><span class='comma token'>,</span> <span class='string val'>'/tmp/'</span><span class='rparen token'>)</span>
+
+<span class='catalog identifier id'>catalog</span><span class='dot token'>.</span><span class='schemas identifier id'>schemas</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='schema_record identifier id'>schema_record</span><span class='bitor op'>|</span>
+  <span class='more_namespace_locations identifier id'>more_namespace_locations</span> <span class='assign token'>=</span>  <span class='analyze_schema identifier id'>analyze_schema</span><span class='lparen token'>(</span><span class='schema_record identifier id'>schema_record</span><span class='dot token'>.</span><span class='localpath identifier id'>localpath</span><span class='rparen token'>)</span>
+  <span class='catalog identifier id'>catalog</span><span class='dot token'>.</span><span class='merge identifier id'>merge</span><span class='lparen token'>(</span><span class='more_namespace_locations identifier id'>more_namespace_locations</span><span class='rparen token'>)</span>
+ <span class='end end kw'>end</span>
 </pre>
-<p>
-(What&#8217;s happening above is that the iterator catalog.schemas is being
+
+<p>(What’s happening above is that the iterator catalog.schemas is being
 augmented via the catalog.merge method, allowing us to recursively search
-the schemas.)
-</p>
+the schemas.)</p>
 
 
   </div>
@@ -405,13 +399,11 @@ the schemas.)
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-fetch LOCATION [ REDIRECT-LIMIT ]
-</p>
-<p>
-Given an HTTP location LOCATION, fetch and return the response. Permit up
-to five redirections by default.
-</p>
+    
+<p>fetch LOCATION [ REDIRECT-LIMIT ]</p>
+
+<p>Given an HTTP location LOCATION, fetch and return the response. Permit up
+to five redirections by default.</p>
 
 
   </div>
@@ -422,8 +414,8 @@ to five redirections by default.
   
     <li>
       
-        <span class='type'>(<tt><span class='object_link'><a href="LocationError.html" title="XmlResolution::LocationError (class)">LocationError</a></span></tt>)</span>
       
+        <span class='type'>(<tt><span class='object_link'><a href="LocationError.html" title="XmlResolution::LocationError (class)">LocationError</a></span></tt>)</span>
       
       
       
@@ -500,14 +492,12 @@ to five redirections by default.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-file_recorded? FILENAME, MTIME, DIGEST
-</p>
-<p>
-A boolean method, return whether FILENAME has the mtime MTIME and MD5
+    
+<p>file_recorded? FILENAME, MTIME, DIGEST</p>
+
+<p>A boolean method, return whether FILENAME has the mtime MTIME and MD5
 Digest DIGEST. FILENAME does not have to exist, but if it does, it must be
-readable.
-</p>
+readable.</p>
 
 
   </div>
@@ -518,8 +508,8 @@ readable.
   
     <li>
       
-        <span class='type'>(<tt>Boolean</tt>)</span>
       
+        <span class='type'>(<tt>Boolean</tt>)</span>
       
       
       
@@ -560,15 +550,13 @@ readable.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-get_schema_record LOCATION, NAMESPACE
-</p>
-<p>
-Retrieve the schema from LOCATION, if possible.  Save the text of the
+    
+<p>get_schema_record LOCATION, NAMESPACE</p>
+
+<p>Retrieve the schema from LOCATION, if possible.  Save the text of the
 schema to a directory.  Returns a record listing the location, namespace,
 text location, digest and last-modification time; See the detailed
-description of the @schema_dictionary instance variable for the details.
-</p>
+description of the @schema_dictionary instance variable for the details.</p>
 
 
   </div>
@@ -654,17 +642,14 @@ description of the @schema_dictionary instance variable for the details.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-merge NAMESPACE_LOCATIONS
-</p>
-<p>
-NAMESPACE_LOCATIONS is a hash of location-URL/namespace-URN key/value
-pairs, the same data structure passed to us in the constructor.
-</p>
-<p>
-Merge lets us add new schema records to the SchemaCatalog, but we take care
-not to overwrite existing records that have already been processed.
-</p>
+    
+<p>merge NAMESPACE_LOCATIONS</p>
+
+<p>NAMESPACE_LOCATIONS is a hash of location-URL/namespace-URN key/value
+pairs, the same data structure passed to us in the constructor.</p>
+
+<p>Merge lets us add new schema records to the SchemaCatalog, but we take care
+not to overwrite existing records that have already been processed.</p>
 
 
   </div>
@@ -750,25 +735,22 @@ not to overwrite existing records that have already been processed.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-schemas
-</p>
-<p>
-Our main iterator - yields the next schema record when given a block,
+    
+<p>schemas</p>
+
+<p>Our main iterator - yields the next schema record when given a block,
 otherwise a complete list of the schema records, alphabetically sorted by
-location.
-</p>
-<p>
-It is expected that the catalog will be expanded through the merge method
-while being iterated over, as in the following example:
-</p>
-<pre class="code">
-  <span class='catalog identifier id'>catalog</span> <span class='assign token'>=</span> <span class='SchemaCatalog constant id'>SchemaCatalog</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='namespace_locations identifier id'>namespace_locations</span><span class='comma token'>,</span> <span class='string val'>'tmp'</span><span class='rparen token'>)</span>
-  <span class='catalog identifier id'>catalog</span><span class='dot token'>.</span><span class='schemas identifier id'>schemas</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='rec identifier id'>rec</span><span class='bitor op'>|</span>
-    <span class='next next kw'>next</span> <span class='if if_mod kw'>if</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='retrieval_status identifier id'>retrieval_status</span> <span class='neq op'>!=</span> <span class='symbol val'>:success</span>
-    <span class='additional_namespace_locations identifier id'>additional_namespace_locations</span> <span class='assign token'>=</span> <span class='my_application identifier id'>my_application</span><span class='lparen token'>(</span><span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='location identifier id'>location</span><span class='comma token'>,</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='read identifier id'>read</span><span class='lparen token'>(</span><span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='pathname identifier id'>pathname</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
-    <span class='catalog identifier id'>catalog</span><span class='dot token'>.</span><span class='merge identifier id'>merge</span> <span class='additional_namespace_locations identifier id'>additional_namespace_locations</span>
-  <span class='end end kw'>end</span>
+location.</p>
+
+<p>It is expected that the catalog will be expanded through the merge method
+while being iterated over, as in the following example:</p>
+
+<pre class="code"><span class='catalog identifier id'>catalog</span> <span class='assign token'>=</span> <span class='SchemaCatalog constant id'>SchemaCatalog</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='namespace_locations identifier id'>namespace_locations</span><span class='comma token'>,</span> <span class='string val'>'tmp'</span><span class='rparen token'>)</span>
+<span class='catalog identifier id'>catalog</span><span class='dot token'>.</span><span class='schemas identifier id'>schemas</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='rec identifier id'>rec</span><span class='bitor op'>|</span>
+  <span class='next next kw'>next</span> <span class='if if_mod kw'>if</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='retrieval_status identifier id'>retrieval_status</span> <span class='neq op'>!=</span> <span class='symbol val'>:success</span>
+  <span class='additional_namespace_locations identifier id'>additional_namespace_locations</span> <span class='assign token'>=</span> <span class='my_application identifier id'>my_application</span><span class='lparen token'>(</span><span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='location identifier id'>location</span><span class='comma token'>,</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='read identifier id'>read</span><span class='lparen token'>(</span><span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='pathname identifier id'>pathname</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+  <span class='catalog identifier id'>catalog</span><span class='dot token'>.</span><span class='merge identifier id'>merge</span> <span class='additional_namespace_locations identifier id'>additional_namespace_locations</span>
+<span class='end end kw'>end</span>
 </pre>
 
 
@@ -811,9 +793,9 @@ while being iterated over, as in the following example:
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:35:01 2011 by 
+  Generated on Fri Aug 19 15:30:05 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.2 (ruby-1.8.7).
 </div>
 
   </body>

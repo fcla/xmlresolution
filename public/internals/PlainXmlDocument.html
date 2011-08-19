@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Class: PlainXmlDocument</title>
-<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: PlainXmlDocument
+  
+    &mdash; XML Resolution Service
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -83,41 +96,36 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>
-Class PlainXmlDocument subclasses Nokogiri::XML::SAX::Document
-</p>
-<p>
-The purpose of PlainXmlDocument is to work in concert with the  Nokogiri
+    
+<p>Class PlainXmlDocument subclasses Nokogiri::XML::SAX::Document</p>
+
+<p>The purpose of PlainXmlDocument is to work in concert with the  Nokogiri
 SAX parser to analyze a submitted XML Document. It accumulates information
-about namespaces and schema locations in the XML Document.
-</p>
-<p>
-The XML document text to be analyzed is not directly accessed by the
+about namespaces and schema locations in the XML Document.</p>
+
+<p>The XML document text to be analyzed is not directly accessed by the
 PlainXmlDocument object; rather, the XML document is used in concert with
-the object and the SAX::Parser, as in the following example:
-</p>
-<pre class="code">
-     <span class='document identifier id'>document</span> <span class='assign token'>=</span> <span class='PlainXmlDocument constant id'>PlainXmlDocument</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
-     <span class='Nokogiri constant id'>Nokogiri</span><span class='colon2 op'>::</span><span class='XML constant id'>XML</span><span class='colon2 op'>::</span><span class='SAX constant id'>SAX</span><span class='colon2 op'>::</span><span class='Parser constant id'>Parser</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='document identifier id'>document</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span><span class='lparen token'>(</span><span class='XML constant id'>XML</span><span class='minus op'>-</span><span class='DOCUMENT constant id'>DOCUMENT</span><span class='minus op'>-</span><span class='TEXT constant id'>TEXT</span><span class='rparen token'>)</span>
-     <span class='dot3 op'>...</span> <span class='use identifier id'>use</span> <span class='document identifier id'>document</span> <span class='methods identifier id'>methods</span> <span class='dot3 op'>...</span>
+the object and the SAX::Parser, as in the following example:</p>
+
+<pre class="code"><span class='document identifier id'>document</span> <span class='assign token'>=</span> <span class='PlainXmlDocument constant id'>PlainXmlDocument</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+<span class='Nokogiri constant id'>Nokogiri</span><span class='colon2 op'>::</span><span class='XML constant id'>XML</span><span class='colon2 op'>::</span><span class='SAX constant id'>SAX</span><span class='colon2 op'>::</span><span class='Parser constant id'>Parser</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='document identifier id'>document</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span><span class='lparen token'>(</span><span class='XML constant id'>XML</span><span class='minus op'>-</span><span class='DOCUMENT constant id'>DOCUMENT</span><span class='minus op'>-</span><span class='TEXT constant id'>TEXT</span><span class='rparen token'>)</span>
+<span class='dot3 op'>...</span> <span class='use identifier id'>use</span> <span class='document identifier id'>document</span> <span class='methods identifier id'>methods</span> <span class='dot3 op'>...</span>
 </pre>
-<p>
-The PlainXmlDocument object registers callbacks with the SAX parser. We
-register only a few of the basic SAX event callbacks, namely:
-</p>
-<pre class="code">
-  <span class='mult op'>*</span> <span class='start_element_namespace identifier id'>start_element_namespace</span>
-  <span class='mult op'>*</span> <span class='error identifier id'>error</span>
-  <span class='mult op'>*</span> <span class='warning identifier id'>warning</span>
-  <span class='mult op'>*</span> <span class='xml_decl identifier id'>xml_decl</span>
+
+<p>The PlainXmlDocument object registers callbacks with the SAX parser. We
+register only a few of the basic SAX event callbacks, namely:</p>
+
+<pre class="code"><span class='mult op'>*</span> <span class='start_element_namespace identifier id'>start_element_namespace</span>
+<span class='mult op'>*</span> <span class='error identifier id'>error</span>
+<span class='mult op'>*</span> <span class='warning identifier id'>warning</span>
+<span class='mult op'>*</span> <span class='xml_decl identifier id'>xml_decl</span>
 </pre>
-<p>
-Analysis of the elements provided by the first of these callbacks allows us
+
+<p>Analysis of the elements provided by the first of these callbacks allows us
 to record the namespaces that are actually used by elements and their
 attributes.  Errors, warnings, and the XML declaration are also collected
 in the course of the parsing. Methods are added to the PlainXmlDocument
-class to return these data.
-</p>
+class to return these data.</p>
 
 
   </div>
@@ -153,10 +161,9 @@ class to return these data.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-An array of strings, these are all of the errors issued by the SAX parser
-when this object is processed.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>An array of strings, these are all of the errors issued by the SAX parser
+when this object is processed.</p>
 </div></span>
   
 </li>
@@ -181,10 +188,9 @@ when this object is processed.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-The string version for the XML document as extracted from the XMl
-declaration; if no such declaration encountered, &#8216;1.0&#8217;.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>The string version for the XML document as extracted from the XMl
+declaration; if no such declaration encountered, ‘1.0’.</p>
 </div></span>
   
 </li>
@@ -209,10 +215,9 @@ declaration; if no such declaration encountered, &#8216;1.0&#8217;.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-An array of strings, these are all of the warnings issued by the SAX parser
-when this object is processed.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>An array of strings, these are all of the warnings issued by the SAX parser
+when this object is processed.</p>
 </div></span>
   
 </li>
@@ -220,6 +225,9 @@ when this object is processed.
     
   </ul>
 
+
+
+  
 
   
     <h2>
@@ -245,9 +253,8 @@ when this object is processed.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-check_for_locations ATTRIBUTES.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>check_for_locations ATTRIBUTES.</p>
 </div></span>
   
 </li>
@@ -269,9 +276,8 @@ check_for_locations ATTRIBUTES.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-error STRING.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>error STRING.</p>
 </div></span>
   
 </li>
@@ -295,9 +301,8 @@ error STRING.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-DOC = PlainXmlDocument.new [ USED_NAMESPACES ].
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>DOC = PlainXmlDocument.new [ USED_NAMESPACES ].</p>
 </div></span>
   
 </li>
@@ -319,9 +324,8 @@ DOC = PlainXmlDocument.new [ USED_NAMESPACES ].
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-namespace_locations.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>namespace_locations.</p>
 </div></span>
   
 </li>
@@ -343,9 +347,8 @@ namespace_locations.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-start_element_namespace ELEMENT_NAME, ATTRIBUTES, PREFIX, URI, NAMESPACE.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>start_element_namespace ELEMENT_NAME, ATTRIBUTES, PREFIX, URI, NAMESPACE.</p>
 </div></span>
   
 </li>
@@ -367,9 +370,8 @@ start_element_namespace ELEMENT_NAME, ATTRIBUTES, PREFIX, URI, NAMESPACE.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-used_namespaces.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>used_namespaces.</p>
 </div></span>
   
 </li>
@@ -391,9 +393,8 @@ used_namespaces.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-warning STRING.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>warning STRING.</p>
 </div></span>
   
 </li>
@@ -415,9 +416,8 @@ warning STRING.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-xmldecl  VERSION, ENCODING, STANDALONE.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>xmldecl  VERSION, ENCODING, STANDALONE.</p>
 </div></span>
   
 </li>
@@ -439,19 +439,16 @@ xmldecl  VERSION, ENCODING, STANDALONE.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-DOC = PlainXmlDocument.new [ USED_NAMESPACES ]
-</p>
-<p>
-The purpose of this object is to garner a list of namespaces actually used
+    
+<p>DOC = PlainXmlDocument.new [ USED_NAMESPACES ]</p>
+
+<p>The purpose of this object is to garner a list of namespaces actually used
 by a document.  The optional USED_NAMESPACE hash, if given, will be
 augmented by namespaces encountered in the document.  USED_NAMESPACES is a
-hash where only the keys (Namespace URNs) are important.
-</p>
-<p>
-DOC will eventually be passed to Nokogiri::XML::SAX::Parser to be
-populated; see the XmlResolution::XMLResolver class.
-</p>
+hash where only the keys (Namespace URNs) are important.</p>
+
+<p>DOC will eventually be passed to Nokogiri::XML::SAX::Parser to be
+populated; see the XmlResolution::XMLResolver class.</p>
 
 
   </div>
@@ -493,10 +490,9 @@ populated; see the XmlResolution::XMLResolver class.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-An array of strings, these are all of the errors issued by the SAX parser
-when this object is processed.
-</p>
+    
+<p>An array of strings, these are all of the errors issued by the SAX parser
+when this object is processed.</p>
 
 
   </div>
@@ -537,10 +533,9 @@ when this object is processed.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-The string version for the XML document as extracted from the XMl
-declaration; if no such declaration encountered, &#8216;1.0&#8217;.
-</p>
+    
+<p>The string version for the XML document as extracted from the XMl
+declaration; if no such declaration encountered, ‘1.0’.</p>
 
 
   </div>
@@ -581,10 +576,9 @@ declaration; if no such declaration encountered, &#8216;1.0&#8217;.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-An array of strings, these are all of the warnings issued by the SAX parser
-when this object is processed.
-</p>
+    
+<p>An array of strings, these are all of the warnings issued by the SAX parser
+when this object is processed.</p>
 
 
   </div>
@@ -629,47 +623,42 @@ when this object is processed.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-check_for_locations ATTRIBUTES
-</p>
-<p>
-Given the array ATTRIBUTES of the SAX-parsed attributes object (which
-include the methods &#8216;localname&#8217;, &#8216;prefix&#8217;,
-&#8216;uri&#8217; and &#8216;value&#8217; such that &#8216;uri&#8217; is
-the namespace of the unprefixed attribute name &#8216;localname&#8217;),
-check if it includes a schemaLocation  and if so, parse its values, adding
-to the internal @locations hash.
-</p>
-<p>
-Consider this fragment of a METs instance document:
-</p>
-<pre class="code">
-   <span class='lt op'>&lt;</span><span class='METS constant id'>METS</span><span class='symbol val'>:mets</span> <span class='xmlns identifier id'>xmlns</span><span class='symbol val'>:METS=</span><span class='string val'>&quot;http://www.loc.gov/METS/&quot;</span>
-              <span class='xmlns identifier id'>xmlns</span><span class='symbol val'>:daitss=</span><span class='string val'>&quot;http://www.fcla.edu/dls/md/daitss/&quot;</span>
-              <span class='xmlns identifier id'>xmlns</span><span class='symbol val'>:dc=</span><span class='string val'>&quot;http://purl.org/dc/elements/1.1/&quot;</span>
-            <span class='xmlns identifier id'>xmlns</span><span class='symbol val'>:mods=</span><span class='string val'>&quot;http://www.loc.gov/mods/v3&quot;</span>
-              <span class='xmlns identifier id'>xmlns</span><span class='symbol val'>:palmm=</span><span class='string val'>&quot;http://www.fcla.edu/dls/md/palmm/&quot;</span>
-              <span class='xmlns identifier id'>xmlns</span><span class='symbol val'>:rightsmd=</span><span class='string val'>&quot;http://www.fcla.edu/dls/md/rightsmd/&quot;</span>
-              <span class='xmlns identifier id'>xmlns</span><span class='symbol val'>:techmd=</span><span class='string val'>&quot;http://www.fcla.edu/dls/md/techmd/&quot;</span>
-              <span class='xmlns identifier id'>xmlns</span><span class='symbol val'>:xlink=</span><span class='string val'>&quot;http://www.w3.org/1999/xlink&quot;</span>
-              <span class='xmlns identifier id'>xmlns</span><span class='symbol val'>:xsi=</span><span class='string val'>&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+    
+<p>check_for_locations ATTRIBUTES</p>
 
-          <span class='LABEL constant id'>LABEL</span><span class='assign token'>=</span><span class='string val'>&quot;Florida Chautauqua&quot;</span> <span class='OBJID constant id'>OBJID</span><span class='assign token'>=</span><span class='string val'>&quot;SN00000005&quot;</span>
-          <span class='TYPE constant id'>TYPE</span><span class='assign token'>=</span><span class='string val'>&quot;serial&quot;</span>
+<p>Given the array ATTRIBUTES of the SAX-parsed attributes object (which
+include the methods ‘localname’, ‘prefix’, ‘uri’ and
+‘value’ such that ‘uri’ is the namespace of the unprefixed
+attribute name ‘localname’), check if it includes a schemaLocation  and
+if so, parse its values, adding to the internal @locations hash.</p>
 
-     <span class='xsi identifier id'>xsi</span><span class='symbol val'>:schemaLocation=</span><span class='string val'>&quot;http://www.loc.gov/METS/             http://www.loc.gov/standards/mets/mets.xsd
-                         http://purl.org/dc/elements/1.1/     http://dublincore.org/schemas/xmls/simpledc20021212.xsd
-                         http://www.loc.gov/mods/v3           http://www.loc.gov/standards/mods/v3/mods-3-0.xsd
-                         http://www.fcla.edu/dls/md/techmd/   http://www.fcla.edu/dls/md/techmd.xsd
-                         http://www.fcla.edu/dls/md/palmm/    http://www.fcla.edu/dls/md/palmm.xsd
-                         http://www.fcla.edu/dls/md/rightsmd/ http://www.fcla.edu/dls/md/rightsmd.xsd
-                         http://www.fcla.edu/dls/md/daitss/   http://www.fcla.edu/dls/md/daitss/daitss.xsd&quot;</span><span class='gt op'>&gt;</span>
+<p>Consider this fragment of a METs instance document:</p>
+
+<pre class="code"><span class='lt op'>&lt;</span><span class='METS constant id'>METS</span><span class='symbol val'>:mets</span> <span class='xmlns identifier id'>xmlns</span><span class='symbol val'>:METS=</span><span class='string val'>&quot;http://www.loc.gov/METS/&quot;</span>
+           <span class='xmlns identifier id'>xmlns</span><span class='symbol val'>:daitss=</span><span class='string val'>&quot;http://www.fcla.edu/dls/md/daitss/&quot;</span>
+           <span class='xmlns identifier id'>xmlns</span><span class='symbol val'>:dc=</span><span class='string val'>&quot;http://purl.org/dc/elements/1.1/&quot;</span>
+         <span class='xmlns identifier id'>xmlns</span><span class='symbol val'>:mods=</span><span class='string val'>&quot;http://www.loc.gov/mods/v3&quot;</span>
+           <span class='xmlns identifier id'>xmlns</span><span class='symbol val'>:palmm=</span><span class='string val'>&quot;http://www.fcla.edu/dls/md/palmm/&quot;</span>
+           <span class='xmlns identifier id'>xmlns</span><span class='symbol val'>:rightsmd=</span><span class='string val'>&quot;http://www.fcla.edu/dls/md/rightsmd/&quot;</span>
+           <span class='xmlns identifier id'>xmlns</span><span class='symbol val'>:techmd=</span><span class='string val'>&quot;http://www.fcla.edu/dls/md/techmd/&quot;</span>
+           <span class='xmlns identifier id'>xmlns</span><span class='symbol val'>:xlink=</span><span class='string val'>&quot;http://www.w3.org/1999/xlink&quot;</span>
+           <span class='xmlns identifier id'>xmlns</span><span class='symbol val'>:xsi=</span><span class='string val'>&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+
+       <span class='LABEL constant id'>LABEL</span><span class='assign token'>=</span><span class='string val'>&quot;Florida Chautauqua&quot;</span> <span class='OBJID constant id'>OBJID</span><span class='assign token'>=</span><span class='string val'>&quot;SN00000005&quot;</span>
+       <span class='TYPE constant id'>TYPE</span><span class='assign token'>=</span><span class='string val'>&quot;serial&quot;</span>
+
+  <span class='xsi identifier id'>xsi</span><span class='symbol val'>:schemaLocation=</span><span class='string val'>&quot;http://www.loc.gov/METS/             http://www.loc.gov/standards/mets/mets.xsd
+                      http://purl.org/dc/elements/1.1/     http://dublincore.org/schemas/xmls/simpledc20021212.xsd
+                      http://www.loc.gov/mods/v3           http://www.loc.gov/standards/mods/v3/mods-3-0.xsd
+                      http://www.fcla.edu/dls/md/techmd/   http://www.fcla.edu/dls/md/techmd.xsd
+                      http://www.fcla.edu/dls/md/palmm/    http://www.fcla.edu/dls/md/palmm.xsd
+                      http://www.fcla.edu/dls/md/rightsmd/ http://www.fcla.edu/dls/md/rightsmd.xsd
+                      http://www.fcla.edu/dls/md/daitss/   http://www.fcla.edu/dls/md/daitss/daitss.xsd&quot;</span><span class='gt op'>&gt;</span>
 </pre>
-<p>
-check_for_locations parses the &#8220;xsi:schemaLocation&#8221; attribute
-into namespace-uri/location-url pairs, and enters them into the @locations
-hash, which maintains an association of locations and the namespace.
-</p>
+
+<p>check_for_locations parses the “xsi:schemaLocation” attribute into
+namespace-uri/location-url pairs, and enters them into the @locations hash,
+which maintains an association of locations and the namespace.</p>
 
 
   </div>
@@ -723,14 +712,12 @@ hash, which maintains an association of locations and the namespace.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-error STRING
-</p>
-<p>
-STRING provides a message encountered when an error condition occurs during
+    
+<p>error STRING</p>
+
+<p>STRING provides a message encountered when an error condition occurs during
 document parsing; we record the message on the  errors attribute, an array
-of strings.
-</p>
+of strings.</p>
 
 
   </div>
@@ -768,14 +755,12 @@ of strings.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-namespace_locations
-</p>
-<p>
-Returns a hash of Location-URL/Namespace-URN key/value pairs  where the use
+    
+<p>namespace_locations</p>
+
+<p>Returns a hash of Location-URL/Namespace-URN key/value pairs  where the use
 of a Namespace-URN has been encountered during element and attribute
-parsing.
-</p>
+parsing.</p>
 
 
   </div>
@@ -821,16 +806,14 @@ parsing.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-start_element_namespace ELEMENT_NAME, ATTRIBUTES, PREFIX, URI, NAMESPACE
-</p>
-<p>
-SAX calls this method as it encounters new elements.  We mine the elements
+    
+<p>start_element_namespace ELEMENT_NAME, ATTRIBUTES, PREFIX, URI, NAMESPACE</p>
+
+<p>SAX calls this method as it encounters new elements.  We mine the elements
 and attributes for their namespace URIs; we also check for schemaLocation
 elements. Note that the namespace for this element is included as the URI;
 NAMESPACE is an array  of the xmlns declarations for this node (if nay),
-which may include namespaces not actually used by the document.
-</p>
+which may include namespaces not actually used by the document.</p>
 
 
   </div>
@@ -876,15 +859,13 @@ which may include namespaces not actually used by the document.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-used_namespaces
-</p>
-<p>
-Returns a hash of the namespaces extracted from the element and attribute
+    
+<p>used_namespaces</p>
+
+<p>Returns a hash of the namespaces extracted from the element and attribute
 information parsed by the SAX processor: only those namespaces actually
 used by the XML document are recorded.  This will be identical to the
-optional hash argument to our constructor if it was provided.
-</p>
+optional hash argument to our constructor if it was provided.</p>
 
 
   </div>
@@ -922,14 +903,12 @@ optional hash argument to our constructor if it was provided.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-warning STRING
-</p>
-<p>
-STRING provides a message encountered when a warning condition occurs
+    
+<p>warning STRING</p>
+
+<p>STRING provides a message encountered when a warning condition occurs
 during document processing; we record the message on the warnings
-attribute, an array of strings.
-</p>
+attribute, an array of strings.</p>
 
 
   </div>
@@ -967,14 +946,11 @@ attribute, an array of strings.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-xmldecl  VERSION, ENCODING, STANDALONE
-</p>
-<p>
-Called when an XML declaration node is encountered; we record the XML
-version as the object attribute version, otherwise defaults to
-&#8216;1.0&#8217;
-</p>
+    
+<p>xmldecl  VERSION, ENCODING, STANDALONE</p>
+
+<p>Called when an XML declaration node is encountered; we record the XML
+version as the object attribute version, otherwise defaults to ‘1.0’</p>
 
 
   </div>
@@ -1008,9 +984,9 @@ version as the object attribute version, otherwise defaults to
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:35:22 2011 by 
+  Generated on Fri Aug 19 15:30:07 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.2 (ruby-1.8.7).
 </div>
 
   </body>

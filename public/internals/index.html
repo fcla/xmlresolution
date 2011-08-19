@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>XML Resolution Service</title>
-<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  File: README
+  
+    &mdash; XML Resolution Service
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
 
   </head>
   <body>
@@ -31,11 +41,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -49,9 +62,9 @@ preservation purposes.  This web service helps you do that, in three
 RESTful steps:</p>
 
 <ol>
-<li>Create a collection resource.</li>
-<li>POST some XML documents to the collection.</li>
-<li>GET the collection, retrieving a tar file of the XML schemas and a manifest of what was found.</li>
+<li> Create a collection resource.</li>
+<li> POST some XML documents to the collection.</li>
+<li> GET the collection, retrieving a tar file of the XML schemas and a manifest of what was found.</li>
 </ol>
 
 
@@ -66,7 +79,7 @@ environment.</p>
 <ul>
 <li>SetEnv DATA_ROOT - where you'll save information about the schemas and document collections.</li>
 <li>SetEnv RESOLVER_PROXY squid.example.com:3128 - an optional squid caching proxy.</li>
-<li>SetEnv LOG_FACILITY LOG_LOCAL1 - optionally set a facility code if you use syslog for logging; STDERR will be used otherwise.</li>
+<li>SetEnv LOG<em>FACILITY LOG</em>LOCAL1 - optionally set a facility code if you use syslog for logging; STDERR will be used otherwise.</li>
 </ul>
 
 
@@ -87,12 +100,12 @@ standards)</p>
 <h2>Quickstart</h2>
 
 <ol>
-<li>Retrieve a copy of the xmlresolution service.</li>
-<li>Test the installation:
+<li> Retrieve a copy of the xmlresolution service.</li>
+<li> Test the installation:
 <code>% rake spec</code></li>
-<li>Run from rackup, specifying your environment:
+<li> Run from rackup, specifying your environment:
 <code>% RESOLVER_PROXY=squid.example.com:3128  rackup config.ru</code>
-or run under a web server.  I'm using passenger phusion under apache:</li>
+ or run under a web server.  I'm using passenger phusion under apache:</li>
 </ol>
 
 
@@ -158,9 +171,9 @@ use and testing; there is a Rake task that will install the
 application documentation under public/internals.</p></div></div>
     
     <div id="footer">
-  Generated on Thu May 12 23:34:58 2011 by 
+  Generated on Fri Aug 19 15:30:02 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.2 (ruby-1.8.7).
 </div>
 
   </body>

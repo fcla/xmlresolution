@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Module: ResolverUtils</title>
-<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Module: ResolverUtils
+  
+    &mdash; XML Resolution Service
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -66,10 +79,9 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>
-ResolverUtils provides a service class of useful methods for the
-XmlResolution service.
-</p>
+    
+<p>ResolverUtils provides a service class of useful methods for the
+XmlResolution service.</p>
 
 
   </div>
@@ -84,9 +96,8 @@ XmlResolution service.
         <dt id="LOCK_TIMEOUT-constant" class="">LOCK_TIMEOUT =
           <div class="docstring">
   <div class="discussion">
-    <p>
-Timeout in seconds for the read_lock and write_lock methods.
-</p>
+    
+<p>Timeout in seconds for the read_lock and write_lock methods.</p>
 
 
   </div>
@@ -100,6 +111,8 @@ Timeout in seconds for the read_lock and write_lock methods.
       
     </dl>
   
+
+
 
 
 
@@ -127,9 +140,8 @@ Timeout in seconds for the read_lock and write_lock methods.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-check_directory PHRASE, DIRECTORY.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>check_directory PHRASE, DIRECTORY.</p>
 </div></span>
   
 </li>
@@ -151,9 +163,8 @@ check_directory PHRASE, DIRECTORY.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-collection_name_ok? COLLECTION_ID.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>collection_name_ok? COLLECTION_ID.</p>
 </div></span>
   
 </li>
@@ -175,9 +186,8 @@ collection_name_ok? COLLECTION_ID.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-escape *LIST.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>escape *LIST.</p>
 </div></span>
   
 </li>
@@ -199,9 +209,31 @@ escape *LIST.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-group [ PATHNAME ].
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>group [ PATHNAME ].</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#read_config-class_method" title="read_config (class method)">+ (Object) <strong>read_config</strong>(yaml_file) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>read_config yaml_file.</p>
 </div></span>
   
 </li>
@@ -223,9 +255,8 @@ group [ PATHNAME ].
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-read_lock FILEPATH [ WAIT_TIME = LOCK_TIMEOUT ].
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>read_lock FILEPATH [ WAIT_TIME = LOCK_TIMEOUT ].</p>
 </div></span>
   
 </li>
@@ -247,9 +278,8 @@ read_lock FILEPATH [ WAIT_TIME = LOCK_TIMEOUT ].
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-remote_name ADDR.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>remote_name ADDR.</p>
 </div></span>
   
 </li>
@@ -271,9 +301,8 @@ remote_name ADDR.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-unescape STRING .
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>unescape STRING .</p>
 </div></span>
   
 </li>
@@ -295,9 +324,8 @@ unescape STRING .
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-user [ PATHNAME ].
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>user [ PATHNAME ].</p>
 </div></span>
   
 </li>
@@ -319,9 +347,8 @@ user [ PATHNAME ].
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-write_lock FILEPATH [ WAIT_TIME = LOCK_TIMEOUT ].
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>write_lock FILEPATH [ WAIT_TIME = LOCK_TIMEOUT ].</p>
 </div></span>
   
 </li>
@@ -345,14 +372,12 @@ write_lock FILEPATH [ WAIT_TIME = LOCK_TIMEOUT ].
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-check_directory PHRASE, DIRECTORY
-</p>
-<p>
-Carefully check that the directory named by the string DIRECTORY is
+    
+<p>check_directory PHRASE, DIRECTORY</p>
+
+<p>Carefully check that the directory named by the string DIRECTORY is
 writable, and if not, throw an XmlResolution::ConfigurationError with a
-descriptive message preceded by PHRASE.
-</p>
+descriptive message preceded by PHRASE.</p>
 
 
   </div>
@@ -390,19 +415,19 @@ descriptive message preceded by PHRASE.
 <span class='def def kw'>def</span> <span class='ResolverUtils constant id'>ResolverUtils</span><span class='dot token'>.</span><span class='check_directory identifier id'>check_directory</span> <span class='phrase identifier id'>phrase</span><span class='comma token'>,</span> <span class='directory identifier id'>directory</span>
 
   <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='exists? fid id'>exists?</span> <span class='directory identifier id'>directory</span>
-    <span class='raise identifier id'>raise</span> <span class='XmlResolution constant id'>XmlResolution</span><span class='colon2 op'>::</span><span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{phrase} #{directory} doesn't exist or is unreadable by this user (#{ResolverUtils.user}) and group (#{ResolverUtils.group}).&quot;</span>
+    <span class='raise identifier id'>raise</span> <span class='XmlResolution constant id'>XmlResolution</span><span class='colon2 op'>::</span><span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{phrase}, '#{directory}', doesn't exist or is unreadable by this user (#{ResolverUtils.user}) and group (#{ResolverUtils.group}).&quot;</span>
   <span class='end end kw'>end</span>
 
   <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='directory? fid id'>directory?</span> <span class='directory identifier id'>directory</span>
-    <span class='raise identifier id'>raise</span> <span class='XmlResolution constant id'>XmlResolution</span><span class='colon2 op'>::</span><span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{phrase} #{directory} isn't a directory.&quot;</span>
+    <span class='raise identifier id'>raise</span> <span class='XmlResolution constant id'>XmlResolution</span><span class='colon2 op'>::</span><span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{phrase}, '#{directory}', isn't a directory.&quot;</span>
   <span class='end end kw'>end</span>
 
   <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='readable? fid id'>readable?</span> <span class='directory identifier id'>directory</span>
-    <span class='raise identifier id'>raise</span> <span class='XmlResolution constant id'>XmlResolution</span><span class='colon2 op'>::</span><span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{phrase} #{directory} isn't readable by this user (#{ResolverUtils.user}) or group (#{ResolverUtils.group}).&quot;</span>
+    <span class='raise identifier id'>raise</span> <span class='XmlResolution constant id'>XmlResolution</span><span class='colon2 op'>::</span><span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{phrase}, '#{directory}', isn't readable by this user (#{ResolverUtils.user}) or group (#{ResolverUtils.group}).&quot;</span>
   <span class='end end kw'>end</span>
 
   <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='writable? fid id'>writable?</span> <span class='directory identifier id'>directory</span>
-    <span class='raise identifier id'>raise</span> <span class='XmlResolution constant id'>XmlResolution</span><span class='colon2 op'>::</span><span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{phrase} #{directory} isn't writable by this user (#{ResolverUtils.user}) or group (#{ResolverUtils.group}).&quot;</span>
+    <span class='raise identifier id'>raise</span> <span class='XmlResolution constant id'>XmlResolution</span><span class='colon2 op'>::</span><span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{phrase}, '#{directory}', isn't writable by this user (#{ResolverUtils.user}) or group (#{ResolverUtils.group}).&quot;</span>
   <span class='end end kw'>end</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -420,18 +445,15 @@ descriptive message preceded by PHRASE.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-collection_name_ok? COLLECTION_ID
-</p>
-<p>
-A boolean to determine if the string COLLECTION_ID is a valid collection
+    
+<p>collection_name_ok? COLLECTION_ID</p>
+
+<p>A boolean to determine if the string COLLECTION_ID is a valid collection
 id. It has to fit into the filesystem as a directory, and must be able to
-server as a single path component.
-</p>
-<p>
-Note that the top-level routes can and should be more restrictive about
-collection names - for instance, a UUID or IEID.
-</p>
+server as a single path component.</p>
+
+<p>Note that the top-level routes can and should be more restrictive about
+collection names - for instance, a UUID or IEID.</p>
 
 
   </div>
@@ -442,8 +464,8 @@ collection names - for instance, a UUID or IEID.
   
     <li>
       
-        <span class='type'>(<tt>Boolean</tt>)</span>
       
+        <span class='type'>(<tt>Boolean</tt>)</span>
       
       
       
@@ -482,13 +504,11 @@ collection names - for instance, a UUID or IEID.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-escape *LIST
-</p>
-<p>
-Given the arugment list LIST of strings, first URI escape them, then join
-them with a space and return the constructed string.
-</p>
+    
+<p>escape *LIST</p>
+
+<p>Given the arugment list LIST of strings, first URI escape them, then join
+them with a space and return the constructed string.</p>
 
 
   </div>
@@ -526,14 +546,12 @@ them with a space and return the constructed string.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-group [ PATHNAME ]
-</p>
-<p>
-Without argument, return the group name (a string) of the user running this
+    
+<p>group [ PATHNAME ]</p>
+
+<p>Without argument, return the group name (a string) of the user running this
 process.  With argument PATHNAME (a string) naming an existing readable
-file, return its group name.
-</p>
+file, return its group name.</p>
 
 
   </div>
@@ -571,6 +589,84 @@ file, return its group name.
 </div>
     
       <div class="method_details ">
+  <p class="signature " id="read_config-class_method">
+  
+    + (<tt>Object</tt>) <strong>read_config</strong>(yaml_file) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>read_config yaml_file</p>
+
+<p>Read a configuration data file, set reasonable defaults, and return a tasty
+struct.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/utils.rb', line 168</span>
+
+<span class='def def kw'>def</span> <span class='ResolverUtils constant id'>ResolverUtils</span><span class='dot token'>.</span><span class='read_config identifier id'>read_config</span> <span class='yaml_file identifier id'>yaml_file</span>
+
+  <span class='conf identifier id'>conf</span> <span class='assign token'>=</span> <span class='Struct constant id'>Struct</span><span class='colon2 op'>::</span><span class='StartUpConfig constant id'>StartUpConfig</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+
+  <span class='begin begin kw'>begin</span>
+    <span class='hash identifier id'>hash</span> <span class='assign token'>=</span> <span class='YAML constant id'>YAML</span><span class='colon2 op'>::</span><span class='load identifier id'>load</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='open identifier id'>open</span><span class='lparen token'>(</span><span class='yaml_file identifier id'>yaml_file</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+  <span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
+    <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Can't parse the XML Resolution service configuration file '#{yaml_file}': #{e.message}.&quot;</span>
+  <span class='else else kw'>else</span>
+    <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Can't parse the data in the XML Resolution service configuration file '#{yaml_file}'.&quot;</span> <span class='if if_mod kw'>if</span> <span class='hash identifier id'>hash</span><span class='dot token'>.</span><span class='class identifier id'>class</span> <span class='neq op'>!=</span> <span class='Hash constant id'>Hash</span>
+  <span class='end end kw'>end</span>
+
+  <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='members identifier id'>members</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='x identifier id'>x</span><span class='bitor op'>|</span> <span class='conf identifier id'>conf</span><span class='lbrack token'>[</span><span class='x identifier id'>x</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='hash identifier id'>hash</span><span class='lbrack token'>[</span><span class='x identifier id'>x</span><span class='rbrack token'>]</span> <span class='rbrace token'>}</span>
+
+  <span class='comment val'># reasonable defaults:</span>
+
+  <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='virtual_hostname identifier id'>virtual_hostname</span> <span class='opasgn op'>||=</span> <span class='Socket constant id'>Socket</span><span class='dot token'>.</span><span class='gethostname identifier id'>gethostname</span>
+  <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='data_root identifier id'>data_root</span>        <span class='opasgn op'>||=</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='expand_path identifier id'>expand_path</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='dirname identifier id'>dirname</span><span class='lparen token'>(</span><span class='__FILE__ __file__ kw'>__FILE__</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='string val'>'../../data'</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+
+  <span class='return return kw'>return</span> <span class='conf identifier id'>conf</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
   <p class="signature " id="read_lock-class_method">
   
     + (<tt>Object</tt>) <strong>read_lock</strong>(filepath, wait_time = LOCK_TIMEOUT) 
@@ -579,23 +675,20 @@ file, return its group name.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-read_lock FILEPATH [ WAIT_TIME = LOCK_TIMEOUT ]
-</p>
-<p>
-Access the file named by FILEPATH in a shared manner.  Note that we have
+    
+<p>read_lock FILEPATH [ WAIT_TIME = LOCK_TIMEOUT ]</p>
+
+<p>Access the file named by FILEPATH in a shared manner.  Note that we have
 two kinds of locks associated with a given file, read_locks and
 write_locks.  There may be 0, 1 or many locks active at any time. There may
 exist many active read_locks at once, but if there is an active write_lock,
 it is the only lock of any kind in existance (for FILEPATH) at that time. 
 Requests for locks may block for up to WAIT_TIME seconds (defaults to
-LOCK_TIMEOUT), after which a LockError exception is raised.
-</p>
-<p>
-On success, we yield a file desciptor positioned at the beginning of the
+LOCK_TIMEOUT), after which a LockError exception is raised.</p>
+
+<p>On success, we yield a file desciptor positioned at the beginning of the
 file and ready to read from.  On exiting the block, the file is properly
-closed and the lock released.
-</p>
+closed and the lock released.</p>
 
 
   </div>
@@ -606,8 +699,8 @@ closed and the lock released.
   
     <li>
       
-        <span class='type'>(<tt><span class='object_link'><a href="XmlResolution/LockError.html" title="XmlResolution::LockError (class)">XmlResolution::LockError</a></span></tt>)</span>
       
+        <span class='type'>(<tt><span class='object_link'><a href="XmlResolution/LockError.html" title="XmlResolution::LockError (class)">XmlResolution::LockError</a></span></tt>)</span>
       
       
       
@@ -656,13 +749,11 @@ closed and the lock released.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-remote_name ADDR
-</p>
-<p>
-Attempts a reverse lookup on IP address ADDR; if it fails, just returns the
-original address ADDR.
-</p>
+    
+<p>remote_name ADDR</p>
+
+<p>Attempts a reverse lookup on IP address ADDR; if it fails, just returns the
+original address ADDR.</p>
 
 
   </div>
@@ -706,12 +797,10 @@ original address ADDR.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-unescape STRING 
-</p>
-<p>
-Perform the inverse of the escape method.
-</p>
+    
+<p>unescape STRING</p>
+
+<p>Perform the inverse of the escape method.</p>
 
 
   </div>
@@ -751,14 +840,12 @@ Perform the inverse of the escape method.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-user [ PATHNAME ]
-</p>
-<p>
-Without argument, return the name (a string) of the user running this
+    
+<p>user [ PATHNAME ]</p>
+
+<p>Without argument, return the name (a string) of the user running this
 process.  With argument PATHNAME (a string) naming an existing, readable
-file, return the name of the user who owns it.
-</p>
+file, return the name of the user who owns it.</p>
 
 
   </div>
@@ -804,18 +891,16 @@ file, return the name of the user who owns it.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-write_lock FILEPATH [ WAIT_TIME = LOCK_TIMEOUT ]
-</p>
-<p>
-Access the file named by FILEPATH exclusively. FILEPATH does not have to
+    
+<p>write_lock FILEPATH [ WAIT_TIME = LOCK_TIMEOUT ]</p>
+
+<p>Access the file named by FILEPATH exclusively. FILEPATH does not have to
 exist. Times out after LOCK_TIMEOUT (or the optional WAIT_TIME, if
 specified) seconds, raising a LockError exception. On successfully
 obtaining a lock we truncate the file, and yield a file descriptor ready
 for writing.  On exiting the block the file is properly closed and the lock
 released. See the description of read_lock for more details on how these
-kinds of lock work.
-</p>
+kinds of lock work.</p>
 
 
   </div>
@@ -826,8 +911,8 @@ kinds of lock work.
   
     <li>
       
-        <span class='type'>(<tt><span class='object_link'><a href="XmlResolution/LockError.html" title="XmlResolution::LockError (class)">XmlResolution::LockError</a></span></tt>)</span>
       
+        <span class='type'>(<tt><span class='object_link'><a href="XmlResolution/LockError.html" title="XmlResolution::LockError (class)">XmlResolution::LockError</a></span></tt>)</span>
       
       
       
@@ -874,9 +959,9 @@ kinds of lock work.
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:35:15 2011 by 
+  Generated on Fri Aug 19 15:30:08 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.2 (ruby-1.8.7).
 </div>
 
   </body>

@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Exception: XmlResolution::LocationError</title>
-<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Exception: XmlResolution::LocationError
+  
+    &mdash; XML Resolution Service
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -83,17 +96,15 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>
-The LocationError is caught internally, and is used to indicate that the
+    
+<p>The LocationError is caught internally, and is used to indicate that the
 fetch of a Schema could not be performed because the location URL scheme
 was not supported.  This results in reporting broken link, and is normally
-not very important: there are many other schemas to report on.
-</p>
-<p>
-However, if this exception was raised to the top level, we do not want to
-pass the information to the user.  That&#8217;s why it is not assigned to
-an HttpError subclass - we <b>want</b> a logged backtrace in that case.
-</p>
+not very important: there are many other schemas to report on.</p>
+
+<p>However, if this exception was raised to the top level, we do not want to
+pass the information to the user.  That’s why it is not assigned to an
+HttpError subclass - we <b>want</b> a logged backtrace in that case.</p>
 
 
   </div>
@@ -107,12 +118,15 @@ an HttpError subclass - we <b>want</b> a logged backtrace in that case.
 
   
 
+
+  
+
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:35:23 2011 by 
+  Generated on Fri Aug 19 15:30:04 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.2 (ruby-1.8.7).
 </div>
 
   </body>

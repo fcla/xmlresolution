@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Class: XmlResolution::XmlResolver</title>
-<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: XmlResolution::XmlResolver
+  
+    &mdash; XML Resolution Service
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -81,60 +94,56 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>
-Initial Author: Randy Fischer (rf@ufl.edu) for DAITSS
-</p>
-<p>
-This class analyzes an XML document, attempting to recursively retrieve all
+    
+<p>Initial Author: Randy Fischer (rf@ufl.edu) for DAITSS</p>
+
+<p>This class analyzes an XML document, attempting to recursively retrieve all
 of the schema documents required to correctly validate it. It will
 optionally use an HTTP caching proxy such as squid to fetch the schemas.  A
 list of namespaces that were not able to be resolved can be retrieved using
-the unresolved_namespaces method.
-</p>
-<p>
-Example usage:
-</p>
-<pre class="code">
- <span class='xrez identifier id'>xrez</span> <span class='assign token'>=</span> <span class='XmlResolution constant id'>XmlResolution</span><span class='colon2 op'>::</span><span class='XmlResolver constant id'>XmlResolver</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='read identifier id'>read</span><span class='lparen token'>(</span><span class='string val'>&quot;F20060215_AAAAHL.xml&quot;</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='string val'>&quot;file://mydoc.xml&quot;</span><span class='comma token'>,</span>
-                                       <span class='string val'>&quot;/var/resolver-files/&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;satyagraha.sacred.net:3128&quot;</span><span class='rparen token'>)</span>
-  <span class='xrez identifier id'>xrez</span><span class='dot token'>.</span><span class='schema_dictionary identifier id'>schema_dictionary</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='rec identifier id'>rec</span><span class='bitor op'>|</span>
-     <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='retrieval_status identifier id'>retrieval_status</span> <span class='eq op'>==</span> <span class='symbol val'>:success</span>
-     <span class='puts identifier id'>puts</span> <span class='dstring node'>&quot;#{rec.namespace} =&gt; #{rec.location}\n&quot;</span>
-  <span class='end end kw'>end</span>
-  <span class='puts identifier id'>puts</span> <span class='string val'>&quot;\nUnresolved: &quot;</span> <span class='plus op'>+</span> <span class='xrez identifier id'>xrez</span><span class='dot token'>.</span><span class='unresolved_namespaces identifier id'>unresolved_namespaces</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>&quot;, &quot;</span><span class='rparen token'>)</span>
-</pre>
-<p>
-which returns
-</p>
-<pre class="code">
-  <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.fcla.edu/</span><span class='dls identifier id'>dls</span><span class='div op'>/</span><span class='md identifier id'>md</span><span class='div op'>/</span><span class='daitss identifier id'>daitss</span><span class='div op'>/</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.fcla.edu/</span><span class='dls identifier id'>dls</span><span class='div op'>/</span><span class='md identifier id'>md</span><span class='div op'>/</span><span class='daitss identifier id'>daitss</span><span class='div op'>/</span><span class='daitss identifier id'>daitss</span><span class='dot token'>.</span><span class='xsd identifier id'>xsd</span>
-  <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.fcla.edu/</span><span class='dls identifier id'>dls</span><span class='div op'>/</span><span class='md identifier id'>md</span><span class='div op'>/</span><span class='daitss identifier id'>daitss</span><span class='div op'>/</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.fcla.edu/</span><span class='dls identifier id'>dls</span><span class='div op'>/</span><span class='md identifier id'>md</span><span class='div op'>/</span><span class='daitss identifier id'>daitss</span><span class='div op'>/</span><span class='daitssAccount identifier id'>daitssAccount</span><span class='dot token'>.</span><span class='xsd identifier id'>xsd</span>
-  <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.fcla.edu/</span><span class='dls identifier id'>dls</span><span class='div op'>/</span><span class='md identifier id'>md</span><span class='div op'>/</span><span class='daitss identifier id'>daitss</span><span class='div op'>/</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.fcla.edu/</span><span class='dls identifier id'>dls</span><span class='div op'>/</span><span class='md identifier id'>md</span><span class='div op'>/</span><span class='daitss identifier id'>daitss</span><span class='div op'>/</span><span class='daitssAccountProject identifier id'>daitssAccountProject</span><span class='dot token'>.</span><span class='xsd identifier id'>xsd</span>
-   <span class='dot3 op'>...</span>
-  <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.fcla.edu/</span><span class='dls identifier id'>dls</span><span class='div op'>/</span><span class='md identifier id'>md</span><span class='div op'>/</span><span class='daitss identifier id'>daitss</span><span class='div op'>/</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.fcla.edu/</span><span class='dls identifier id'>dls</span><span class='div op'>/</span><span class='md identifier id'>md</span><span class='div op'>/</span><span class='daitss identifier id'>daitss</span><span class='div op'>/</span><span class='daitssWaveFile identifier id'>daitssWaveFile</span><span class='dot token'>.</span><span class='xsd identifier id'>xsd</span>
-  <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.loc.gov/</span><span class='METS constant id'>METS</span><span class='div op'>/</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.loc.gov/s</span><span class='tandards identifier id'>tandards</span><span class='div op'>/</span><span class='mets identifier id'>mets</span><span class='div op'>/</span><span class='mets identifier id'>mets</span><span class='dot token'>.</span><span class='xsd identifier id'>xsd</span>
-  <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.loc.gov/</span><span class='mods identifier id'>mods</span><span class='div op'>/</span><span class='v3 identifier id'>v3</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.loc.gov/s</span><span class='tandards identifier id'>tandards</span><span class='div op'>/</span><span class='mods identifier id'>mods</span><span class='div op'>/</span><span class='v3 identifier id'>v3</span><span class='div op'>/</span><span class='mods identifier id'>mods</span><span class='minus op'>-</span><span class='integer val'>3</span><span class='minus op'>-</span><span class='float val'>3</span><span class='dot token'>.</span><span class='xsd identifier id'>xsd</span>
-  <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.w3.org/</span><span class='XML constant id'>XML</span><span class='div op'>/</span><span class='integer val'>1998</span><span class='div op'>/</span><span class='namespace identifier id'>namespace</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.loc.gov/s</span><span class='tandards identifier id'>tandards</span><span class='div op'>/</span><span class='mods identifier id'>mods</span><span class='div op'>/</span><span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='xsd identifier id'>xsd</span>
-  <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.w3.org/</span><span class='integer val'>1999</span><span class='div op'>/</span><span class='xlink identifier id'>xlink</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.loc.gov/s</span><span class='tandards identifier id'>tandards</span><span class='div op'>/</span><span class='xlink identifier id'>xlink</span><span class='div op'>/</span><span class='xlink identifier id'>xlink</span><span class='dot token'>.</span><span class='xsd identifier id'>xsd</span>
-  <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.uflib.ufl.edu/</span><span class='digital identifier id'>digital</span><span class='div op'>/</span><span class='metadata identifier id'>metadata</span><span class='div op'>/</span><span class='ufdc2 identifier id'>ufdc2</span><span class='div op'>/</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.uflib.ufl.edu/</span><span class='digital identifier id'>digital</span><span class='div op'>/</span><span class='metadata identifier id'>metadata</span><span class='div op'>/</span><span class='ufdc2 identifier id'>ufdc2</span><span class='div op'>/</span><span class='ufdc2 identifier id'>ufdc2</span><span class='dot token'>.</span><span class='xsd identifier id'>xsd</span>
-  <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.w3.org/</span><span class='XML constant id'>XML</span><span class='div op'>/</span><span class='integer val'>1998</span><span class='div op'>/</span><span class='namespace identifier id'>namespace</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.w3.org/</span><span class='integer val'>2001</span><span class='div op'>/</span><span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='xsd identifier id'>xsd</span>
-  <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.w3.org/</span><span class='integer val'>2001</span><span class='div op'>/</span><span class='XMLSchema constant id'>XMLSchema</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.w3.org/</span><span class='integer val'>2001</span><span class='div op'>/</span><span class='XMLSchema constant id'>XMLSchema</span><span class='dot token'>.</span><span class='xsd identifier id'>xsd</span>
+the unresolved_namespaces method.</p>
 
-  <span class='Unresolved constant id'>Unresolved</span><span class='colon op'>:</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.w3.org/</span><span class='integer val'>1999</span><span class='div op'>/</span><span class='xlink identifier id'>xlink</span><span class='comma token'>,</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.w3.org/</span><span class='integer val'>2001</span><span class='div op'>/</span><span class='XMLSchema constant id'>XMLSchema</span><span class='minus op'>-</span><span class='instance identifier id'>instance</span>
+<p>Example usage:</p>
+
+<pre class="code"><span class='xrez identifier id'>xrez</span> <span class='assign token'>=</span> <span class='XmlResolution constant id'>XmlResolution</span><span class='colon2 op'>::</span><span class='XmlResolver constant id'>XmlResolver</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='read identifier id'>read</span><span class='lparen token'>(</span><span class='string val'>&quot;F20060215_AAAAHL.xml&quot;</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='string val'>&quot;file://mydoc.xml&quot;</span><span class='comma token'>,</span>
+                                      <span class='string val'>&quot;/var/resolver-files/&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;satyagraha.sacred.net:3128&quot;</span><span class='rparen token'>)</span>
+ <span class='xrez identifier id'>xrez</span><span class='dot token'>.</span><span class='schema_dictionary identifier id'>schema_dictionary</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='rec identifier id'>rec</span><span class='bitor op'>|</span>
+    <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='retrieval_status identifier id'>retrieval_status</span> <span class='eq op'>==</span> <span class='symbol val'>:success</span>
+    <span class='puts identifier id'>puts</span> <span class='dstring node'>&quot;#{rec.namespace} =&gt; #{rec.location}\n&quot;</span>
+ <span class='end end kw'>end</span>
+ <span class='puts identifier id'>puts</span> <span class='string val'>&quot;\nUnresolved: &quot;</span> <span class='plus op'>+</span> <span class='xrez identifier id'>xrez</span><span class='dot token'>.</span><span class='unresolved_namespaces identifier id'>unresolved_namespaces</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>&quot;, &quot;</span><span class='rparen token'>)</span>
 </pre>
-<p>
-Two notes on squid caching proxies: at least by default, redirects are not
-cached (even 301 &#8220;moved permanently&#8221;) so that there will always
-be a request to the original host resulting in a redirect that we will
-handle (though the URL we are directed to will usually be cached) - an
-example is <a
+
+<p>which returns</p>
+
+<pre class="code"><span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.fcla.edu/</span><span class='dls identifier id'>dls</span><span class='div op'>/</span><span class='md identifier id'>md</span><span class='div op'>/</span><span class='daitss identifier id'>daitss</span><span class='div op'>/</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.fcla.edu/</span><span class='dls identifier id'>dls</span><span class='div op'>/</span><span class='md identifier id'>md</span><span class='div op'>/</span><span class='daitss identifier id'>daitss</span><span class='div op'>/</span><span class='daitss identifier id'>daitss</span><span class='dot token'>.</span><span class='xsd identifier id'>xsd</span>
+<span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.fcla.edu/</span><span class='dls identifier id'>dls</span><span class='div op'>/</span><span class='md identifier id'>md</span><span class='div op'>/</span><span class='daitss identifier id'>daitss</span><span class='div op'>/</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.fcla.edu/</span><span class='dls identifier id'>dls</span><span class='div op'>/</span><span class='md identifier id'>md</span><span class='div op'>/</span><span class='daitss identifier id'>daitss</span><span class='div op'>/</span><span class='daitssAccount identifier id'>daitssAccount</span><span class='dot token'>.</span><span class='xsd identifier id'>xsd</span>
+<span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.fcla.edu/</span><span class='dls identifier id'>dls</span><span class='div op'>/</span><span class='md identifier id'>md</span><span class='div op'>/</span><span class='daitss identifier id'>daitss</span><span class='div op'>/</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.fcla.edu/</span><span class='dls identifier id'>dls</span><span class='div op'>/</span><span class='md identifier id'>md</span><span class='div op'>/</span><span class='daitss identifier id'>daitss</span><span class='div op'>/</span><span class='daitssAccountProject identifier id'>daitssAccountProject</span><span class='dot token'>.</span><span class='xsd identifier id'>xsd</span>
+ <span class='dot3 op'>...</span>
+<span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.fcla.edu/</span><span class='dls identifier id'>dls</span><span class='div op'>/</span><span class='md identifier id'>md</span><span class='div op'>/</span><span class='daitss identifier id'>daitss</span><span class='div op'>/</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.fcla.edu/</span><span class='dls identifier id'>dls</span><span class='div op'>/</span><span class='md identifier id'>md</span><span class='div op'>/</span><span class='daitss identifier id'>daitss</span><span class='div op'>/</span><span class='daitssWaveFile identifier id'>daitssWaveFile</span><span class='dot token'>.</span><span class='xsd identifier id'>xsd</span>
+<span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.loc.gov/</span><span class='METS constant id'>METS</span><span class='div op'>/</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.loc.gov/s</span><span class='tandards identifier id'>tandards</span><span class='div op'>/</span><span class='mets identifier id'>mets</span><span class='div op'>/</span><span class='mets identifier id'>mets</span><span class='dot token'>.</span><span class='xsd identifier id'>xsd</span>
+<span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.loc.gov/</span><span class='mods identifier id'>mods</span><span class='div op'>/</span><span class='v3 identifier id'>v3</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.loc.gov/s</span><span class='tandards identifier id'>tandards</span><span class='div op'>/</span><span class='mods identifier id'>mods</span><span class='div op'>/</span><span class='v3 identifier id'>v3</span><span class='div op'>/</span><span class='mods identifier id'>mods</span><span class='minus op'>-</span><span class='integer val'>3</span><span class='minus op'>-</span><span class='float val'>3</span><span class='dot token'>.</span><span class='xsd identifier id'>xsd</span>
+<span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.w3.org/</span><span class='XML constant id'>XML</span><span class='div op'>/</span><span class='integer val'>1998</span><span class='div op'>/</span><span class='namespace identifier id'>namespace</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.loc.gov/s</span><span class='tandards identifier id'>tandards</span><span class='div op'>/</span><span class='mods identifier id'>mods</span><span class='div op'>/</span><span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='xsd identifier id'>xsd</span>
+<span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.w3.org/</span><span class='integer val'>1999</span><span class='div op'>/</span><span class='xlink identifier id'>xlink</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.loc.gov/s</span><span class='tandards identifier id'>tandards</span><span class='div op'>/</span><span class='xlink identifier id'>xlink</span><span class='div op'>/</span><span class='xlink identifier id'>xlink</span><span class='dot token'>.</span><span class='xsd identifier id'>xsd</span>
+<span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.uflib.ufl.edu/</span><span class='digital identifier id'>digital</span><span class='div op'>/</span><span class='metadata identifier id'>metadata</span><span class='div op'>/</span><span class='ufdc2 identifier id'>ufdc2</span><span class='div op'>/</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.uflib.ufl.edu/</span><span class='digital identifier id'>digital</span><span class='div op'>/</span><span class='metadata identifier id'>metadata</span><span class='div op'>/</span><span class='ufdc2 identifier id'>ufdc2</span><span class='div op'>/</span><span class='ufdc2 identifier id'>ufdc2</span><span class='dot token'>.</span><span class='xsd identifier id'>xsd</span>
+<span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.w3.org/</span><span class='XML constant id'>XML</span><span class='div op'>/</span><span class='integer val'>1998</span><span class='div op'>/</span><span class='namespace identifier id'>namespace</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.w3.org/</span><span class='integer val'>2001</span><span class='div op'>/</span><span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='xsd identifier id'>xsd</span>
+<span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.w3.org/</span><span class='integer val'>2001</span><span class='div op'>/</span><span class='XMLSchema constant id'>XMLSchema</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.w3.org/</span><span class='integer val'>2001</span><span class='div op'>/</span><span class='XMLSchema constant id'>XMLSchema</span><span class='dot token'>.</span><span class='xsd identifier id'>xsd</span>
+
+<span class='Unresolved constant id'>Unresolved</span><span class='colon op'>:</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.w3.org/</span><span class='integer val'>1999</span><span class='div op'>/</span><span class='xlink identifier id'>xlink</span><span class='comma token'>,</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/www.w3.org/</span><span class='integer val'>2001</span><span class='div op'>/</span><span class='XMLSchema constant id'>XMLSchema</span><span class='minus op'>-</span><span class='instance identifier id'>instance</span>
+</pre>
+
+<p>Two notes on squid caching proxies: at least by default, redirects are not
+cached (even 301 “moved permanently”) so that there will always be a
+request to the original host resulting in a redirect that we will handle
+(though the URL we are directed to will usually be cached) - an example is
+<a
 href="http://www.loc.gov/mods/v3/mods-3-2.xsd">www.loc.gov/mods/v3/mods-3-2.xsd</a>.
 Secondly, there are common schemas, such as <a
 href="http://dublincore.org/schemas/xmls/simpledc20021212.xsd">dublincore.org/schemas/xmls/simpledc20021212.xsd</a>,
 that squid cannot cache since there is no Last-Modified, Etag, or
 caching/expiration information associated with it. These kinds of issues
-slow us down somewhat.
-</p>
+will slow you down somewhat, unless you take special pains (see the
+refresh_pattern directive for squid)</p>
 
 
   </div>
@@ -153,22 +162,18 @@ slow us down somewhat.
         <dt id="NAMESPACE_DONT_TELL-constant" class="">NAMESPACE_DONT_TELL =
           <div class="docstring">
   <div class="discussion">
-    <p>
-There exist basic namespaces that schema-processors &#8216;just know
-about&#8217;, and they are not normally downloaded when encountered (for
-instance, <a
+    
+<p>There exist basic namespaces that schema-processors ‘just know about’,
+and they are not normally downloaded when encountered (for instance, <a
 href="http://www.w3.org/2001/XMLSchema.xsd">www.w3.org/2001/XMLSchema.xsd</a>
 and <a href="http://www.w3.org/2001/xml.xsd">www.w3.org/2001/xml.xsd</a>). 
-We, however, do currently download those.
-</p>
-<p>
-In other cases there are no actual schemas at all - schema-processors
-really do have to interpret them.
-</p>
-<p>
-For this latter case we do not want to report them as unresolved
-namespaces. NAMESPACE_DONT_TELL is the place to list them.
-</p>
+We, however, do currently download those.</p>
+
+<p>In other cases there are no actual schemas at all - schema-processors
+really do have to interpret them.</p>
+
+<p>For this latter case we do not want to report them as unresolved
+namespaces. NAMESPACE_DONT_TELL is the place to list them.</p>
 
 
   </div>
@@ -187,11 +192,10 @@ namespaces. NAMESPACE_DONT_TELL is the place to list them.
         <dt id="TOO_MANY_SCHEMAS-constant" class="">TOO_MANY_SCHEMAS =
           <div class="docstring">
   <div class="discussion">
-    <p>
-To avoid potential denial of service attacks (even if self-inflicted),
+    
+<p>To avoid potential denial of service attacks (even if self-inflicted),
 limit the number of schemas we are willing to process for one XML instance
-document.
-</p>
+document.</p>
 
 
   </div>
@@ -229,10 +233,9 @@ document.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-A writable directory for storing information about a collection of XML
-documents.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>A writable directory for storing information about a collection of XML
+documents.</p>
 </div></span>
   
 </li>
@@ -257,9 +260,8 @@ documents.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-A unique identifer for the document text.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>A unique identifer for the document text.</p>
 </div></span>
   
 </li>
@@ -284,9 +286,8 @@ A unique identifer for the document text.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-The length of the document.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>The length of the document.</p>
 </div></span>
   
 </li>
@@ -311,9 +312,8 @@ The length of the document.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-The text of the XML document we&#8217;ll resolve.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>The text of the XML document we’ll resolve.</p>
 </div></span>
   
 </li>
@@ -338,9 +338,8 @@ The text of the XML document we&#8217;ll resolve.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-A file URL constructed from the original filename of the document.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>A file URL constructed from the original filename of the document.</p>
 </div></span>
   
 </li>
@@ -365,9 +364,35 @@ A file URL constructed from the original filename of the document.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-errors is an array of errors encountered in processing the docment.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>errors is an array of errors encountered in processing the docment; these
+are not necessarily fatal errors.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#fatal-instance_method" title="#fatal (instance method)">- (Object) <strong>fatal</strong> </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title readonly">readonly</span>
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>fatals is boolean indicating that the document could not be parsed at all.</p>
 </div></span>
   
 </li>
@@ -392,9 +417,8 @@ errors is an array of errors encountered in processing the docment.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-The proxy to use when gathering schemas.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>The proxy to use when gathering schemas.</p>
 </div></span>
   
 </li>
@@ -419,9 +443,8 @@ The proxy to use when gathering schemas.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-resolution_time shows the time we began to process the XML document.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>resolution_time shows the time we began to process the XML document.</p>
 </div></span>
   
 </li>
@@ -446,9 +469,8 @@ resolution_time shows the time we began to process the XML document.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-schema_dictionary is a array of Structs that provides data about schemas.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>schema_dictionary is a array of Structs that provides data about schemas.</p>
 </div></span>
   
 </li>
@@ -473,9 +495,8 @@ schema_dictionary is a array of Structs that provides data about schemas.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-A writable directory for storing retrieved schema documents.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>A writable directory for storing retrieved schema documents.</p>
 </div></span>
   
 </li>
@@ -500,16 +521,17 @@ A writable directory for storing retrieved schema documents.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-used_namespaces is meant to be used as a list of unique namespaces that
-have been directly used by an XML document or one of its schemas.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>used_namespaces is meant to be used as a list of unique namespaces that
+have been directly used by an XML document or one of its schemas.</p>
 </div></span>
   
 </li>
 
     
   </ul>
+
+
 
 
   
@@ -578,9 +600,8 @@ have been directly used by an XML document or one of its schemas.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-dump.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>dump.</p>
 </div></span>
   
 </li>
@@ -604,9 +625,8 @@ dump.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-new DOCUMENT_TEXT, DOCUMENT_URI, DATA_ROOT, [ PROXY ].
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>new DOCUMENT_TEXT, DOCUMENT_URI, DATA_ROOT, [ PROXY ].</p>
 </div></span>
   
 </li>
@@ -670,9 +690,8 @@ new DOCUMENT_TEXT, DOCUMENT_URI, DATA_ROOT, [ PROXY ].
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-process.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>process.</p>
 </div></span>
   
 </li>
@@ -694,9 +713,8 @@ process.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-save COLLECTION_ID.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>save COLLECTION_ID.</p>
 </div></span>
   
 </li>
@@ -718,9 +736,8 @@ save COLLECTION_ID.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-unresolved_namespaces.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>unresolved_namespaces.</p>
 </div></span>
   
 </li>
@@ -741,17 +758,15 @@ unresolved_namespaces.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-new DOCUMENT_TEXT, DOCUMENT_URI, DATA_ROOT, [ PROXY ]
-</p>
-<p>
-Create a new XmlResolver object. The XML document is provided as the string
+    
+<p>new DOCUMENT_TEXT, DOCUMENT_URI, DATA_ROOT, [ PROXY ]</p>
+
+<p>Create a new XmlResolver object. The XML document is provided as the string
 DOCUMENT_TEXT, an externally-supplied identifier as the string DOCUMENT_URI
 (normally a file URL).  DATA_ROOT, a string, provides the path to the
 parent directory where schemas and collections of information about the
 resolved DOCUMENT_TEXT will be stored.  PROXY, if supplied, points to a
-proxy, to allow a caching proxy to be used.
-</p>
+proxy, to allow a caching proxy to be used.</p>
 
 
   </div>
@@ -762,8 +777,8 @@ proxy, to allow a caching proxy to be used.
   
     <li>
       
-        <span class='type'>(<tt><span class='object_link'><a href="InadequateDataError.html" title="XmlResolution::InadequateDataError (class)">InadequateDataError</a></span></tt>)</span>
       
+        <span class='type'>(<tt><span class='object_link'><a href="InadequateDataError.html" title="XmlResolution::InadequateDataError (class)">InadequateDataError</a></span></tt>)</span>
       
       
       
@@ -777,11 +792,6 @@ proxy, to allow a caching proxy to be used.
       <pre class="lines">
 
 
-155
-156
-157
-158
-159
 160
 161
 162
@@ -798,10 +808,16 @@ proxy, to allow a caching proxy to be used.
 173
 174
 175
-176</pre>
+176
+177
+178
+179
+180
+181
+182</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 155</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 160</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='document_text identifier id'>document_text</span><span class='comma token'>,</span> <span class='document_uri identifier id'>document_uri</span><span class='comma token'>,</span> <span class='data_root identifier id'>data_root</span><span class='comma token'>,</span> <span class='proxy identifier id'>proxy</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
   
@@ -813,7 +829,8 @@ proxy, to allow a caching proxy to be used.
   
   <span class='@used_namespaces ivar id'>@used_namespaces</span>      <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
   <span class='@schema_dictionary ivar id'>@schema_dictionary</span>    <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
-  <span class='@errors ivar id'>@errors</span>               <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>   <span class='comment val'># only errors in the instance document</span>
+  <span class='@errors ivar id'>@errors</span>               <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>     <span class='comment val'># only errors in the instance document</span>
+  <span class='@fatal ivar id'>@fatal</span>                <span class='assign token'>=</span> <span class='false false kw'>false</span>  <span class='comment val'># fatal errors.</span>
 
   <span class='@schemas_storage_directory ivar id'>@schemas_storage_directory</span>     <span class='assign token'>=</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='data_root identifier id'>data_root</span><span class='comma token'>,</span> <span class='string val'>'schemas'</span><span class='rparen token'>)</span>
   <span class='@collections_storage_directory ivar id'>@collections_storage_directory</span> <span class='assign token'>=</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='data_root identifier id'>data_root</span><span class='comma token'>,</span> <span class='string val'>'collections'</span><span class='rparen token'>)</span>
@@ -848,10 +865,9 @@ proxy, to allow a caching proxy to be used.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-A writable directory for storing information about a collection of XML
-documents
-</p>
+    
+<p>A writable directory for storing information about a collection of XML
+documents</p>
 
 
   </div>
@@ -864,12 +880,12 @@ documents
       <pre class="lines">
 
 
-94
 95
-96</pre>
+96
+97</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 94</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 95</span>
 
 <span class='def def kw'>def</span> <span class='collections_storage_directory identifier id'>collections_storage_directory</span>
   <span class='@collections_storage_directory ivar id'>@collections_storage_directory</span>
@@ -892,10 +908,9 @@ documents
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-A unique identifer for the document text. It is the MD5 hex digest of the
-document.
-</p>
+    
+<p>A unique identifer for the document text. It is the MD5 hex digest of the
+document.</p>
 
 
   </div>
@@ -908,12 +923,12 @@ document.
       <pre class="lines">
 
 
-119
 120
-121</pre>
+121
+122</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 119</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 120</span>
 
 <span class='def def kw'>def</span> <span class='document_identifier identifier id'>document_identifier</span>
   <span class='@document_identifier ivar id'>@document_identifier</span>
@@ -936,9 +951,8 @@ document.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-The length of the document
-</p>
+    
+<p>The length of the document</p>
 
 
   </div>
@@ -951,12 +965,12 @@ The length of the document
       <pre class="lines">
 
 
-123
 124
-125</pre>
+125
+126</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 123</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 124</span>
 
 <span class='def def kw'>def</span> <span class='document_size identifier id'>document_size</span>
   <span class='@document_size ivar id'>@document_size</span>
@@ -979,9 +993,8 @@ The length of the document
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-The text of the XML document we&#8217;ll resolve.
-</p>
+    
+<p>The text of the XML document we’ll resolve.</p>
 
 
   </div>
@@ -994,12 +1007,12 @@ The text of the XML document we&#8217;ll resolve.
       <pre class="lines">
 
 
-115
 116
-117</pre>
+117
+118</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 115</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 116</span>
 
 <span class='def def kw'>def</span> <span class='document_text identifier id'>document_text</span>
   <span class='@document_text ivar id'>@document_text</span>
@@ -1022,9 +1035,8 @@ The text of the XML document we&#8217;ll resolve.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-A file URL constructed from the original filename of the document.
-</p>
+    
+<p>A file URL constructed from the original filename of the document.</p>
 
 
   </div>
@@ -1037,12 +1049,12 @@ A file URL constructed from the original filename of the document.
       <pre class="lines">
 
 
-127
 128
-129</pre>
+129
+130</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 127</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 128</span>
 
 <span class='def def kw'>def</span> <span class='document_uri identifier id'>document_uri</span>
   <span class='@document_uri ivar id'>@document_uri</span>
@@ -1065,9 +1077,9 @@ A file URL constructed from the original filename of the document.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-errors is an array of errors encountered in processing the docment.
-</p>
+    
+<p>errors is an array of errors encountered in processing the docment; these
+are not necessarily fatal errors</p>
 
 
   </div>
@@ -1080,15 +1092,57 @@ errors is an array of errors encountered in processing the docment.
       <pre class="lines">
 
 
-136
 137
-138</pre>
+138
+139</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 136</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 137</span>
 
 <span class='def def kw'>def</span> <span class='errors identifier id'>errors</span>
   <span class='@errors ivar id'>@errors</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <span id="fatal-instance_method"></span>
+      <div class="method_details ">
+  <p class="signature " id="fatal-instance_method">
+  
+    - (<tt>Object</tt>) <strong>fatal</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>fatals is boolean indicating that the document could not be parsed at all</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+141
+142
+143</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 141</span>
+
+<span class='def def kw'>def</span> <span class='fatal identifier id'>fatal</span>
+  <span class='@fatal ivar id'>@fatal</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -1108,9 +1162,8 @@ errors is an array of errors encountered in processing the docment.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-The proxy to use when gathering schemas. If nil, go directly to the source.
-</p>
+    
+<p>The proxy to use when gathering schemas. If nil, go directly to the source.</p>
 
 
   </div>
@@ -1123,12 +1176,12 @@ The proxy to use when gathering schemas. If nil, go directly to the source.
       <pre class="lines">
 
 
-98
 99
-100</pre>
+100
+101</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 98</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 99</span>
 
 <span class='def def kw'>def</span> <span class='proxy identifier id'>proxy</span>
   <span class='@proxy ivar id'>@proxy</span>
@@ -1151,9 +1204,8 @@ The proxy to use when gathering schemas. If nil, go directly to the source.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-resolution_time shows the time we began to process the XML document.
-</p>
+    
+<p>resolution_time shows the time we began to process the XML document.</p>
 
 
   </div>
@@ -1166,12 +1218,12 @@ resolution_time shows the time we began to process the XML document.
       <pre class="lines">
 
 
-111
 112
-113</pre>
+113
+114</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 111</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 112</span>
 
 <span class='def def kw'>def</span> <span class='resolution_time identifier id'>resolution_time</span>
   <span class='@resolution_time ivar id'>@resolution_time</span>
@@ -1194,10 +1246,9 @@ resolution_time shows the time we began to process the XML document.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-schema_dictionary is a array of Structs that provides data about schemas. 
-See documentation for XmlResolution::SchemaCatalog.
-</p>
+    
+<p>schema_dictionary is a array of Structs that provides data about schemas. 
+See documentation for XmlResolution::SchemaCatalog.</p>
 
 
   </div>
@@ -1210,12 +1261,12 @@ See documentation for XmlResolution::SchemaCatalog.
       <pre class="lines">
 
 
-132
 133
-134</pre>
+134
+135</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 132</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 133</span>
 
 <span class='def def kw'>def</span> <span class='schema_dictionary identifier id'>schema_dictionary</span>
   <span class='@schema_dictionary ivar id'>@schema_dictionary</span>
@@ -1238,9 +1289,8 @@ See documentation for XmlResolution::SchemaCatalog.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-A writable directory for storing retrieved schema documents.
-</p>
+    
+<p>A writable directory for storing retrieved schema documents.</p>
 
 
   </div>
@@ -1253,12 +1303,12 @@ A writable directory for storing retrieved schema documents.
       <pre class="lines">
 
 
-90
 91
-92</pre>
+92
+93</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 90</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 91</span>
 
 <span class='def def kw'>def</span> <span class='schemas_storage_directory identifier id'>schemas_storage_directory</span>
   <span class='@schemas_storage_directory ivar id'>@schemas_storage_directory</span>
@@ -1281,11 +1331,10 @@ A writable directory for storing retrieved schema documents.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-used_namespaces is meant to be used as a list of unique namespaces that
+    
+<p>used_namespaces is meant to be used as a list of unique namespaces that
 have been directly used by an XML document or one of its schemas.  It is a
-hash where the values are irrelevant; only the keys are important.
-</p>
+hash where the values are irrelevant; only the keys are important.</p>
 
 
   </div>
@@ -1298,12 +1347,12 @@ hash where the values are irrelevant; only the keys are important.
       <pre class="lines">
 
 
-105
 106
-107</pre>
+107
+108</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 105</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 106</span>
 
 <span class='def def kw'>def</span> <span class='used_namespaces identifier id'>used_namespaces</span>
   <span class='@used_namespaces ivar id'>@used_namespaces</span>
@@ -1334,14 +1383,14 @@ hash where the values are irrelevant; only the keys are important.
       <pre class="lines">
 
 
-451
-452
-453
-454
-455</pre>
+461
+462
+463
+464
+465</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 451</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 461</span>
 
 <span class='def def kw'>def</span> <span class='analyze_schema_document identifier id'>analyze_schema_document</span> <span class='schema_location identifier id'>schema_location</span><span class='comma token'>,</span> <span class='schema_text identifier id'>schema_text</span><span class='comma token'>,</span> <span class='namespaces identifier id'>namespaces</span>
   <span class='document identifier id'>document</span> <span class='assign token'>=</span> <span class='SchemaDocument constant id'>SchemaDocument</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='schema_location identifier id'>schema_location</span><span class='comma token'>,</span> <span class='namespaces identifier id'>namespaces</span><span class='rparen token'>)</span>
@@ -1367,14 +1416,14 @@ hash where the values are irrelevant; only the keys are important.
       <pre class="lines">
 
 
-445
-446
-447
-448
-449</pre>
+455
+456
+457
+458
+459</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 445</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 455</span>
 
 <span class='def def kw'>def</span> <span class='analyze_xml_document identifier id'>analyze_xml_document</span> <span class='text identifier id'>text</span>
   <span class='document identifier id'>document</span> <span class='assign token'>=</span> <span class='PlainXmlDocument constant id'>PlainXmlDocument</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
@@ -1396,38 +1445,35 @@ hash where the values are irrelevant; only the keys are important.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-dump
-</p>
-<p>
-Return a string representation of our analysis of an xml document, along
-the lines of:
-</p>
-<pre class="code">
- <span class='FILE_NAME constant id'>FILE_NAME</span> <span class='url identifier id'>url</span>
- <span class='DIGEST constant id'>DIGEST</span> <span class='md5 identifier id'>md5</span>
- <span class='SIZE constant id'>SIZE</span> <span class='fixnum identifier id'>fixnum</span>
- <span class='DATE_TIME constant id'>DATE_TIME</span> <span class='time identifier id'>time</span>
- <span class='SCHEMA constant id'>SCHEMA</span> <span class='md5 identifier id'>md5</span> <span class='modification identifier id'>modification</span> <span class='location identifier id'>location</span> <span class='namespace identifier id'>namespace</span>
- <span class='SCHEMA constant id'>SCHEMA</span> <span class='md5 identifier id'>md5</span> <span class='modification identifier id'>modification</span> <span class='location identifier id'>location</span> <span class='namespace identifier id'>namespace</span>
- <span class='SCHEMA constant id'>SCHEMA</span> <span class='md5 identifier id'>md5</span> <span class='modification identifier id'>modification</span> <span class='location identifier id'>location</span> <span class='namespace identifier id'>namespace</span>
- <span class='SCHEMA constant id'>SCHEMA</span> <span class='md5 identifier id'>md5</span> <span class='modification identifier id'>modification</span> <span class='location identifier id'>location</span> <span class='namespace identifier id'>namespace</span>
-  <span class='dot3 op'>...</span><span class='dot token'>.</span>
- <span class='BROKEN_SCHEMA constant id'>BROKEN_SCHEMA</span> <span class='location identifier id'>location</span> <span class='namespace identifier id'>namespace</span> <span class='error_message identifier id'>error_message</span>
- <span class='BROKEN_SCHEMA constant id'>BROKEN_SCHEMA</span> <span class='location identifier id'>location</span> <span class='namespace identifier id'>namespace</span> <span class='error_message identifier id'>error_message</span>
-  <span class='dot3 op'>...</span><span class='dot token'>.</span>
- <span class='REDIRECTED_SCHEMA constant id'>REDIRECTED_SCHEMA</span> <span class='location identifier id'>location</span> <span class='namespace identifier id'>namespace</span> <span class='redirected_locaton identifier id'>redirected_locaton</span>
- <span class='REDIRECTED_SCHEMA constant id'>REDIRECTED_SCHEMA</span> <span class='location identifier id'>location</span> <span class='namespace identifier id'>namespace</span> <span class='redirected_locaton identifier id'>redirected_locaton</span>
-  <span class='dot3 op'>...</span>
- <span class='ERROR constant id'>ERROR</span> <span class='message identifier id'>message</span>
- <span class='ERROR constant id'>ERROR</span> <span class='message identifier id'>message</span>
+    
+<p>dump</p>
+
+<p>Return a string representation of our analysis of an xml document, along
+the lines of:</p>
+
+<pre class="code"><span class='FILE_NAME constant id'>FILE_NAME</span> <span class='url identifier id'>url</span>
+<span class='DIGEST constant id'>DIGEST</span> <span class='md5 identifier id'>md5</span>
+<span class='SIZE constant id'>SIZE</span> <span class='fixnum identifier id'>fixnum</span>
+<span class='DATE_TIME constant id'>DATE_TIME</span> <span class='time identifier id'>time</span>
+<span class='SCHEMA constant id'>SCHEMA</span> <span class='md5 identifier id'>md5</span> <span class='modification identifier id'>modification</span> <span class='location identifier id'>location</span> <span class='namespace identifier id'>namespace</span>
+<span class='SCHEMA constant id'>SCHEMA</span> <span class='md5 identifier id'>md5</span> <span class='modification identifier id'>modification</span> <span class='location identifier id'>location</span> <span class='namespace identifier id'>namespace</span>
+<span class='SCHEMA constant id'>SCHEMA</span> <span class='md5 identifier id'>md5</span> <span class='modification identifier id'>modification</span> <span class='location identifier id'>location</span> <span class='namespace identifier id'>namespace</span>
+<span class='SCHEMA constant id'>SCHEMA</span> <span class='md5 identifier id'>md5</span> <span class='modification identifier id'>modification</span> <span class='location identifier id'>location</span> <span class='namespace identifier id'>namespace</span>
  <span class='dot3 op'>...</span><span class='dot token'>.</span>
- <span class='UNRESOLVED_NAMESPACES constant id'>UNRESOLVED_NAMESPACES</span> <span class='namespace identifier id'>namespace</span> <span class='namespace identifier id'>namespace</span> <span class='namespace identifier id'>namespace</span> <span class='dot3 op'>...</span><span class='dot token'>.</span>
+<span class='BROKEN_SCHEMA constant id'>BROKEN_SCHEMA</span> <span class='location identifier id'>location</span> <span class='namespace identifier id'>namespace</span> <span class='error_message identifier id'>error_message</span>
+<span class='BROKEN_SCHEMA constant id'>BROKEN_SCHEMA</span> <span class='location identifier id'>location</span> <span class='namespace identifier id'>namespace</span> <span class='error_message identifier id'>error_message</span>
+ <span class='dot3 op'>...</span><span class='dot token'>.</span>
+<span class='REDIRECTED_SCHEMA constant id'>REDIRECTED_SCHEMA</span> <span class='location identifier id'>location</span> <span class='namespace identifier id'>namespace</span> <span class='redirected_locaton identifier id'>redirected_locaton</span>
+<span class='REDIRECTED_SCHEMA constant id'>REDIRECTED_SCHEMA</span> <span class='location identifier id'>location</span> <span class='namespace identifier id'>namespace</span> <span class='redirected_locaton identifier id'>redirected_locaton</span>
+ <span class='dot3 op'>...</span>
+<span class='ERROR constant id'>ERROR</span> <span class='message identifier id'>message</span>
+<span class='ERROR constant id'>ERROR</span> <span class='message identifier id'>message</span>
+<span class='dot3 op'>...</span><span class='dot token'>.</span>
+<span class='UNRESOLVED_NAMESPACES constant id'>UNRESOLVED_NAMESPACES</span> <span class='namespace identifier id'>namespace</span> <span class='namespace identifier id'>namespace</span> <span class='namespace identifier id'>namespace</span> <span class='dot3 op'>...</span><span class='dot token'>.</span>
 </pre>
-<p>
-Each &#8216;phrase&#8217; is URL-escaped, so embeded whitespace won&#8217;t
-cause parsing problems.
-</p>
+
+<p>Each ‘phrase’ is URL-escaped, so embeded whitespace won’t cause
+parsing problems.</p>
 
 
   </div>
@@ -1440,16 +1486,6 @@ cause parsing problems.
       <pre class="lines">
 
 
-483
-484
-485
-486
-487
-488
-489
-490
-491
-492
 493
 494
 495
@@ -1467,10 +1503,20 @@ cause parsing problems.
 507
 508
 509
-510</pre>
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 483</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 493</span>
 
 <span class='def def kw'>def</span> <span class='dump identifier id'>dump</span>
   <span class='str identifier id'>str</span> <span class='assign token'>=</span> <span class='string val'>''</span>
@@ -1519,12 +1565,12 @@ cause parsing problems.
       <pre class="lines">
 
 
-441
-442
-443</pre>
+451
+452
+453</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 441</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 451</span>
 
 <span class='def def kw'>def</span> <span class='mint_event_id identifier id'>mint_event_id</span>
   <span class='string val'>'file://'</span> <span class='plus op'>+</span> <span class='Socket constant id'>Socket</span><span class='colon2 op'>::</span><span class='gethostname identifier id'>gethostname</span>  <span class='plus op'>+</span> <span class='File constant id'>File</span><span class='colon2 op'>::</span><span class='SEPARATOR constant id'>SEPARATOR</span> <span class='plus op'>+</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>'xmlresolution'</span><span class='comma token'>,</span> <span class='string val'>'events'</span><span class='comma token'>,</span> <span class='document_identifier identifier id'>document_identifier</span> <span class='plus op'>+</span> <span class='string val'>'-'</span> <span class='plus op'>+</span> <span class='Digest constant id'>Digest</span><span class='colon2 op'>::</span><span class='MD5 constant id'>MD5</span><span class='dot token'>.</span><span class='hexdigest identifier id'>hexdigest</span><span class='lparen token'>(</span><span class='rand identifier id'>rand</span><span class='lparen token'>(</span><span class='integer val'>1_000_000_000_000</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='rparen token'>)</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='dot2 op'>..</span><span class='integer val'>5</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
@@ -1548,12 +1594,6 @@ cause parsing problems.
       <pre class="lines">
 
 
-267
-268
-269
-270
-271
-272
 273
 274
 275
@@ -1653,10 +1693,24 @@ cause parsing problems.
 369
 370
 371
-372</pre>
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 267</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 273</span>
 
 <span class='def def kw'>def</span> <span class='premis_report identifier id'>premis_report</span>
 
@@ -1670,13 +1724,15 @@ cause parsing problems.
     <span class='when when kw'>when</span> <span class='symbol val'>:success</span><span class='comma token'>,</span> <span class='symbol val'>:redirect</span> <span class='semicolon token'>;</span>  <span class='successes identifier id'>successes</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span>
     <span class='end end kw'>end</span>
   <span class='end end kw'>end</span>
-  
-  <span class='if if kw'>if</span> <span class='lparen token'>(</span><span class='successes identifier id'>successes</span> <span class='gt op'>&gt;</span> <span class='integer val'>0</span> <span class='and and kw'>and</span> <span class='failures identifier id'>failures</span> <span class='gt op'>&gt;</span> <span class='integer val'>0</span><span class='rparen token'>)</span>
+
+  <span class='if if kw'>if</span> <span class='@fatal ivar id'>@fatal</span>
+    <span class='outcome identifier id'>outcome</span> <span class='assign token'>=</span> <span class='string val'>'error'</span>
+  <span class='elsif elsif kw'>elsif</span> <span class='lparen token'>(</span><span class='successes identifier id'>successes</span> <span class='gt op'>&gt;</span> <span class='integer val'>0</span> <span class='and and kw'>and</span> <span class='failures identifier id'>failures</span> <span class='gt op'>&gt;</span> <span class='integer val'>0</span><span class='rparen token'>)</span>
     <span class='outcome identifier id'>outcome</span> <span class='assign token'>=</span> <span class='string val'>'mixed'</span>
   <span class='elsif elsif kw'>elsif</span> <span class='failures identifier id'>failures</span> <span class='gt op'>&gt;</span> <span class='integer val'>0</span>
     <span class='outcome identifier id'>outcome</span> <span class='assign token'>=</span> <span class='string val'>'failure'</span>
   <span class='else else kw'>else</span>
-    <span class='outcome identifier id'>outcome</span> <span class='assign token'>=</span> <span class='string val'>'success'</span>  <span class='comment val'># Vacuous case will be a success.</span>
+    <span class='outcome identifier id'>outcome</span> <span class='assign token'>=</span> <span class='string val'>'success'</span>  <span class='comment val'># Vacuous case will be counted a success.</span>
   <span class='end end kw'>end</span>
   
   <span class='broken_links identifier id'>broken_links</span> <span class='assign token'>=</span> <span class='schema_dictionary identifier id'>schema_dictionary</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='s identifier id'>s</span><span class='bitor op'>|</span> <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='location identifier id'>location</span> <span class='if if_mod kw'>if</span> <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='retrieval_status identifier id'>retrieval_status</span> <span class='eq op'>==</span> <span class='symbol val'>:failure</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='compact identifier id'>compact</span>
@@ -1733,7 +1789,13 @@ cause parsing problems.
       <span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='eventDateTime identifier id'>eventDateTime</span><span class='lparen token'>(</span><span class='@resolution_time ivar id'>@resolution_time</span><span class='dot token'>.</span><span class='iso8601 identifier id'>iso8601</span><span class='rparen token'>)</span>
       <span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='eventOutcomeInformation identifier id'>eventOutcomeInformation</span> <span class='lbrace token'>{</span> 
         <span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='eventOutcome identifier id'>eventOutcome</span><span class='lparen token'>(</span><span class='outcome identifier id'>outcome</span><span class='rparen token'>)</span> 
-        <span class='if if kw'>if</span> <span class='lparen token'>(</span><span class='unresolved_namespaces identifier id'>unresolved_namespaces</span><span class='dot token'>.</span><span class='count identifier id'>count</span> <span class='gt op'>&gt;</span> <span class='integer val'>0</span><span class='rparen token'>)</span> <span class='or or kw'>or</span> <span class='lparen token'>(</span><span class='broken_links identifier id'>broken_links</span><span class='dot token'>.</span><span class='count identifier id'>count</span> <span class='gt op'>&gt;</span> <span class='integer val'>0</span><span class='rparen token'>)</span>
+        <span class='if if kw'>if</span> <span class='@fatal ivar id'>@fatal</span>
+          <span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='eventOutcomeDetail identifier id'>eventOutcomeDetail</span> <span class='lbrace token'>{</span>
+            <span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='eventOutcomeDetailExtension identifier id'>eventOutcomeDetailExtension</span> <span class='lbrace token'>{</span>
+              <span class='@errors ivar id'>@errors</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='err identifier id'>err</span><span class='bitor op'>|</span> <span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='error identifier id'>error</span><span class='lparen token'>(</span><span class='err identifier id'>err</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
+            <span class='rbrace token'>}</span>
+          <span class='rbrace token'>}</span>
+        <span class='elsif elsif kw'>elsif</span> <span class='lparen token'>(</span><span class='unresolved_namespaces identifier id'>unresolved_namespaces</span><span class='dot token'>.</span><span class='count identifier id'>count</span> <span class='gt op'>&gt;</span> <span class='integer val'>0</span><span class='rparen token'>)</span> <span class='or or kw'>or</span> <span class='lparen token'>(</span><span class='broken_links identifier id'>broken_links</span><span class='dot token'>.</span><span class='count identifier id'>count</span> <span class='gt op'>&gt;</span> <span class='integer val'>0</span><span class='rparen token'>)</span>
           <span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='eventOutcomeDetail identifier id'>eventOutcomeDetail</span> <span class='lbrace token'>{</span>
             <span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='eventOutcomeDetailExtension identifier id'>eventOutcomeDetailExtension</span> <span class='lbrace token'>{</span>
               <span class='broken_links identifier id'>broken_links</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='loc identifier id'>loc</span><span class='bitor op'>|</span> <span class='xml identifier id'>xml</span><span class='dot token'>.</span><span class='broken_link identifier id'>broken_link</span><span class='lparen token'>(</span><span class='loc identifier id'>loc</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
@@ -1779,14 +1841,12 @@ cause parsing problems.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-process
-</p>
-<p>
-Process the XML instance document, downloading the schemas it references,
+    
+<p>process</p>
+
+<p>Process the XML instance document, downloading the schemas it references,
 analyze the schemas, and  download the schemas <b>those</b> reference, and
-so on, until we&#8217;re done.
-</p>
+so on, until we’re done.</p>
 
 
   </div>
@@ -1799,20 +1859,6 @@ so on, until we&#8217;re done.
       <pre class="lines">
 
 
-406
-407
-408
-409
-410
-411
-412
-413
-414
-415
-416
-417
-418
-419
 420
 421
 422
@@ -1831,27 +1877,33 @@ so on, until we&#8217;re done.
 435
 436
 437
-438</pre>
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 406</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 420</span>
 
 <span class='def def kw'>def</span> <span class='process identifier id'>process</span>
   <span class='@resolution_time ivar id'>@resolution_time</span> <span class='assign token'>=</span> <span class='Time constant id'>Time</span><span class='dot token'>.</span><span class='now identifier id'>now</span>
   
   <span class='instance_document identifier id'>instance_document</span>   <span class='assign token'>=</span> <span class='analyze_xml_document identifier id'>analyze_xml_document</span><span class='lparen token'>(</span><span class='document_text identifier id'>document_text</span><span class='rparen token'>)</span>
-
-  <span class='if if kw'>if</span> <span class='instance_document identifier id'>instance_document</span><span class='dot token'>.</span><span class='version identifier id'>version</span> <span class='neq op'>!=</span> <span class='string val'>'1.0'</span>
-    <span class='raise identifier id'>raise</span> <span class='XmlResolution constant id'>XmlResolution</span><span class='colon2 op'>::</span><span class='BadXmlVersion constant id'>BadXmlVersion</span><span class='comma token'>,</span> <span class='dstring node'>&quot;This service only supports XML Version 1.0. This document is XML Version #{instance_document.version}&quot;</span>
-  <span class='end end kw'>end</span>
-
   <span class='namespace_locations identifier id'>namespace_locations</span> <span class='assign token'>=</span> <span class='instance_document identifier id'>instance_document</span><span class='dot token'>.</span><span class='namespace_locations identifier id'>namespace_locations</span>   <span class='comment val'># a hash of Location-URL =&gt; Namespace-URN pairs</span>
   <span class='@used_namespaces ivar id'>@used_namespaces</span>    <span class='assign token'>=</span> <span class='instance_document identifier id'>instance_document</span><span class='dot token'>.</span><span class='used_namespaces identifier id'>used_namespaces</span>       <span class='comment val'># a hash of Namespace-URN =&gt; 'true' pairs </span>
 
   <span class='@errors ivar id'>@errors</span> <span class='assign token'>=</span> <span class='instance_document identifier id'>instance_document</span><span class='dot token'>.</span><span class='errors identifier id'>errors</span>
 
   <span class='if if kw'>if</span> <span class='lparen token'>(</span><span class='instance_document identifier id'>instance_document</span><span class='dot token'>.</span><span class='errors identifier id'>errors</span><span class='dot token'>.</span><span class='count identifier id'>count</span> <span class='gt op'>&gt;</span> <span class='integer val'>0</span><span class='rparen token'>)</span> <span class='and and kw'>and</span> <span class='namespace_locations identifier id'>namespace_locations</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span> <span class='and and kw'>and</span> <span class='@used_namespaces ivar id'>@used_namespaces</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
-    <span class='raise identifier id'>raise</span> <span class='XmlResolution constant id'>XmlResolution</span><span class='colon2 op'>::</span><span class='BadBadXmlDocument constant id'>BadBadXmlDocument</span><span class='comma token'>,</span> <span class='dstring node'>&quot;The XML document #{document_uri} had too many errors: &quot;</span> <span class='plus op'>+</span> <span class='instance_document identifier id'>instance_document</span><span class='dot token'>.</span><span class='errors identifier id'>errors</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>'; '</span><span class='rparen token'>)</span>
+    <span class='@fatal ivar id'>@fatal</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+    <span class='return return kw'>return</span>
   <span class='end end kw'>end</span>
   
   <span class='catalog identifier id'>catalog</span> <span class='assign token'>=</span> <span class='SchemaCatalog constant id'>SchemaCatalog</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='namespace_locations identifier id'>namespace_locations</span><span class='comma token'>,</span> <span class='schemas_storage_directory identifier id'>schemas_storage_directory</span><span class='comma token'>,</span> <span class='proxy identifier id'>proxy</span><span class='rparen token'>)</span>
@@ -1884,15 +1936,13 @@ so on, until we&#8217;re done.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-save COLLECTION_ID
-</p>
-<p>
-Serialize the data we&#8217;ve collected for the XML document, saving the
+    
+<p>save COLLECTION_ID</p>
+
+<p>Serialize the data we’ve collected for the XML document, saving the
 information in a format we can easily reread.  It is saved in the directory
-named &#8230;/collections/COLLECTION_ID/; for the filename of the data we
-use the MD5 checksum of the XML document.
-</p>
+named …/collections/COLLECTION_ID/; for the filename of the data we use
+the MD5 checksum of the XML document.</p>
 
 
   </div>
@@ -1903,8 +1953,8 @@ use the MD5 checksum of the XML document.
   
     <li>
       
-        <span class='type'>(<tt><span class='object_link'><a href="BadCollectionID.html" title="XmlResolution::BadCollectionID (class)">XmlResolution::BadCollectionID</a></span></tt>)</span>
       
+        <span class='type'>(<tt><span class='object_link'><a href="BadCollectionID.html" title="XmlResolution::BadCollectionID (class)">XmlResolution::BadCollectionID</a></span></tt>)</span>
       
       
       
@@ -1918,25 +1968,25 @@ use the MD5 checksum of the XML document.
       <pre class="lines">
 
 
-382
-383
-384
-385
-386
-387
-388
-389
-390
-391
-392
-393
-394
-395
 396
-397</pre>
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 382</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 396</span>
 
 <span class='def def kw'>def</span> <span class='save identifier id'>save</span> <span class='collection_id identifier id'>collection_id</span>
 
@@ -1969,13 +2019,11 @@ use the MD5 checksum of the XML document.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-unresolved_namespaces
-</p>
-<p>
-Return an array of all of the namesapces that we have not been able to
-resolve.
-</p>
+    
+<p>unresolved_namespaces</p>
+
+<p>Return an array of all of the namesapces that we have not been able to
+resolve.</p>
 
 
   </div>
@@ -1988,12 +2036,12 @@ resolve.
       <pre class="lines">
 
 
-183
-184
-185</pre>
+189
+190
+191</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 183</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 189</span>
 
 <span class='def def kw'>def</span> <span class='unresolved_namespaces identifier id'>unresolved_namespaces</span>   
   <span class='lparen token'>(</span><span class='@used_namespaces ivar id'>@used_namespaces</span><span class='dot token'>.</span><span class='keys identifier id'>keys</span><span class='dot token'>.</span><span class='sort identifier id'>sort</span> <span class='minus op'>-</span> <span class='schema_dictionary identifier id'>schema_dictionary</span><span class='dot token'>.</span><span class='map identifier id'>map</span><span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='s identifier id'>s</span><span class='bitor op'>|</span> <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='namespace identifier id'>namespace</span> <span class='rbrace token'>}</span> <span class='minus op'>-</span> <span class='NAMESPACE_DONT_TELL constant id'>NAMESPACE_DONT_TELL</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='sort identifier id'>sort</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='a identifier id'>a</span><span class='comma token'>,</span><span class='b identifier id'>b</span><span class='bitor op'>|</span> <span class='a identifier id'>a</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span> <span class='cmp op'>&lt;=&gt;</span> <span class='b identifier id'>b</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span> <span class='rbrace token'>}</span>
@@ -2009,9 +2057,9 @@ resolve.
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:35:10 2011 by 
+  Generated on Fri Aug 19 15:30:10 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.2 (ruby-1.8.7).
 </div>
 
   </body>

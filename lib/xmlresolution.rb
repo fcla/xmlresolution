@@ -57,7 +57,6 @@ module XmlResolution
   NAME     = 'XMLResolution'
 
   require 'xmlresolution/exceptions'
-  require 'xmlresolution/logger'
   require 'xmlresolution/resolver_collection'
   require 'xmlresolution/schema_catalog'
   require 'xmlresolution/tar_writer'

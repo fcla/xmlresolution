@@ -153,41 +153,6 @@ module ResolverUtils
     addr
   end
 
-  Struct.new('StartUpConfig',
-             :data_root,
-             :log_syslog_facility,
-             :resolver_proxy,
-             :temp_directory,
-             :virtual_hostname
-             )
-
-  # read_config yaml_file
-  #
-  # Read a configuration data file, set reasonable defaults, and return a tasty struct.
-
-  def ResolverUtils.read_config yaml_file
-
-    conf = Struct::StartUpConfig.new
-
-    begin
-      hash = YAML::load(File.open(yaml_file))
-    rescue => e
-      raise "Can't parse the XML Resolution service configuration file '#{yaml_file}': #{e.message}."
-    else
-      raise "Can't parse the data in the XML Resolution service configuration file '#{yaml_file}'." if hash.class != Hash
-    end
-
-    conf.members.each { |x| conf[x] = hash[x] }
-
-    # reasonable defaults:
-
-    conf.virtual_hostname ||= Socket.gethostname
-    conf.data_root        ||= File.expand_path(File.join(File.dirname(__FILE__), '../../data'))
-
-    return conf
-  end
-
-
 end # of module
 
 

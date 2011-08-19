@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Class: XmlResolution::XmlResolverReloaded</title>
-<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: XmlResolution::XmlResolverReloaded
+  
+    &mdash; XML Resolution Service
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -83,20 +96,18 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>
-XmlResolverReloaded provides a subset of the capabilities of the
+    
+<p>XmlResolverReloaded provides a subset of the capabilities of the
 XmlResolver class; it reloads the data that is dumped via XmlResolver#dump.
-In particular, we can get:
-</p>
-<pre class="code">
- <span class='mult op'>*</span> <span class='those identifier id'>those</span> <span class='successfully identifier id'>successfully</span> <span class='retrieved identifier id'>retrieved</span> <span class='schemas identifier id'>schemas</span> <span class='needed identifier id'>needed</span> <span class='for for kw'>for</span> <span class='understanding identifier id'>understanding</span> <span class='the identifier id'>the</span> <span class='analyzed identifier id'>analyzed</span> <span class='document identifier id'>document</span>
- <span class='mult op'>*</span> <span class='a identifier id'>a</span> <span class='list identifier id'>list</span> <span class='of identifier id'>of</span> <span class='unretrievable identifier id'>unretrievable</span> <span class='and and kw'>and</span> <span class='redirected identifier id'>redirected</span> <span class='schemas identifier id'>schemas</span> 
- <span class='mult op'>*</span> <span class='the identifier id'>the</span> <span class='unresolved identifier id'>unresolved</span> <span class='namespaces identifier id'>namespaces</span>
- <span class='mult op'>*</span> <span class='basic identifier id'>basic</span> <span class='information identifier id'>information</span> <span class='about identifier id'>about</span> <span class='the identifier id'>the</span> <span class='document identifier id'>document</span> <span class='analyzed identifier id'>analyzed</span><span class='colon op'>:</span> <span class='checksum identifier id'>checksum</span><span class='comma token'>,</span> <span class='size identifier id'>size</span><span class='comma token'>,</span> <span class='original identifier id'>original</span> <span class='filename identifier id'>filename</span><span class='dot token'>.</span>
+In particular, we can get:</p>
+
+<pre class="code"><span class='mult op'>*</span> <span class='those identifier id'>those</span> <span class='successfully identifier id'>successfully</span> <span class='retrieved identifier id'>retrieved</span> <span class='schemas identifier id'>schemas</span> <span class='needed identifier id'>needed</span> <span class='for for kw'>for</span> <span class='understanding identifier id'>understanding</span> <span class='the identifier id'>the</span> <span class='analyzed identifier id'>analyzed</span> <span class='document identifier id'>document</span>
+<span class='mult op'>*</span> <span class='a identifier id'>a</span> <span class='list identifier id'>list</span> <span class='of identifier id'>of</span> <span class='unretrievable identifier id'>unretrievable</span> <span class='and and kw'>and</span> <span class='redirected identifier id'>redirected</span> <span class='schemas identifier id'>schemas</span> 
+<span class='mult op'>*</span> <span class='the identifier id'>the</span> <span class='unresolved identifier id'>unresolved</span> <span class='namespaces identifier id'>namespaces</span>
+<span class='mult op'>*</span> <span class='basic identifier id'>basic</span> <span class='information identifier id'>information</span> <span class='about identifier id'>about</span> <span class='the identifier id'>the</span> <span class='document identifier id'>document</span> <span class='analyzed identifier id'>analyzed</span><span class='colon op'>:</span> <span class='checksum identifier id'>checksum</span><span class='comma token'>,</span> <span class='size identifier id'>size</span><span class='comma token'>,</span> <span class='original identifier id'>original</span> <span class='filename identifier id'>filename</span><span class='dot token'>.</span>
 </pre>
-<p>
-The original document text is no longer available, however.
-</p>
+
+<p>The original document text is no longer available, however.</p>
 
 
   </div>
@@ -114,6 +125,16 @@ The original document text is no longer available, however.
   
   <h3 class="inherited">Constants inherited from <span class='object_link'><a href="XmlResolver.html" title="XmlResolution::XmlResolver (class)">XmlResolver</a></span></h3>
   <p class="inherited"><span class='object_link'><a href="XmlResolver.html#NAMESPACE_DONT_TELL-constant" title="XmlResolution::XmlResolver::NAMESPACE_DONT_TELL (constant)">NAMESPACE_DONT_TELL</a></span>, <span class='object_link'><a href="XmlResolver.html#TOO_MANY_SCHEMAS-constant" title="XmlResolution::XmlResolver::TOO_MANY_SCHEMAS (constant)">TOO_MANY_SCHEMAS</a></span></p>
+
+
+
+  
+  
+  
+  <h2>Instance Attribute Summary</h2>
+  
+  <h3 class="inherited">Attributes inherited from <span class='object_link'><a href="XmlResolver.html" title="XmlResolution::XmlResolver (class)">XmlResolver</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="XmlResolver.html#collections_storage_directory-instance_method" title="XmlResolution::XmlResolver#collections_storage_directory (method)">collections_storage_directory</a></span>, <span class='object_link'><a href="XmlResolver.html#document_identifier-instance_method" title="XmlResolution::XmlResolver#document_identifier (method)">document_identifier</a></span>, <span class='object_link'><a href="XmlResolver.html#document_size-instance_method" title="XmlResolution::XmlResolver#document_size (method)">document_size</a></span>, <span class='object_link'><a href="XmlResolver.html#document_text-instance_method" title="XmlResolution::XmlResolver#document_text (method)">document_text</a></span>, <span class='object_link'><a href="XmlResolver.html#document_uri-instance_method" title="XmlResolution::XmlResolver#document_uri (method)">document_uri</a></span>, <span class='object_link'><a href="XmlResolver.html#errors-instance_method" title="XmlResolution::XmlResolver#errors (method)">errors</a></span>, <span class='object_link'><a href="XmlResolver.html#fatal-instance_method" title="XmlResolution::XmlResolver#fatal (method)">fatal</a></span>, <span class='object_link'><a href="XmlResolver.html#proxy-instance_method" title="XmlResolution::XmlResolver#proxy (method)">proxy</a></span>, <span class='object_link'><a href="XmlResolver.html#resolution_time-instance_method" title="XmlResolution::XmlResolver#resolution_time (method)">resolution_time</a></span>, <span class='object_link'><a href="XmlResolver.html#schema_dictionary-instance_method" title="XmlResolution::XmlResolver#schema_dictionary (method)">schema_dictionary</a></span>, <span class='object_link'><a href="XmlResolver.html#schemas_storage_directory-instance_method" title="XmlResolution::XmlResolver#schemas_storage_directory (method)">schemas_storage_directory</a></span>, <span class='object_link'><a href="XmlResolver.html#used_namespaces-instance_method" title="XmlResolution::XmlResolver#used_namespaces (method)">used_namespaces</a></span></p>
 
 
   
@@ -142,9 +163,8 @@ The original document text is no longer available, however.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-A new instance of XmlResolverReloaded.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>A new instance of XmlResolverReloaded.</p>
 </div></span>
   
 </li>
@@ -166,9 +186,8 @@ A new instance of XmlResolverReloaded.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-load TEXT.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>load TEXT.</p>
 </div></span>
   
 </li>
@@ -199,9 +218,8 @@ load TEXT.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-A new instance of XmlResolverReloaded
-</p>
+    
+<p>A new instance of XmlResolverReloaded</p>
 
 
   </div>
@@ -214,16 +232,6 @@ A new instance of XmlResolverReloaded
       <pre class="lines">
 
 
-526
-527
-528
-529
-530
-531
-532
-533
-534
-535
 536
 537
 538
@@ -243,10 +251,20 @@ A new instance of XmlResolverReloaded
 552
 553
 554
-555</pre>
+555
+556
+557
+558
+559
+560
+561
+562
+563
+564
+565</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 526</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 536</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='data_root identifier id'>data_root</span><span class='comma token'>,</span> <span class='collection_id identifier id'>collection_id</span><span class='comma token'>,</span> <span class='document_identifier identifier id'>document_identifier</span>
 
@@ -300,14 +318,11 @@ A new instance of XmlResolverReloaded
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-load TEXT
-</p>
-<p>
-Given the data that dump produces, read it in and recreate most of objects
-that dump dumps. See the parent&#8217;s XmlResolver.dump method for the
-details
-</p>
+    
+<p>load TEXT</p>
+
+<p>Given the data that dump produces, read it in and recreate most of objects
+that dump dumps. See the parent’s XmlResolver.dump method for the details</p>
 
 
   </div>
@@ -320,16 +335,6 @@ details
       <pre class="lines">
 
 
-564
-565
-566
-567
-568
-569
-570
-571
-572
-573
 574
 575
 576
@@ -376,10 +381,20 @@ details
 617
 618
 619
-620</pre>
+620
+621
+622
+623
+624
+625
+626
+627
+628
+629
+630</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 564</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/xmlresolution/lib/xmlresolution/xml_resolver.rb', line 574</span>
 
 <span class='def def kw'>def</span> <span class='load identifier id'>load</span> <span class='text identifier id'>text</span>
 
@@ -449,9 +464,9 @@ details
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:35:13 2011 by 
+  Generated on Fri Aug 19 15:30:05 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.2 (ruby-1.8.7).
 </div>
 
   </body>

@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Top Level Namespace</title>
-<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Top Level Namespace
+  
+    &mdash; XML Resolution Service
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -56,7 +69,7 @@
   
     
       <dt class="r1">Includes:</dt>
-      <dd class="r1"><span class='object_link'><a href="XmlResolution.html" title="XmlResolution (module)">XmlResolution</a></span></dd>
+      <dd class="r1">Datyl, <span class='object_link'><a href="XmlResolution.html" title="XmlResolution (module)">XmlResolution</a></span></dd>
       
     
   
@@ -86,9 +99,16 @@
   
   
   
+  
   <h3 class="inherited">Constants included from <span class='object_link'><a href="XmlResolution.html" title="XmlResolution (module)">XmlResolution</a></span></h3>
   <p class="inherited"><span class='object_link'><a href="XmlResolution.html#NAME-constant" title="XmlResolution::NAME (constant)">NAME</a></span>, <span class='object_link'><a href="XmlResolution.html#RELEASE-constant" title="XmlResolution::RELEASE (constant)">RELEASE</a></span>, <span class='object_link'><a href="XmlResolution.html#REVISION-constant" title="XmlResolution::REVISION (constant)">REVISION</a></span>, <span class='object_link'><a href="XmlResolution.html#VERSION-constant" title="XmlResolution::VERSION (constant)">VERSION</a></span></p>
 
+
+
+  
+  
+  
+  
 
   
     <h2>
@@ -114,11 +134,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-When we deploy with Capistrano it checks out the code using Git into its
-own branch, and places the git revision hash into the
-&#8216;REVISION&#8217; file.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>When we deploy with Capistrano it checks out the code using Git into its
+own branch, and places the git revision hash into the ‘REVISION’ file.</p>
 </div></span>
   
 </li>
@@ -140,12 +158,32 @@ own branch, and places the git revision hash into the
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-When we deploy with Capistrano, it places a newly checked out version of
+    <span class="summary_desc"><div class='inline'>
+<p>When we deploy with Capistrano, it places a newly checked out version of
 the code into a directory created under ../releases/, with names such as
-20100516175736.
-</p>
+20100516175736.</p>
 </div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#get_config-instance_method" title="#get_config (instance method)">- (Object) <strong>get_config</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
   
 </li>
 
@@ -154,6 +192,7 @@ the code into a directory created under ../releases/, with names such as
   
 
 
+  
   
   
   
@@ -178,12 +217,10 @@ the code into a directory created under ../releases/, with names such as
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-When we deploy with Capistrano it checks out the code using Git into its
-own branch, and places the git revision hash into the
-&#8216;REVISION&#8217; file.  Here we search for that file, and if found,
-return its contents.
-</p>
+    
+<p>When we deploy with Capistrano it checks out the code using Git into its
+own branch, and places the git revision hash into the ‘REVISION’ file. 
+Here we search for that file, and if found, return its contents.</p>
 
 
   </div>
@@ -223,18 +260,16 @@ return its contents.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-When we deploy with Capistrano, it places a newly checked out version of
+    
+<p>When we deploy with Capistrano, it places a newly checked out version of
 the code into a directory created under ../releases/, with names such as
 20100516175736.  Now this is a nice thing, since these directories are
-backed up in the normal course of events: we&#8217;d like to include this
+backed up in the normal course of events: we’d like to include this
 release number in our service version information so we can easily locate
-the specific version of the code, if need be, in the future.
-</p>
-<p>
-Note that this release information is more specific than a git release; it
-includes configuration information that may not be checked in.
-</p>
+the specific version of the code, if need be, in the future.</p>
+
+<p>Note that this release information is more specific than a git release; it
+includes configuration information that may not be checked in.</p>
 
 
   </div>
@@ -265,14 +300,76 @@ includes configuration information that may not be checked in.
 </table>
 </div>
     
+      <div class="method_details ">
+  <p class="signature " id="get_config-instance_method">
+  
+    - (<tt>Object</tt>) <strong>get_config</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Raises:</h3>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="XmlResolution/ConfigurationError.html" title="XmlResolution::ConfigurationError (class)">ConfigurationError</a></span></tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+9
+10
+11
+12
+13
+14
+15
+16
+17</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app.rb', line 9</span>
+
+<span class='def def kw'>def</span> <span class='get_config identifier id'>get_config</span>
+
+  <span class='raise identifier id'>raise</span> <span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='string val'>&quot;No DAITSS_CONFIG environment variable has been set, so there's no configuration file to read&quot;</span>             <span class='unless unless_mod kw'>unless</span> <span class='ENV constant id'>ENV</span><span class='lbrack token'>[</span><span class='string val'>'DAITSS_CONFIG'</span><span class='rbrack token'>]</span>
+  <span class='raise identifier id'>raise</span> <span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;The DAITSS_CONFIG environment variable points to a non-existant file, (#{ENV['DAITSS_CONFIG']})&quot;</span>          <span class='unless unless_mod kw'>unless</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='exists? fid id'>exists?</span> <span class='ENV constant id'>ENV</span><span class='lbrack token'>[</span><span class='string val'>'DAITSS_CONFIG'</span><span class='rbrack token'>]</span>
+  <span class='raise identifier id'>raise</span> <span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;The DAITSS_CONFIG environment variable points to a directory instead of a file (#{ENV['DAITSS_CONFIG']})&quot;</span>     <span class='if if_mod kw'>if</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='directory? fid id'>directory?</span> <span class='ENV constant id'>ENV</span><span class='lbrack token'>[</span><span class='string val'>'DAITSS_CONFIG'</span><span class='rbrack token'>]</span>
+  <span class='raise identifier id'>raise</span> <span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;The DAITSS_CONFIG environment variable points to an unreadable file (#{ENV['DAITSS_CONFIG']})&quot;</span>            <span class='unless unless_mod kw'>unless</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='readable? fid id'>readable?</span> <span class='ENV constant id'>ENV</span><span class='lbrack token'>[</span><span class='string val'>'DAITSS_CONFIG'</span><span class='rbrack token'>]</span>
+  
+  <span class='return return kw'>return</span> <span class='Datyl constant id'>Datyl</span><span class='colon2 op'>::</span><span class='Config constant id'>Config</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='ENV constant id'>ENV</span><span class='lbrack token'>[</span><span class='string val'>'DAITSS_CONFIG'</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='symbol val'>:xmlresolution</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
   </div>
 
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:35:23 2011 by 
+  Generated on Fri Aug 19 15:30:11 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.2 (ruby-1.8.7).
 </div>
 
   </body>

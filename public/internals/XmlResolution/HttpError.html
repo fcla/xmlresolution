@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Exception: XmlResolution::HttpError</title>
-<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Exception: XmlResolution::HttpError
+  
+    &mdash; XML Resolution Service
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -83,25 +96,22 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>
-Most named exceptions in the XmlResolution service we subclass here to one
+    
+<p>Most named exceptions in the XmlResolution service we subclass here to one
 of the HTTP classes.  Libraries are designed specifically to be unaware of
-this mapping: they only use their specific low level exceptions classes.
-</p>
-<p>
-In general, if we catch an HttpError at our top level app, we can blindly
+this mapping: they only use their specific low level exceptions classes.</p>
+
+<p>In general, if we catch an HttpError at our top level app, we can blindly
 return the error message to the client as a diagnostic, and log it.  The
-fact that we&#8217;re naming these exceptions means we&#8217;re being
-careful not to leak information, and still be helpful to the Client.  They
-are very specific messages; tracebacks will not be required.
-</p>
-<p>
-When we get an un-named exception, however, the appropriate thing to do is
-to just supply a very terse message to the client (e.g., we wouldn&#8217;t
-like to expose errors from an ORM that said something like &#8220;password
-&#8216;topsecret&#8217; failed in mysql open&#8221;).  We <b>will</b> want
-to log the full error message, and probably a backtrace to boot.
-</p>
+fact that we’re naming these exceptions means we’re being careful not
+to leak information, and still be helpful to the Client.  They are very
+specific messages; tracebacks will not be required.</p>
+
+<p>When we get an un-named exception, however, the appropriate thing to do is
+to just supply a very terse message to the client (e.g., we wouldn’t like
+to expose errors from an ORM that said something like “password
+‘topsecret’ failed in mysql open”).  We <b>will</b> want to log the
+full error message, and probably a backtrace to boot.</p>
 
 
   </div>
@@ -112,6 +122,9 @@ to log the full error message, and probably a backtrace to boot.
   <h2>Direct Known Subclasses</h2>
   <p class="children"><span class='object_link'><a href="Http400Error.html" title="XmlResolution::Http400Error (class)">Http400Error</a></span>, <span class='object_link'><a href="Http500Error.html" title="XmlResolution::Http500Error (class)">Http500Error</a></span></p>
 </div>
+
+
+  
 
 
   
@@ -189,9 +202,9 @@ to log the full error message, and probably a backtrace to boot.
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:35:15 2011 by 
+  Generated on Fri Aug 19 15:30:02 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.2 (ruby-1.8.7).
 </div>
 
   </body>

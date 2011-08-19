@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Class: XmlResolution::TarWriter</title>
-<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: XmlResolution::TarWriter
+  
+    &mdash; XML Resolution Service
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -103,9 +116,8 @@
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-A file descriptor we will write to.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>A file descriptor we will write to.</p>
 </div></span>
   
 </li>
@@ -130,16 +142,17 @@ A file descriptor we will write to.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-A hash having keys :uid, :gid, :username, :groupname, used to set ownership
-for all files included in the tar file we produce.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>A hash having keys :uid, :gid, :username, :groupname, used to set ownership
+for all files included in the tar file we produce.</p>
 </div></span>
   
 </li>
 
     
   </ul>
+
+
 
 
   
@@ -166,9 +179,8 @@ for all files included in the tar file we produce.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-Write two 512-byte blocks of nul characters to end the tar file.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Write two 512-byte blocks of nul characters to end the tar file.</p>
 </div></span>
   
 </li>
@@ -190,9 +202,8 @@ Write two 512-byte blocks of nul characters to end the tar file.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-Determine the checksum of a header BUFF.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Determine the checksum of a header BUFF.</p>
 </div></span>
   
 </li>
@@ -216,10 +227,9 @@ Determine the checksum of a header BUFF.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-Create a object that will allow us to stream a tar file to given file
-descriptor FD.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Create a object that will allow us to stream a tar file to given file
+descriptor FD.</p>
 </div></span>
   
 </li>
@@ -241,10 +251,9 @@ descriptor FD.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-Given the string FILE_PATH to a file and the string TARFILE_PATH, the
-pathname to use for the tar entry, create a header for the file.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Given the string FILE_PATH to a file and the string TARFILE_PATH, the
+pathname to use for the tar entry, create a header for the file.</p>
 </div></span>
   
 </li>
@@ -266,11 +275,9 @@ pathname to use for the tar entry, create a header for the file.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-Build a boilerplate header based on what we know won&#8217;t change: for
-us, that&#8217;s plain files on plain filesystems with a global set of
-ownership.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Build a boilerplate header based on what we know won’t change: for us,
+that’s plain files on plain filesystems with a global set of ownership.</p>
 </div></span>
   
 </li>
@@ -292,10 +299,9 @@ ownership.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-Format INT as octal string, optionally prefix with leading zeros to fill
-out to PAD length.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Format INT as octal string, optionally prefix with leading zeros to fill
+out to PAD length.</p>
 </div></span>
   
 </li>
@@ -317,10 +323,9 @@ out to PAD length.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-Write out a tar header for the file found at FILE_PATH, using the TAR_PATH
-string as the filename in the tar file.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Write out a tar header for the file found at FILE_PATH, using the TAR_PATH
+string as the filename in the tar file.</p>
 </div></span>
   
 </li>
@@ -341,11 +346,10 @@ string as the filename in the tar file.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-Create a object that will allow us to stream a tar file to given file
+    
+<p>Create a object that will allow us to stream a tar file to given file
 descriptor FD.  The second argument FILE_OWNERSHIP, a hash, gives the :gid,
-:uid, :username and :groupname to use for all files.
-</p>
+:uid, :username and :groupname to use for all files.</p>
 
 
   </div>
@@ -395,10 +399,9 @@ descriptor FD.  The second argument FILE_OWNERSHIP, a hash, gives the :gid,
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-A file descriptor we will write to.  It could be a StringIO object, if you
-really want to get a string out of this class.
-</p>
+    
+<p>A file descriptor we will write to.  It could be a StringIO object, if you
+really want to get a string out of this class.</p>
 
 
   </div>
@@ -439,10 +442,9 @@ really want to get a string out of this class.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-A hash having keys :uid, :gid, :username, :groupname, used to set ownership
-for all files included in the tar file we produce.
-</p>
+    
+<p>A hash having keys :uid, :gid, :username, :groupname, used to set ownership
+for all files included in the tar file we produce.</p>
 
 
   </div>
@@ -487,9 +489,8 @@ for all files included in the tar file we produce.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-Write two 512-byte blocks of nul characters to end the tar file.
-</p>
+    
+<p>Write two 512-byte blocks of nul characters to end the tar file.</p>
 
 
   </div>
@@ -529,11 +530,10 @@ Write two 512-byte blocks of nul characters to end the tar file.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-Determine the checksum of a header BUFF.  The location of the checksum
+    
+<p>Determine the checksum of a header BUFF.  The location of the checksum
 itself (at <a href="http://148..155">buff</a>) is treated as a string of
-blanks.
-</p>
+blanks.</p>
 
 
   </div>
@@ -577,10 +577,9 @@ blanks.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-Given the string FILE_PATH to a file and the string TARFILE_PATH, the
-pathname to use for the tar entry, create a header for the file.
-</p>
+    
+<p>Given the string FILE_PATH to a file and the string TARFILE_PATH, the
+pathname to use for the tar entry, create a header for the file.</p>
 
 
   </div>
@@ -684,11 +683,9 @@ pathname to use for the tar entry, create a header for the file.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-Build a boilerplate header based on what we know won&#8217;t change: for
-us, that&#8217;s plain files on plain filesystems with a global set of
-ownership
-</p>
+    
+<p>Build a boilerplate header based on what we know won’t change: for us,
+that’s plain files on plain filesystems with a global set of ownership</p>
 
 
   </div>
@@ -792,10 +789,9 @@ ownership
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-Format INT as octal string, optionally prefix with leading zeros to fill
-out to PAD length. INT may be a string or fixnum.
-</p>
+    
+<p>Format INT as octal string, optionally prefix with leading zeros to fill
+out to PAD length. INT may be a string or fixnum.</p>
 
 
   </div>
@@ -833,11 +829,10 @@ out to PAD length. INT may be a string or fixnum.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-Write out a tar header for the file found at FILE_PATH, using the TAR_PATH
+    
+<p>Write out a tar header for the file found at FILE_PATH, using the TAR_PATH
 string as the filename in the tar file.  If TAR_PATH is not supplied,
-initialize from FILE_PATH, removing leading slashes.
-</p>
+initialize from FILE_PATH, removing leading slashes.</p>
 
 
   </div>
@@ -897,9 +892,9 @@ initialize from FILE_PATH, removing leading slashes.
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:35:12 2011 by 
+  Generated on Fri Aug 19 15:30:11 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.2 (ruby-1.8.7).
 </div>
 
   </body>
