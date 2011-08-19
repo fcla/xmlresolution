@@ -53,7 +53,7 @@ module XmlResolution
 
   REVISION = get_capistrano_git_revision()
   RELEASE  = get_capistrano_release()
-  VERSION  = '1.3.4'
+  VERSION  = File.read(File.expand_path("../../VERSION",__FILE__)).strip
   NAME     = 'XMLResolution'
 
   require 'xmlresolution/exceptions'

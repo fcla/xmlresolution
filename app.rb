@@ -1,10 +1,19 @@
 require 'xmlresolution'
+require 'datyl/config'
+require 'datyl/logger'
 
 include XmlResolution
+include Datyl            # gets Logger interface
+
 
 def get_config
-  filename = ENV['XMLRESOLUTION_CONFIG_FILE'] || File.join(File.dirname(__FILE__), 'config.yml')
-  config = ResolverUtils.read_config(filename)
+
+  raise ConfigurationError, "No DAITSS_CONFIG environment variable has been set, so there's no configuration file to read"             unless ENV['DAITSS_CONFIG']
+  raise ConfigurationError, "The DAITSS_CONFIG environment variable points to a non-existant file, (#{ENV['DAITSS_CONFIG']})"          unless File.exists? ENV['DAITSS_CONFIG']
+  raise ConfigurationError, "The DAITSS_CONFIG environment variable points to a directory instead of a file (#{ENV['DAITSS_CONFIG']})"     if File.directory? ENV['DAITSS_CONFIG']
+  raise ConfigurationError, "The DAITSS_CONFIG environment variable points to an unreadable file (#{ENV['DAITSS_CONFIG']})"            unless File.readable? ENV['DAITSS_CONFIG']
+  
+  return Datyl::Config.new(ENV['DAITSS_CONFIG'], :xmlresolution)
 end
 
 
@@ -25,7 +34,7 @@ configure do
   set :proxy,       config.resolver_proxy   # Where to find the tape robot (see SiloTape and TsmExecutor).
   set :data_path,   config.data_root        # The collections and schema data live here.
 
-  Logger.setup('XmlResolution', config.virtual_hostname)  # TODO: add vhost second arg
+  Logger.setup('XmlResolution', config.virtual_hostname)
 
   if config.log_syslog_facility
     Logger.facility = config.log_syslog_facility

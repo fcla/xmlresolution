@@ -1,0 +1,43 @@
+# This is an example of the DAITSS configuration file restricted to
+# the data necessary to run the xmlresolution service.
+#
+# You must set up your web server to set the environment variable
+# DAITSS_CONFIG to point to a configuration file along these lines,
+# though typically it will have sections for many services in addition
+# to this one.
+#
+# Please don't use tabs in this file.
+
+
+xmlresolution:
+     virtual_hostname:            xmlresolution.example.org
+     data_root:                   /var/daitss/xmlresoluition
+     log_syslog_facility:         LOG_LOCAL0
+     resolver_proxy:              squid.example.org:3128
+
+
+# log_syslog_facility
+# -------------------
+# If log_syslog_facility is set, use the value as a syslog facility
+# code and log using syslog. Otherwise, log to STDERR.
+#
+# resolver_proxy
+# --------------
+# To avoid slamming the hosts of schema files (such as W3C, who may
+# blacklist you), we recommend using a caching proxy such as squid.
+# The resolver_proxy settings points to such a proxy; it is also much
+# faster.
+#
+# data_root
+# ---------
+# The directory where we'll keep data files; old files are aged out
+# automatically.  If not set, the service will try to use the 'data'
+# subdirectory in the installation root.  N.B.: this directory must
+# have two subdirectories in it, names 'collections' and 'schemas',
+# and they must be writable by the user running the service.
+#
+# virtual_hostname
+# ----------------
+# The virtual_hostname is used in logging; if not set, it will use the
+# hostname of the computer on which it is running.
+
