@@ -1,10 +1,12 @@
 # -*- mode:ruby; -*-
 
+# TODO: rcov appears to be broken on my system
+
 require 'fileutils'
-require 'rake'
-require 'rake/rdoctask'
+require 'rspec'
+require 'rspec/core/rake_task'
 require 'socket'
-require 'spec/rake/spectask'
+
 
 HOME    = File.expand_path(File.dirname(__FILE__))
 LIBDIR  = File.join(HOME, 'lib')
@@ -13,26 +15,19 @@ TMPDIR  = File.join(HOME, 'tmp')
 FILES   = FileList["#{LIBDIR}/**/*.rb", 'config.ru', 'app.rb']         # run yard/hanna/rdoc on these and..
 DOCDIR  = File.join(HOME, 'public', 'internals')                       # ...place the html doc files here.
 
+# Warning!  development mode, gets all the rake/spec/cucumber gems into bundler
+
+ENV['BUNDLE_GEMFILE'] = File.join(HOME, 'Gemfile.development')
+
 def dev_host
   Socket.gethostname =~ /romeo-foxtrot/
 end
 
-# Working with continuous integration.  The CI servers out
-# there.... Sigh... Something that should be so easy...let's start
-# with ci/reporter...
-
-
-require 'ci/reporter/rake/rspec'
-require 'ci/reporter/rake/cucumber'
-
-task :spec => [ "ci:setup:rspec", "ci:setup:cucumber" ]
-
-Spec::Rake::SpecTask.new do |task|
-  task.spec_opts = [ '--format', 'specdoc' ]    # ci/reporter is getting in the way of this being used.
-  task.libs << 'lib'
-  task.libs << 'spec'
-  task.rcov = true if dev_host   # do coverage tests on my devlopment box
+RSpec::Core::RakeTask.new do |task|
+   task.rspec_opts = [ '--color', '--format', 'documentation' ] 
 end
+
+# RSpec::Core::RakeTask.new
 
 # Documentation support on deployed hosts is so iffy that we distribute our own
 

@@ -77,6 +77,7 @@ describe XmlResolver do  # and XmlResolverReloaded
     @@resolver.document_text.should == text
     @@resolver.document_size.should == text.length
     @@resolver.document_identifier.should == Digest::MD5.hexdigest(text)
+    # @@resolver.resolution_time.should be_close(Time.now, 30)
     @@resolver.resolution_time.should be_within(30).of(Time.now)
   end
 
