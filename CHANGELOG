@@ -1,0 +1,6 @@
+Version 1.3.5 - 2011-08-19
+
+  * Using datyl project for logging and configuration
+  * Set up support for new global config file
+  * Rebuilt docs
+
