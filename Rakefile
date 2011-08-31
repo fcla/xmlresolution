@@ -15,9 +15,13 @@ TMPDIR  = File.join(HOME, 'tmp')
 FILES   = FileList["#{LIBDIR}/**/*.rb", 'config.ru', 'app.rb']         # run yard/hanna/rdoc on these and..
 DOCDIR  = File.join(HOME, 'public', 'internals')                       # ...place the html doc files here.
 
-# Warning!  development mode, gets all the rake/spec/cucumber gems into bundler
+# require 'bundler/setup'
 
-ENV['BUNDLE_GEMFILE'] = File.join(HOME, 'Gemfile.development')
+# These days, bundle is called automatically, if a Gemfile exists, by a lot
+# of different libraries - rack and rspec among them.  Use the development
+# gemfile for those things run from this Rakefile.
+
+### ENV['BUNDLE_GEMFILE'] = File.join(HOME, 'Gemfile.development')
 
 def dev_host
   Socket.gethostname =~ /romeo-foxtrot/
@@ -25,6 +29,7 @@ end
 
 RSpec::Core::RakeTask.new do |task|
    task.rspec_opts = [ '--color', '--format', 'documentation' ] 
+  ## task.rcov = true if Socket.gethostname =~ /romeo-foxtrot/   # do coverage tests on my devlopment box
 end
 
 # RSpec::Core::RakeTask.new
@@ -57,14 +62,9 @@ task :docs do
   end
 end
 
-desc "Maintain the sinatra tmp directory for automated restart (passenger phusion pays attention to tmp/restart.txt)."
+desc "Hit the restart button for apache/passenger, pow servers"
 task :restart do
-  mkdir TMPDIR unless File.directory? TMPDIR
-  restart = File.join(TMPDIR, 'restart.txt')
-  if not (File.exists?(restart) and `find  #{FILES} -type f -newer "#{restart}" 2> /dev/null`.empty?)
-    puts "Indicating a restart is in order."
-    File.open(restart, 'w') { |f| f.write "" }
-  end
+  sh "touch #{HOME}/tmp/restart.txt"
 end
 
 # Build local bundled Gems; 
@@ -73,8 +73,8 @@ desc "Gem bundles"
 task :bundle do
   sh "rm -rf #{HOME}/bundle #{HOME}/.bundle #{HOME}/Gemfile.development.lock #{HOME}/Gemfile.lock"
   sh "mkdir -p #{HOME}/bundle"
-  sh "cd #{HOME}; bundle install --path bundle"
-  sh "cd #{HOME}; bundle --gemfile Gemfile.development install --path bundle"
+  ### sh "cd #{HOME}; bundle --gemfile Gemfile.development install --path bundle"
+  sh "cd #{HOME}; bundle --gemfile Gemfile install --path bundle"
 end
 
 desc "Make emacs tags files"

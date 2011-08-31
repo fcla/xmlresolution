@@ -8,36 +8,44 @@
 #
 # Please don't use tabs in this file.
 
+defaults:
+     temp_directory:             /var/tmp
 
 xmlresolution:
-     virtual_hostname:            xmlresolution.example.org
-     data_root:                   /var/daitss/xmlresoluition
-     log_syslog_facility:         LOG_LOCAL0
-     resolver_proxy:              squid.example.org:3128
+     virtual_hostname:           xmlresolution.example.org
+     data_root:                  /var/daitss/xmlresoluition
+     log_syslog_facility:        LOG_LOCAL0
+     resolver_proxy:             squid.example.org:3128
 
-
-# log_syslog_facility
-# -------------------
+# defaults:temp_directory
+# -----------------------
+# Where should temporary files be created? This should be at least
+# twice the size of the largest package you plan to ingest, plus
+# headroom.  Defaults to system-defined temp directory (typically
+# /tmp/)
+#
+# xmlresolution:log_syslog_facility
+# ---------------------------------
 # If log_syslog_facility is set, use the value as a syslog facility
 # code and log using syslog. Otherwise, log to STDERR.
 #
-# resolver_proxy
-# --------------
+# xmlresolution:resolver_proxy
+# ----------------------------
 # To avoid slamming the hosts of schema files (such as W3C, who may
 # blacklist you), we recommend using a caching proxy such as squid.
 # The resolver_proxy settings points to such a proxy; it is also much
 # faster.
 #
-# data_root
-# ---------
+# xmlresolution:data_root
+# -----------------------
 # The directory where we'll keep data files; old files are aged out
 # automatically.  If not set, the service will try to use the 'data'
 # subdirectory in the installation root.  N.B.: this directory must
 # have two subdirectories in it, names 'collections' and 'schemas',
 # and they must be writable by the user running the service.
 #
-# virtual_hostname
-# ----------------
+# xmlresolution:virtual_hostname
+# ------------------------------
 # The virtual_hostname is used in logging; if not set, it will use the
 # hostname of the computer on which it is running.
 

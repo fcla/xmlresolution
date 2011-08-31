@@ -5,7 +5,6 @@ require 'datyl/logger'
 include XmlResolution
 include Datyl            # gets Logger interface
 
-
 def get_config
 
   raise ConfigurationError, "No DAITSS_CONFIG environment variable has been set, so there's no configuration file to read"             unless ENV['DAITSS_CONFIG']

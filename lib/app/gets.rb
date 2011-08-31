@@ -59,3 +59,7 @@ end
 get '/test-form/:collection_id/' do |collection_id|
   erb :'test-form', :locals => { :collection_id => collection_id }
 end
+
+get '/status' do
+  [ 200, {'Content-Type'  => 'application/xml'}, "<status/>\n" ]
+end
