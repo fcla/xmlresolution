@@ -8,11 +8,12 @@ include Datyl            # gets Logger interface
 def get_config
 
   raise ConfigurationError, "No DAITSS_CONFIG environment variable has been set, so there's no configuration file to read"             unless ENV['DAITSS_CONFIG']
+  raise ConfigurationError, "The VIRTUAL_HOSTNAME environment variable has not been set"                                               unless ENV['VIRTUAL_HOSTNAME']
   raise ConfigurationError, "The DAITSS_CONFIG environment variable points to a non-existant file, (#{ENV['DAITSS_CONFIG']})"          unless File.exists? ENV['DAITSS_CONFIG']
   raise ConfigurationError, "The DAITSS_CONFIG environment variable points to a directory instead of a file (#{ENV['DAITSS_CONFIG']})"     if File.directory? ENV['DAITSS_CONFIG']
   raise ConfigurationError, "The DAITSS_CONFIG environment variable points to an unreadable file (#{ENV['DAITSS_CONFIG']})"            unless File.readable? ENV['DAITSS_CONFIG']
   
-  return Datyl::Config.new(ENV['DAITSS_CONFIG'], :xmlresolution)
+  return Datyl::Config.new(ENV['DAITSS_CONFIG'], ENV['VIRTUAL_HOSTNAME'])
 end
 
 
@@ -33,13 +34,14 @@ configure do
   set :proxy,       config.resolver_proxy   # Where to find the tape robot (see SiloTape and TsmExecutor).
   set :data_path,   config.data_root        # The collections and schema data live here.
 
-  Logger.setup('XmlResolution', config.virtual_hostname)
+  Logger.setup('XmlResolution', ENV['VIRTUAL_HOSTNAME'])
 
-  if config.log_syslog_facility
-    Logger.facility = config.log_syslog_facility
-  else
+  if not (config.log_filename or config.log_syslog_facility)
     Logger.stderr
   end
+
+  Logger.facility = config.log_syslog_facility  if config.log_syslog_facility
+  Logger.filename = config.log_filename         if config.log_filename
 
   use Rack::CommonLogger, Logger.new(:info, 'Rack:')  # Bend CommonLogger to our will...
 

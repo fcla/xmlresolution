@@ -11,10 +11,17 @@
 defaults:
      temp_directory:             /var/tmp
 
-xmlresolution:
-     virtual_hostname:           xmlresolution.example.org
+# We normally name sections after the virtual hostname used by an
+# applcation (this is so one physical host can run multiple services
+# of the same kind).  An application's configuration code typically
+# checks the VIRTUAL_HOSTNAME environment variable to determine the
+# appropriate section to load.  Typically VIRTUAL_HOSTNAME is set in
+# the same place that the DAITTS_CONFIG environment is set.
+
+xmlresolution.example.org:
      data_root:                  /var/daitss/xmlresoluition
      log_syslog_facility:        LOG_LOCAL0
+     log_filename:               /path/to/name/of/file.log
      resolver_proxy:             squid.example.org:3128
 
 # defaults:temp_directory
@@ -24,10 +31,17 @@ xmlresolution:
 # headroom.  Defaults to system-defined temp directory (typically
 # /tmp/)
 #
+
 # xmlresolution:log_syslog_facility
-# ---------------------------------
-# If log_syslog_facility is set, use the value as a syslog facility
-# code and log using syslog. Otherwise, log to STDERR.
+# -------------------------------
+# If set, direct log information to this syslog facility (see
+# /etc/syslog.conf). If neither log_filename nor log_syslog_facility
+# are set, log to STDERR.
+#
+# xmlresolution:log_filename
+# -------------------------------
+# If set, direct log information to this file. If neither log_filename
+# nor log_syslog_facility are set, log to STDERR.
 #
 # xmlresolution:resolver_proxy
 # ----------------------------
@@ -44,8 +58,4 @@ xmlresolution:
 # have two subdirectories in it, names 'collections' and 'schemas',
 # and they must be writable by the user running the service.
 #
-# xmlresolution:virtual_hostname
-# ------------------------------
-# The virtual_hostname is used in logging; if not set, it will use the
-# hostname of the computer on which it is running.
 
