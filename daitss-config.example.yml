@@ -16,7 +16,7 @@ defaults:
 # of the same kind).  An application's configuration code typically
 # checks the VIRTUAL_HOSTNAME environment variable to determine the
 # appropriate section to load.  Typically VIRTUAL_HOSTNAME is set in
-# the same place that the DAITTS_CONFIG environment is set.
+# the same place that the DAITSS_CONFIG environment is set.
 
 xmlresolution.example.org:
      data_root:                  /var/daitss/xmlresoluition
