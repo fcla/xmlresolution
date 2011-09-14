@@ -90,14 +90,14 @@ task :darchive do
     sh "cap deploy -S target=darchive.fcla.edu:/opt/web-services/sites/xmlresolution -S who=daitss:daitss"
 end
 
-desc "deploy to development site (xmlresolution.retsinafcla.edu)"
+desc "deploy to development site (xmlresolution.retsina.fcla.edu)"
 task :retsina do
     sh "cap deploy -S target=retsina.fcla.edu:/opt/web-services/sites/xmlresolution -S who=daitss:daitss"
 end
 
 desc "deploy to ripple's test site (xmlresolution.ripple.fcla.edu)"
 task :ripple do
-    sh "cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/xmlresolution -S who=xmlrez:daitss"
+    sh "cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/xmlresolution -S who=daitss:daitss"
 end
 
 desc "deploy to tarchive's coop (xmlresolution.tarchive.fcla.edu?)"
