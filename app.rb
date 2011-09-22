@@ -48,10 +48,7 @@ configure do
   Logger.info "Starting #{XmlResolution.version.rev}"
   Logger.info "Initializing with data directory #{config.data_root}; caching proxy is #{config.resolver_proxy || 'off' }"
 
-  if config.temp_directory
-    Logger.info "Using temp directory #{config.temp_directory}"
-    ENV['TMPDIR'] = config.temp_directory
-  end
+  Logger.info "Using temp directory #{ENV['TMPDIR']}"
 end
 
 

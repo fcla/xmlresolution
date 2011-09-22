@@ -9,7 +9,6 @@
 # Please don't use tabs in this file.
 
 defaults:
-     temp_directory:             /var/tmp
 
 # We normally name sections after the virtual hostname used by an
 # applcation (this is so one physical host can run multiple services
@@ -23,14 +22,6 @@ xmlresolution.example.org:
      log_syslog_facility:        LOG_LOCAL0
      log_filename:               /path/to/name/of/file.log
      resolver_proxy:             squid.example.org:3128
-
-# defaults:temp_directory
-# -----------------------
-# Where should temporary files be created? This should be at least
-# twice the size of the largest package you plan to ingest, plus
-# headroom.  Defaults to system-defined temp directory (typically
-# /tmp/)
-#
 
 # xmlresolution:log_syslog_facility
 # -------------------------------
