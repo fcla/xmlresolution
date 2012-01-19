@@ -15,6 +15,12 @@ TMPDIR  = File.join(HOME, 'tmp')
 FILES   = FileList["#{LIBDIR}/**/*.rb", 'config.ru', 'app.rb']         # run yard/hanna/rdoc on these and..
 DOCDIR  = File.join(HOME, 'public', 'internals')                       # ...place the html doc files here.
 
+if ENV["USER"] == "Carol"
+  user = "cchou"
+else
+  user = ENV["USER"]
+end
+
 # require 'bundler/setup'
 
 # These days, bundle is called automatically, if a Gemfile exists, by a lot
@@ -87,22 +93,22 @@ end
 
 desc "deploy to darchive's production site (xmlresolution.fda.fcla.edu)"
 task :darchive do
-    sh "cap deploy -S target=darchive.fcla.edu:/opt/web-services/sites/xmlresolution -S who=daitss:daitss"
+    sh "cap deploy -S target=darchive.fcla.edu:/opt/web-services/sites/xmlresolution -S who=#{user}:#{user}"
 end
 
 desc "deploy to development site (xmlresolution.retsina.fcla.edu)"
 task :retsina do
-    sh "cap deploy -S target=retsina.fcla.edu:/opt/web-services/sites/xmlresolution -S who=daitss:daitss"
+    sh "cap deploy -S target=retsina.fcla.edu:/opt/web-services/sites/xmlresolution -S who=#{user}:#{user}"
 end
 
 desc "deploy to ripple's test site (xmlresolution.ripple.fcla.edu)"
 task :ripple do
-    sh "cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/xmlresolution -S who=daitss:daitss"
+    sh "cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/xmlresolution -S who=#{user}:#{user}"
 end
 
 desc "deploy to tarchive's coop (xmlresolution.tarchive.fcla.edu?)"
 task :tarchive_coop do
-    sh "cap deploy -S target=tarchive.fcla.edu:/opt/web-services/sites/coop/xmlresolution -S who=daitss:daitss"
+    sh "cap deploy -S target=tarchive.fcla.edu:/opt/web-services/sites/coop/xmlresolution -S who=#{user}:#{user}"
 end
 
 defaults = [:restart, :spec]

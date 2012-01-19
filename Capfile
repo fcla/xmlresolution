@@ -58,11 +58,11 @@ namespace :deploy do
     ['collections', 'schemas', 'bundle'].each do |dir|  # want to preserve existing data, so keep state files in the shared directory
       realname = File.join(shared_path, dir)
       run "mkdir -p #{realname}"
-      run "chmod -R ug+rwX #{realname}"
+      #run "chmod -R ug+rwX #{realname}"
     end
 
-    run "find #{shared_path} #{release_path} -type d | xargs chmod 2775"
-    run "find #{shared_path} #{release_path}  | xargs chgrp #{group}"
+    #run "find #{shared_path} #{release_path} -type d | xargs chmod 2775"
+    #run "find #{shared_path} #{release_path}  | xargs chgrp #{group}"
   end
 
 
