@@ -1,6 +1,7 @@
 require 'xmlresolution'
 require 'datyl/config'
-require 'datyl/logger'
+require 'datyl/logger' 
+require 'fileutils'
 
 include XmlResolution
 include Datyl            # gets Logger interface
@@ -15,6 +16,19 @@ def get_config
   
   return Datyl::Config.new(ENV['DAITSS_CONFIG'], ENV['VIRTUAL_HOSTNAME'])
 end
+
+def do_at_exit(str1)
+
+	  at_exit do
+		  FileUtils.rm_rf(str1);
+		  Logger.info "Temporary directory #{str1} deleted" 
+		  #if get_config.shutdown_stats 
+		  #   shutdown_stats
+		  #end
+		  Logger.info "Ending #{XmlResolution.version.rev}"
+         end
+end
+
 
 
 configure do
@@ -32,8 +46,12 @@ configure do
   set :raise_errors, false                  # We'll handle our own errors, thanks
 
   set :proxy,       config.resolver_proxy   # Where to find the tape robot (see SiloTape and TsmExecutor).
-  set :data_path,   config.data_root        # The collections and schema data live here.
+  #set :data_path,   config.data_root        # The collections and schema data live here.
 
+  # create a unique temporary directory to hold the output files.
+  #$tempdir = Dir.mktmpdir  code move to schema_catalog.rb 
+  set :data_path, $tempdir                  # The collections and schema data live here.
+    
   Logger.setup('XmlResolution', ENV['VIRTUAL_HOSTNAME'])
 
   if not (config.log_filename or config.log_syslog_facility)
@@ -46,11 +64,39 @@ configure do
   use Rack::CommonLogger, Logger.new(:info, 'Rack:')  # Bend CommonLogger to our will...
 
   Logger.info "Starting #{XmlResolution.version.rev}"
-  Logger.info "Initializing with data directory #{config.data_root}; caching proxy is #{config.resolver_proxy || 'off' }"
+  Logger.info "Initializing with temp data directory #{$tempdir}; caching proxy is #{config.resolver_proxy || 'off' }"
+  defconfig = Datyl::Config.new(ENV['DAITSS_CONFIG'], 'defaults')
+  #Logger.info "Using temp directory #{$tempdir}"
 
-  Logger.info "Using temp directory #{ENV['TMPDIR']}"
+  collections_dirname =  File.join($tempdir,"collections")
+  Dir.mkdir(collections_dirname)
+  Logger.info "Collections directory #{collections_dirname} created"
+  schemas_dirname =  File.join($tempdir,"schemas")
+  Dir.mkdir(schemas_dirname)
+  Logger.info "Schemas directory #{schemas_dirname} created"
+  do_at_exit($tempdir)
+  # "globals initialized in  SchemaCatalog class- not in app.rb,  $schema_references,$schema_references_permanent,$MD5toURL
 end
-
+=begin
+def shutdown_stats
+	Logger.info "write_count=#{$write_count}";
+	Logger.info "iostats write_count=#{$iostats.writes}";
+  Logger.info "Shutdown Statistics"
+  Logger.info "Current"
+  Logger.info "Count\tDate\t\t\t\tMD5\t\t\t\t\tURL"
+  $schema_references.keys.each do |k|
+    val = $schema_references[k]
+    Logger.info "#{val}\t#{$MD5toRecord[k].last_modified.iso8601}\t#{k}\t#{$MD5toRecord[k].location}"
+  end   
+		  
+  Logger.info "Cumulative"
+  Logger.info "Count\t\t\t\t\tMD5\t\t\t\t\tURL"
+  $schema_references_permanent.keys.each do |k|
+    val = $schema_references_permanent[k]
+    Logger.info "#{val}\t\t\t\t\t#{k}\t#{$MD5toRecord[k].location}"
+ end   
+end
+=end
 
 begin
   load 'lib/app/helpers.rb'
