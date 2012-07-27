@@ -25,6 +25,26 @@ module XmlResolution
   # redirected_location::  if retrieval_status is :redirect, this will be the initial Location URL; the location slot contains the address of the retrieved schema text.
 
   class SchemaCatalog
+    $tempdir = Dir.mktmpdir
+    $schema_references = Hash.new
+#begin    
+    $schema_references_permanent = Hash.new
+    $MD5toURL = Hash.new
+    $MD5toRecord = Hash.new
+    $write_count = 0
+    ios = Struct.new("Iostats",:url_reads,:url_bytes_read,:writes,:bytes_written,:successes,:redirect_cases,:redirect_total,:fails,:collections,:startup_time)
+    $iostats = ios.new
+    $iostats.url_reads = 0
+    $iostats.url_bytes_read = 0
+    $iostats.writes = 0
+    $iostats.bytes_written = 0
+    $iostats.successes = 0
+    $iostats.redirect_cases = 0
+    $iostats.redirect_total = 0
+    $iostats.fails = 0
+    $iostats.collections = 0
+    $iostats.startup_time = Time.new.iso8601
+#end    
 
     # Be sure to keep the following more or less in sync with the Struct::SchemaReloaded used in the XmlResolverReloaded class;
     # it is the data structure that we maintain in the SchemaCatalog.
@@ -134,7 +154,6 @@ module XmlResolution
       # they aren't yet in our schema_dictionary, go fetch them.  If we
       # get a schema record that has a different location than we asked
       # for, one or more redirects occured: mark it as such.
-
       namespace_locations.each do |location, namespace|
 
         next if @processed_locations[location]
@@ -143,9 +162,7 @@ module XmlResolution
 
         @schema_dictionary.push schema_record
         @processed_locations[schema_record.location] = true
-
         if schema_record.location != location   # then one or more redirects
-
           original = Struct::Schema.new(location, schema_record.namespace)
           original.retrieval_status    = :redirect
           original.redirected_location = schema_record.location
@@ -172,18 +189,38 @@ module XmlResolution
 
       response, actual_location = fetch location
 
-      record.digest           = Digest::MD5.hexdigest(response.body)
+      #record.digest           = Digest::MD5.hexdigest(response.body)
+      record.digest           = Digest::MD5.hexdigest(location)  # github issue 14
       record.last_modified    = response['Last-Modified'] ? Time.parse(response['Last-Modified']) : Time.now
       record.localpath        = File.join(@data_root, record.digest)
       record.location         = actual_location
       record.retrieval_status = :success
 
-      if not file_recorded?(record.localpath, record.last_modified, record.digest)
-        ResolverUtils.write_lock(record.localpath) do |fd|
+      if $schema_references[record.digest]  == nil 
+	      $schema_references[record.digest] = 1
+      else	      
+         $schema_references[record.digest]=$schema_references[record.digest]+1
+       end	 
+=begin   statistics
+      $MD5toURL[record.digest] = record.location
+      $MD5toRecord[record.digest] = record
+      
+      if $schema_references_permanent[record.digest]  == nil 
+	      $schema_references_permanent[record.digest] = 1
+      else	      
+         $schema_references_permanent[record.digest]=$schema_references_permanent[record.digest]+1
+       end	 
+=end       
+
+      # file_recorded? has a side effect.  gets a write lock
+        if  not file_recorded?(record.localpath, record.last_modified, record.digest)
+          ResolverUtils.write_lock(record.localpath) do |fd|
           fd.write response.body
           fd.close
+	  #$iostats.writes  += 1
+	  #$iostats.bytes_written  += response.body.length
           File.utime(File.atime(record.localpath), record.last_modified, record.localpath)
-        end
+	end
       end
 
       return record
@@ -213,11 +250,18 @@ module XmlResolution
 
       Net::HTTP::Proxy(@proxy_addr, @proxy_port).start(uri.host, uri.port) do |http|
         response  = http.get(uri.path)
+	#$iostats.url_reads      += 1                     
         case response
-        when Net::HTTPSuccess     then return [ response, location ]
-        when Net::HTTPRedirection then fetch response['location'], limit - 1
+        when Net::HTTPSuccess     then
+		#$iostats.successes  += 1
+		#$iostats.url_bytes_read  += response.body.length
+	       	return [ response, location ]
+        when Net::HTTPRedirection then
+		#$iostats.redirect_cases  += 1
+	       	fetch response['location'], limit - 1
         else
-          response.error!
+         #$iostats.fails          += 1                    
+         response.error!
         end
       end
 
@@ -230,7 +274,9 @@ module XmlResolution
 
     def file_recorded? filename, mtime, digest
       return false unless File.exists?(filename)
-      ResolverUtils.read_lock(filename) { |fd| (File.mtime(filename) == mtime) and (Digest::MD5.hexdigest(fd.read) == digest) }
+      #ResolverUtils.read_lock(filename) { |fd| (File.mtime(filename) == mtime) and (Digest::MD5.hexdigest(fd.read) == digest) } this is the original
+      #ResolverUtils.read_lock(filename) { |fd| (File.mtime(filename) == mtime) and (Digest::MD5.hexdigest(filename) == digest) }
+      ResolverUtils.read_lock(filename) { |fd| (File.mtime(filename) == mtime) }  #  record the file when the datetimestamp changed
     end
 
   end # of class SchemaCatalog
