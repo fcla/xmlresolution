@@ -15,6 +15,7 @@ describe SchemaCatalog do
   def proxy 
     prox = ENV['RESOLVER_PROXY']
     prox ||= case Socket.gethostname
+             when /iterman/;   'localhost:3128'
              when /romeo-foxtrot/;   'localhost:3128'
              when /sacred.net/;      'satyagraha.sacred.net:3128'
              when /fcla.edu/;        'sake.fcla.edu'
@@ -35,11 +36,13 @@ describe SchemaCatalog do
   end
 
   after(:all) do
+
     FileUtils.rm_rf @@tempdir
   end
 
   def daitss_namespace_locations
     { 'http://www.fcla.edu/dls/md/daitss/daitss.xsd' => 'http://www.fcla.edu/dls/md/daitss/' }
+    #{ 'http://localhost/daitss.xsd' => 'http://www.fcla.edu/dls/md/daitss/' }
   end
 
   # we'll get a redirect with this one.
@@ -56,25 +59,27 @@ describe SchemaCatalog do
     info = recs[0]
     info.retrieval_status.should == :success
     File.exists?(info.localpath).should == true
-    Digest::MD5.hexdigest(File.read(info.localpath)).should == info.digest
+    #Digest::MD5.hexdigest(File.read(info.localpath)).should == info.digest
+    Digest::MD5.hexdigest(info.location).should == info.digest   #  github issue  14
+    
   end
 
   it "should merge additional records, retrieving those schema" do
-
-    @@catalog.merge({ 'http://www.fcla.edu/dls/md/daitss/daitssBitstream.xsd' => 'http://www.fcla.edu/dls/md/daitss/' })
+    @@catalog.merge({ 'http://www.fcla.edu/dls/md/daitss/1.16/daitssAdmin.xsd' => 'http://www.fcla.edu/dls/md/daitss/admin/' }) #.merge({ 'http://www.fcla.edu/dls/md/daitss/daitssBitstream.xsd' => 'http://www.fcla.edu/dls/md/daitss/' })
     recs = @@catalog.schemas
     recs.length.should == 2
 
     recs.each do |info|
       info.retrieval_status.should == :success
       File.exists?(info.localpath).should == true
-      Digest::MD5.hexdigest(File.read(info.localpath)).should == info.digest
+      Digest::MD5.hexdigest(info.location).should == info.digest
     end
   end
 
   it "should not merge additional records if they've already been retrieved" do
 
-    @@catalog.merge({ 'http://www.fcla.edu/dls/md/daitss/daitssBitstream.xsd' => 'http://www.fcla.edu/dls/md/daitss/' })
+    #@@catalog.merge({ 'http://www.fcla.edu/dls/md/daitss/daitssBitstream.xsd' => 'http://www.fcla.edu/dls/md/daitss/' })
+    @@catalog.merge({ 'http://www.fcla.edu/dls/md/daitss/1.16/daitssAdmin.xsd' => 'http://www.fcla.edu/dls/md/daitss/admin/' })
     recs = @@catalog.schemas
     recs.length.should == 2
   end
@@ -104,7 +109,6 @@ describe SchemaCatalog do
   end
 
   it "should retrieve the schema location information from the catalog via a block method" do
-
     locs = []
     successes = 0
     failures  = 0
@@ -121,7 +125,7 @@ describe SchemaCatalog do
 
     locs.length.should == 4
     locs.include?("http://www.fcla.edu/dls/md/daitss/daitss.xsd").should == true
-    locs.include?("http://www.fcla.edu/dls/md/daitss/daitssBitstream.xsd").should == true
+    locs.include?("http://www.fcla.edu/dls/md/daitss/1.16/daitssAdmin.xsd").should == true
     locs.include?("http://www.loc.gov/mods/v3/mods-3-2.xsd").should == true
     locs.include?("http://www.loc.gov/standards/mods/v3/mods-3-2.xsd").should == true
 
