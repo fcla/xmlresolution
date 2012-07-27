@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<?fcla fda="yes"?>
+<?fcla dl="no"?>
+<?xml-stylesheet type="text/xsl" href="http://schema.fcla.edu/xml/student_html.xsl"?>
+<!--  Towards Interoperable Preservation Repositories: Repository Exchange Package Use Cases and Best Practices ( Book ) -->
+<METS:mets OBJID="FDA025"
+  xmlns:METS="http://www.loc.gov/METS/"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns:daitss="http://www.fcla.edu/dls/md/daitss/"
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
+  xsi:schemaLocation="http://www.loc.gov/METS/
+    http://www.loc.gov/standards/mets/mets.xsd 
+    http://www.fcla.edu/dls/md/daitss/
+    http://www.fcla.edu/dls/md/daitss/daitss.xsd
+    http://purl.org/dc/elements/1.1/
+    http://dublincore.org/schemas/xmls/simpledc20021212.xsd
+">
+<METS:metsHdr CREATEDATE="2011-10-27T15:36:18Z" ID="FDA025" LASTMODDATE="2011-10-27T15:37:50Z" RECORDSTATUS="COMPLETE">
+<METS:agent ROLE="CREATOR" TYPE="ORGANIZATION"> 
+<METS:name>FCLA,Florida Center for Library Automation</METS:name>
+</METS:agent>
+<METS:agent OTHERTYPE="SOFTWARE" ROLE="CREATOR" TYPE="OTHER"> 
+<METS:name>SobekCM Metadata Template</METS:name>
+</METS:agent>
+<METS:agent ROLE="CREATOR" TYPE="INDIVIDUAL"> 
+<METS:name>Lydia-7\Lydia</METS:name>
+</METS:agent>
+</METS:metsHdr>
+<METS:dmdSec ID="DMD1">
+<METS:mdWrap MDTYPE="DC"  MIMETYPE="text/xml" LABEL="Simple Dublin Core">
+<METS:xmlData>
+<dc:title>Towards Interoperable Preservation Repositories: Repository Exchange Package Use Cases and Best Practices</dc:title>
+<dc:creator>Caplan, Priscilla</dc:creator>
+<dc:creator>Pawletko, Joseph G.</dc:creator>
+<dc:date>2011</dc:date>
+<dc:language>English</dc:language>
+<dc:type>text</dc:type>
+<dc:rights>All rights reserved by the source institution</dc:rights>
+</METS:xmlData>
+</METS:mdWrap>
+</METS:dmdSec>
+<METS:amdSec>
+<METS:digiprovMD ID="AMD_DAITSS">
+<METS:mdWrap MDTYPE="OTHER" OTHERMDTYPE="DAITSS">
+<METS:xmlData>
+<daitss:daitss>
+<daitss:AGREEMENT_INFO ACCOUNT="ACT" PROJECT="PRJ" />
+</daitss:daitss>
+</METS:xmlData>
+</METS:mdWrap>
+</METS:digiprovMD>
+</METS:amdSec>
+<METS:fileSec> 
+<METS:fileGrp USE="reference" > 
+<METS:file GROUPID="G1" ID="PDF1" MIMETYPE="application/pdf" CHECKSUM="f9e12ea80ce1390e55ad3d455d0f51ef" CHECKSUMTYPE="MD5" SIZE="114115"> 
+<METS:FLocat LOCTYPE="OTHER" OTHERLOCTYPE="SYSTEM" xlink:href="smalltest.pdf" /> 
+</METS:file> 
+<METS:file GROUPID="G1" ID="XML1" MIMETYPE="application/xml" CHECKSUM="6ee29108e5ccb56625762202f2c0ba87" CHECKSUMTYPE="MD5" SIZE="8340"> 
+<METS:FLocat LOCTYPE="OTHER" OTHERLOCTYPE="SYSTEM" xlink:href="marc.xml" /> 
+</METS:file> 
+<METS:file GROUPID="G1" ID="JAR1" MIMETYPE="application/xml" CHECKSUM="0cc2a9fed22f7ad26ddcb3d4607c4f7d" CHECKSUMTYPE="MD5" SIZE="5712"> 
+<METS:FLocat LOCTYPE="OTHER" OTHERLOCTYPE="SYSTEM" xlink:href="xmlvalidator.jar" /> 
+</METS:file> 
+<METS:file GROUPID="G1" ID="EXE1" MIMETYPE="application/xml" CHECKSUM="472812717ad00dc1dc2c3e63bf6346cf" CHECKSUMTYPE="MD5" SIZE="44192"> 
+<METS:FLocat LOCTYPE="OTHER" OTHERLOCTYPE="SYSTEM" xlink:href="cat" /> 
+</METS:file> 
+<!--
+<METS:file GROUPID="G1" ID="FILE1" MIMETYPE="application/xml" CHECKSUM="38863738bd52ddf332bf7c9f3753e052" CHECKSUMTYPE="MD5" SIZE="468"> 
+	<METS:FLocat LOCTYPE="URL" OTHERLOCTYPE="SYSTEM" xlink:href="file:/./internal-dtd.xml" /> 
+</METS:file> 
+-->
+<METS:file GROUPID="G1" ID="XMLRANDOM" MIMETYPE="application/xml" CHECKSUM="1218b1ea5b00b979c3b5ff19ee203192" CHECKSUMTYPE="MD5" SIZE="1024">
+<METS:FLocat LOCTYPE="OTHER" OTHERLOCTYPE="SYSTEM" xlink:href="random.data" /> 
+</METS:file> 
+<METS:file GROUPID="G1" ID="XML2" MIMETYPE="application/xml" CHECKSUM="63721547c1a1604f2783791f4010c7d0" CHECKSUMTYPE="MD5" SIZE="654"> 
+<METS:FLocat LOCTYPE="OTHER" OTHERLOCTYPE="SYSTEM" xlink:href="rss-public.xml" /> 
+</METS:file> 
+<METS:file GROUPID="G1" ID="XML2R" MIMETYPE="application/xml" CHECKSUM="b2f92504227ed7e073a1b86abe88a5c2" CHECKSUMTYPE="MD5" SIZE="644"> 
+<METS:FLocat LOCTYPE="OTHER" OTHERLOCTYPE="SYSTEM" xlink:href="redir-rss-public.xml" /> 
+</METS:file> 
+
+<METS:file GROUPID="G1" ID="XYZ3" MIMETYPE="application/xml" CHECKSUM="dcc2534c65c20e259e2ae945c103befd" CHECKSUMTYPE="MD5" SIZE="607"> 
+<METS:FLocat LOCTYPE="OTHER" OTHERLOCTYPE="SYSTEM" xlink:href="rss-system.xml" /> 
+</METS:file> 
+<METS:file GROUPID="G1" ID="XYZ3R" MIMETYPE="application/xml" CHECKSUM="8cc5ce1cb54ce3d0b9494f94b1fb6755" CHECKSUMTYPE="MD5" SIZE="697"> 
+<METS:FLocat LOCTYPE="OTHER" OTHERLOCTYPE="SYSTEM" xlink:href="redir-rss-system.xml" /> 
+</METS:file> 
+<METS:file GROUPID="G1" ID="XML4" MIMETYPE="application/xml" CHECKSUM="2250e8ea2f8db0f6c371a54d66415071" CHECKSUMTYPE="MD5" SIZE="580"> 
+<METS:FLocat LOCTYPE="OTHER" OTHERLOCTYPE="SYSTEM" xlink:href="rss-local.xml" /> 
+</METS:file> 
+
+<METS:file GROUPID="G1" ID="XML5" MIMETYPE="application/xml" CHECKSUM="89159980e74c51c72aa325c1ff20f2d4" CHECKSUMTYPE="MD5" SIZE="587"> 
+<METS:FLocat LOCTYPE="OTHER" OTHERLOCTYPE="SYSTEM" xlink:href="hasOnlyPi.xml" /> 
+</METS:file> 
+<METS:file GROUPID="G1" ID="XML5R" MIMETYPE="application/xml" CHECKSUM="20d712d985cebbbba32b1dd53ff8c86b" CHECKSUMTYPE="MD5" SIZE="577"> 
+<METS:FLocat LOCTYPE="OTHER" OTHERLOCTYPE="SYSTEM" xlink:href="redir-hasOnlyPi.xml" /> 
+</METS:file> 
+<METS:file GROUPID="G1" ID="XML6" MIMETYPE="application/xml" CHECKSUM="1fec8a9a5ba1ea5922ba81ff590b4422" CHECKSUMTYPE="MD5" SIZE="1019"> 
+<METS:FLocat LOCTYPE="OTHER" OTHERLOCTYPE="SYSTEM" xlink:href="rss-0.91.dtd" /> 
+</METS:file> 
+<METS:file GROUPID="G1" ID="XML7" MIMETYPE="application/xml" CHECKSUM="3208d11d2b92394680365b153ff41d25" CHECKSUMTYPE="MD5" SIZE="403"> 
+<METS:FLocat LOCTYPE="OTHER" OTHERLOCTYPE="SYSTEM" xlink:href="mixed-internal-external-dtd.xml" /> 
+</METS:file> 
+<METS:file GROUPID="G1" ID="XML8" MIMETYPE="application/xml" CHECKSUM="36925bb4265922400ac322874a4fd4f4" CHECKSUMTYPE="MD5" SIZE="113"> 
+<METS:FLocat LOCTYPE="OTHER" OTHERLOCTYPE="SYSTEM" xlink:href="partial-filesystem.dtd" /> 
+</METS:file> 
+
+<METS:file GROUPID="G1" ID="XML9" MIMETYPE="application/xml" CHECKSUM="43f7c5423ac0249f49d07905c408323a" CHECKSUMTYPE="MD5" SIZE="745"> 
+<METS:FLocat LOCTYPE="OTHER" OTHERLOCTYPE="SYSTEM" xlink:href="local_ss.xsl" /> 
+</METS:file> 
+ 
+<METS:file GROUPID="G1" ID="XML11" MIMETYPE="application/xml" CHECKSUM="052de0ef3fd66627dcb091db1e530b1d" CHECKSUMTYPE="MD5" SIZE="609"> 
+<METS:FLocat LOCTYPE="OTHER" OTHERLOCTYPE="SYSTEM" xlink:href="poorly-formed.xml" /> 
+</METS:file> 
+
+<METS:file GROUPID="G1" ID="XML12" MIMETYPE="application/xml" CHECKSUM="8b9f87f1d7d1ff59de7a1370ea8b938c" CHECKSUMTYPE="MD5" SIZE="589"> 
+<METS:FLocat LOCTYPE="OTHER" OTHERLOCTYPE="SYSTEM" xlink:href="points_to_bad_xsl.xml" /> 
+</METS:file> 
+
+<METS:file GROUPID="G1" ID="XML10" MIMETYPE="application/xml" CHECKSUM="38863738bd52ddf332bf7c9f3753e052" CHECKSUMTYPE="MD5" SIZE="468"> 
+<METS:FLocat LOCTYPE="OTHER" OTHERLOCTYPE="SYSTEM" xlink:href="internal-dtd.xml" /> 
+</METS:file> 
+</METS:fileGrp> 
+</METS:fileSec> 
+<METS:structMap ID="STRUCT2" TYPE="other"> 
+<METS:div DMDID="DMD1" LABEL="Towards Interoperable Preservation Repositories: Repository Exchange Package Use Cases and Best Practices" ORDER="0" TYPE="main"> 
+<METS:div ID="DDIV1" ORDER="1" TYPE="Main"> 
+<METS:div ID="FILES1" ORDER="1" TYPE="Page"> 
+<METS:fptr FILEID="PDF1" /> 
+</METS:div> 
+</METS:div> 
+</METS:div>
+</METS:structMap>
+</METS:mets>
