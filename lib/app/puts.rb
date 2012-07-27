@@ -9,6 +9,7 @@ put '/ieids/:collection_id' do |collection_id|
   else
     ResolverCollection.new settings.data_path, collection_id
     status 201
+#      $iostats.collections += 1
     "Collection #{collection_id} created.\n"
   end
 
