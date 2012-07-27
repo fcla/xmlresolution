@@ -7,6 +7,8 @@ require 'xmlresolution/exceptions'
 require 'xmlresolution/schema_catalog'
 require 'xmlresolution/utils'
 require 'xmlresolution/xml_processors'
+require 'uri'
+require 'rexml/document'
 
 
 module XmlResolution
@@ -76,7 +78,9 @@ module XmlResolution
     NAMESPACE_DONT_TELL =  [
                             'http://www.w3.org/1999/xhtml',
                             'http://www.w3.org/2001/XMLSchema-hasFacetAndProperty',
-                            'http://www.w3.org/2001/XMLSchema-instance'
+                            'http://www.w3.org/2001/XMLSchema-instance'#
+			    #'http://www.w3.org/1999/XSL/Transform',
+			    #'http://www.w3.org/2001/XMLSchema'
                            ]
 
     # To avoid potential denial of service attacks (even if self-inflicted), limit the number
@@ -160,7 +164,8 @@ module XmlResolution
     def initialize document_text, document_uri, data_root, proxy = nil
       
       @document_text        = document_text
-      @document_identifier  = Digest::MD5.hexdigest(document_text)
+      #@document_identifier  = Digest::MD5.hexdigest(document_text)
+      @document_identifier  = Digest::MD5.hexdigest(document_uri)    # github issue 14
       @document_uri         = document_uri
       @proxy                = proxy
       @document_size        = document_text.length
@@ -177,6 +182,12 @@ module XmlResolution
       ResolverUtils.check_directory "The document collection directory", collections_storage_directory    # ditto
       
       raise InadequateDataError, "XML document #{document_uri} was empty" if document_size == 0
+      begin
+	      doc = REXML::Document.new(document_text) #   
+      rescue	      
+        raise XmlResolution::BadXmlDocument, $!.to_s + "   document uri: #{document_uri}"
+      end
+
 
       process
     end
@@ -296,6 +307,7 @@ module XmlResolution
       broken_links = schema_dictionary.map { |s| s.location if s.retrieval_status == :failure }.compact
       event_id = mint_event_id
       
+      @http_status_code =  String.new
       xml = Builder::XmlMarkup.new(:indent => 2)
       
       xml.instruct!(:xml, :encoding => 'UTF-8')
@@ -338,6 +350,7 @@ module XmlResolution
           }
         }
 
+	@schema_dictionary.map {|rr| @http_status_code=rr.error_message}
         xml.event {
           xml.eventIdentifier {
             xml.eventIdentifierType('URI')
@@ -351,6 +364,9 @@ module XmlResolution
               xml.eventOutcomeDetail {
                 xml.eventOutcomeDetailExtension {
                   @errors.each { |err| xml.error(err) }
+
+                  unresolved_namespaces.each { |ns| xml.unresolved_namespace(ns) }
+		  xml.http_status_code(@http_status_code) if @http_status_code  
                 }
               }
             elsif (unresolved_namespaces.count > 0) or (broken_links.count > 0)
@@ -358,6 +374,7 @@ module XmlResolution
                 xml.eventOutcomeDetailExtension {
                   broken_links.each { |loc| xml.broken_link(loc) }
                   unresolved_namespaces.each { |ns| xml.unresolved_namespace(ns) }
+		  xml.http_status_code(@http_status_code) if @http_status_code
                 }
               }
             end
@@ -410,6 +427,86 @@ module XmlResolution
       end
     end
     
+    
+    #
+    # input:
+    #         text:                    of an xml document
+    #         namespace_locations:     a hash   of locations=> namesspaces
+    #output:
+    #         namespace_location   has extra entries for DTD and Processing Instrctions
+    #
+    #1. first lop off all children of the root node
+    #2. then delete all comment nodes
+    #3. what is left are DTDs  and Processing instructions
+    #4. by text parsing determine if DTD or PI
+    #
+    def get_PI_DTD! (text,namespace_locations) 	    
+	    # (rdb:1) e xmldoc = Nokogiri::XML(preamble)
+	    #
+	    # found a bug  when there is a DTD and PI dtd gets excised out
+	     #(rdb:1) e  ch=xmldoc.children.each {|c| x  = "#{c}"}
+	    #0
+	    #(rdb:1) e x
+	    #"<?xml-stylesheet type=\"text/xsl\" href=\"http://schema.fcla.edu/xml/MARC21slim2MODS3-4.xsl\"?>"
+	    #
+    doc = REXML::Document.new(text)  #  the include REXML avoid REXML::Document
+    root = doc.root
+    #root.each_child {|f|  root.delete(f) if f.instance_of? REXML::Comment}
+    root_str = root.to_s
+    if root.prefix.length != 0
+       preamble_index =  text.index('<'+root.prefix+':'+root.name) - 1
+    else
+	    preamble_index =  text.index('<'+root.name) - 1
+    end   
+    preamble  = text[0..preamble_index]
+    comment_begin = preamble.index('<!--')
+    while comment_begin
+	    comment_end = preamble.index('-->',comment_begin)
+	    if comment_end  == nil
+		    break
+	    else
+		    preamble = preamble[0..comment_begin-1] + preamble[comment_end+3,preamble.length]
+		    comment_begin = preamble.index('<!--')
+	    end
+
+    end
+    xmldoc = Nokogiri::XML(preamble)
+    dtd_pi_ar = Array.new
+    xmldoc.children.each do |c|
+	x  = "#{c}"
+	dtd_pi_ar.push(x)
+
+     end
+
+    location = String.new
+    dtd_pi_ar.collect! do |f|
+	if (f.index('<!DOCTYPE') != nil || f.index('<?') != nil )  && f.index('http://') == nil  # this implies a local or not DTD and not PI
+		next    
+	end
+	words = f.scan(/(?:"")|(?:"(.*[^\\])")|(\w+)/).flatten.compact
+	namespace = ""             #  words[0]
+	words.each do |w|
+		if w.include?('http://')
+			location = w[w.index('http://')..w.length-1]
+			namespace = namespace + w[0..w.index('http://') - 1] + '.'
+	        else
+			namespace =  namespace + w + '.'
+        	end
+	end
+	if namespace.end_with?('.')
+		namespace = namespace[0...namespace.length - 1]
+	end
+	namespace_locations[location] = namespace
+    end
+
+    
+    end
+    
+    
+    
+    
+    
+    
     private
 
     # process
@@ -430,7 +527,7 @@ module XmlResolution
         @fatal = true
         return
       end
-      
+      get_PI_DTD!( document_text,namespace_locations)
       catalog = SchemaCatalog.new(namespace_locations, schemas_storage_directory, proxy)
 
       count = 0
@@ -560,7 +657,6 @@ module XmlResolution
       if not File.readable? filename
         raise ConfigurationError, "Can't read the data file #{document_identifier} for the collection #{collection_id} to read in schema info (looking in #{@collections_storage_directory})"
       end
-
       load File.read filename
     end
 
