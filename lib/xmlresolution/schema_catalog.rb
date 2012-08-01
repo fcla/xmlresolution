@@ -111,7 +111,7 @@ module XmlResolution
       ResolverUtils.check_directory "The schema storage directory", @data_root
 
       @schema_dictionary = []
-      merge namespace_locations
+       merge namespace_locations
     end
 
     # schemas
@@ -236,6 +236,7 @@ module XmlResolution
     #
     # Given an HTTP location LOCATION, fetch and return the response.
     # Permit up to five redirections by default.
+    # <Net::HTTPNotFound 404 Not Found readbody=true>  unreachable
 
     def fetch location, limit = 5
 
