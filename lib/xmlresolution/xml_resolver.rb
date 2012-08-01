@@ -307,7 +307,7 @@ module XmlResolution
       broken_links = schema_dictionary.map { |s| s.location if s.retrieval_status == :failure }.compact
       event_id = mint_event_id
       
-      @http_status_code =  String.new
+      #@http_status_code =  String.new   # not for premis xml
       xml = Builder::XmlMarkup.new(:indent => 2)
       
       xml.instruct!(:xml, :encoding => 'UTF-8')
@@ -374,7 +374,7 @@ module XmlResolution
                 xml.eventOutcomeDetailExtension {
                   broken_links.each { |loc| xml.broken_link(loc) }
                   unresolved_namespaces.each { |ns| xml.unresolved_namespace(ns) }
-		  xml.http_status_code(@http_status_code) if @http_status_code
+		  #xml.http_status_code(@http_status_code) if @http_status_code  # when I thougt this was a good idea
                 }
               }
             end
