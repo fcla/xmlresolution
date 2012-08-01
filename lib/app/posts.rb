@@ -40,8 +40,20 @@ post '/ieids/:collection_id/' do |collection_id|
     end
 
     res.unresolved_namespaces.each { |ns|  Logger.warn "Unresolved namespace #{ns} for document #{file_url}.", @env }
-
-    status 201
+    # if squid is down all the error_code will be 'Connection refused - connect(2)' unless squid came up in during
+    # the resolutions - very low probability.  If one of the error_codes is 'Connection refused - connect(2)' we will
+    # take this to mean  squid is down.
+    # all other error code we will pass back to client as  status 201.
+    # error_code '503 "Service Unavailable"'  http equivalent of connection refused we will treat as unreachable 
+    # error_code '404 "Not Found"'            http - asking for a url not on the server                           
+    rc     = 201              # assume everything is ok
+    res.schema_dictionary.map do  |r|
+     if r.error_message == 'Connection refused - connect(2)'
+	     rc = 503
+	     break;
+     end	     
+    end    
+    status rc  
     content_type 'application/xml'
     res.premis_report
   ensure
