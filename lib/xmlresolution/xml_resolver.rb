@@ -493,8 +493,12 @@ module XmlResolution
 			namespace =  namespace + w + '.'
         	end
 	end
-	if namespace.end_with?('.')
-		namespace = namespace[0...namespace.length - 1]
+	if namespace.end_with?('href=".')                     # style sheet 
+		namespace = namespace[0...namespace.length - 9]
+	elsif namespace.end_with?('" ".')                     # PUBLIC DTD
+	        namespace=namespace[0..namespace.size-5]
+	elsif namespace.end_with?('.')                     # other DTD          
+		namespace=namespace[0...namespace.size-1]
 	end
 	namespace_locations[location] = namespace
     end
