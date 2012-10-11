@@ -288,15 +288,20 @@ module XmlResolution
       successes = failures = 0
       
       schema_dictionary.each do |s|
+	      # for stylesheet s.namespace= xml.stylesheet.type.text/xsl
+	      # dtd namespace="DOCTYPE.rss.PUBLIC.-//Netscape Communications//DTD RSS 0.91//EN
         case s.retrieval_status
         when :failure            ;  failures  += 1
         when :success, :redirect ;  successes += 1
         end
       end
 
+      broken_links = schema_dictionary.map { |s| s.location if s.retrieval_status == :failure }.compact
       if @fatal
-        outcome = 'error'
-      elsif (successes > 0 and failures > 0)
+        outcome = 'failure'
+      elsif schema_dictionary.size == failures
+        outcome = 'failure'
+      elsif (successes > 0 and failures > 0)  or unresolved_namespaces.count > 0
         outcome = 'mixed'
       elsif failures > 0
         outcome = 'failure'
@@ -304,7 +309,7 @@ module XmlResolution
         outcome = 'success'  # Vacuous case will be counted a success.
       end
       
-      broken_links = schema_dictionary.map { |s| s.location if s.retrieval_status == :failure }.compact
+      #broken_links = schema_dictionary.map { |s| s.location if s.retrieval_status == :failure }.compact
       event_id = mint_event_id
       
       #@http_status_code =  String.new   # not for premis xml
@@ -349,8 +354,23 @@ module XmlResolution
             xml.linkingEventIdentifierValue(event_id)
           }
         }
-
-	@schema_dictionary.map {|rr| @http_status_code=rr.error_message}
+        @loc = ""
+	@ns = ""
+	@nsToType = {}
+	@locToType = {}
+	@schema_dictionary.map do |rr| @http_status_code=rr.error_message
+	if  rr.namespace[0..6] == "DOCTYPE"
+		@type = 'dtd'
+	elsif rr.namespace[0..6] == "xml.sty"
+		@type = "stylesheet"
+	else
+		@type = "schema"
+	end
+	@loc = rr.location
+	@ns =  rr.namespace
+	@nsToType[@ns] = @type
+	@locToType[@loc] = @type
+	end
         xml.event {
           xml.eventIdentifier {
             xml.eventIdentifierType('URI')
@@ -361,20 +381,27 @@ module XmlResolution
           xml.eventOutcomeInformation { 
             xml.eventOutcome(outcome) 
             if @fatal
+		    puts"fatal case1 namespace=#{@ns}  loc=#{@loc} "
               xml.eventOutcomeDetail {
                 xml.eventOutcomeDetailExtension {
+                  broken_links.each do |ns|
+			  xml.broken_link(ns,"type"=>@locToType[ns])
+		  end
                   @errors.each { |err| xml.error(err) }
 
-                  unresolved_namespaces.each { |ns| xml.unresolved_namespace(ns) }
+                  unresolved_namespaces.each { |ns| xml.unresolved_namespace(ns,"type"=>@nsToType[ns]) }
 		  xml.http_status_code(@http_status_code) if @http_status_code  
                 }
               }
-            elsif (unresolved_namespaces.count > 0) or (broken_links.count > 0)
+           elsif (broken_links.count != 0)  or (unresolved_namespaces.count > 0) or (broken_links.count > 0)
+	    attributes = {}
+	    attributes[:type] = "unresolvable"      
               xml.eventOutcomeDetail {
                 xml.eventOutcomeDetailExtension {
-                  broken_links.each { |loc| xml.broken_link(loc) }
-                  unresolved_namespaces.each { |ns| xml.unresolved_namespace(ns) }
-		  #xml.http_status_code(@http_status_code) if @http_status_code  # when I thougt this was a good idea
+                  broken_links.each { |loc| xml.broken_link(loc,"type"=>@locToType[loc]) }
+                  unresolved_namespaces.each do |ns|
+			  xml.broken_link(ns,"type"=>"unresolvable")
+		  end
                 }
               }
             end
