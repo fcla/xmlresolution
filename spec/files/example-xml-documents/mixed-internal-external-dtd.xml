@@ -1,0 +1,14 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE person SYSTEM "partial-filesystem.dtd" [
+ <!ELEMENT profession (#PCDATA)>
+ <!ELEMENT person     (name, profession*)>
+ ]>
+ <person>
+	 <name>
+		 <first_name>Alan</first_name>
+		 <last_name>Turing</last_name>
+	 </name>
+	 <profession>computer scientist</profession>
+	 <profession>mathematician</profession>
+	 <profession>cryptographer</profession>
+ </person>
