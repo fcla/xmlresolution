@@ -34,7 +34,7 @@ describe ResolverCollection do
   end
 
   def unresolveds
-	  ['status="unresolved" namespace="http://www.w3.org/1984/XSL/BADTransform"']
+	  ['status="unresolvable" namespace="http://www.w3.org/1984/XSL/BADTransform"']
   end
 
   def hostname 
@@ -165,7 +165,7 @@ describe ResolverCollection do
     what_should_get_resolved.each{|z| @@locations.include?(z).should be_true}
   end
 
-  it "should have these unresolveds in the manifest" do
+  it "should have these unresolvables in the manifest" do
     unresolveds.each{|z| @@manifest.index(z).should_not be_nil} 
   end
 
