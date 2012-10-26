@@ -1,3 +1,6 @@
+Version 1.4.2 - 2012-10-26
+  * resolve github issue #27  resolved -> unresolvable in manifest.xml
+  * resolve github issue #29  in manifest.xml  for DTDs and STYLESHEETS get rid of namespace and substitute dtd or stylesheet for schema tag where appropriate
 Version 1.4.1 - 2012-07-31
   * resolve github issue #21 will resolve  DTDs and Processing instructions
   * fixed github issue #7  pass return_code 503 to  client if we receive 'Connection refused - connect(2) when trying to reach squid
