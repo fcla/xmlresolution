@@ -37,11 +37,11 @@ describe ResolverCollection do
   end
 
   def unresolveds
-	  ['status="unresolved" namespace="info:lc/xmlns/premis-v2-beta',
-	  'status="unresolved" namespace="http://www.w3.org/2001/XMLSchema',
-	  'status="unresolved" namespace="http://www.loc.gov/standards/textMD',
-          'status="unresolved" namespace="http://www.fcla.edu/dls/md/docmd',
-          'status="unresolved" namespace="http://www.fcla.edu/dls/md/daitss/']
+	  ['status="unresolvable" namespace="info:lc/xmlns/premis-v2-beta',
+	  'status="unresolvable" namespace="http://www.w3.org/2001/XMLSchema',
+	  'status="unresolvable" namespace="http://www.loc.gov/standards/textMD',
+          'status="unresolvable" namespace="http://www.fcla.edu/dls/md/docmd',
+          'status="unresolvable" namespace="http://www.fcla.edu/dls/md/daitss/']
   end
   
   def broken_links
@@ -189,7 +189,7 @@ describe ResolverCollection do
   end
    
 
-  it "should have these unresolveds in the manifest" do
+  it "should have these unresolvables in the manifest" do
     unresolveds.each{|z| @@manifest.index(z).should_not be_nil} 
   end
 
