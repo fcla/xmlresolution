@@ -18,7 +18,7 @@ with the manifest document.  The root element &lt;resolutions&gt; act
 as a container for individual &lt;resolutions&gt; - these latter are
 associated with exactly one XML document, and list information about
 the schemas used to resolve that document.  The status associated with
-the schemas are one of success, redirect, unresolved, and failure.
+the schemas are one of success, redirect, unresolvable, and failure.
 These indicate, respectively, that the attempt to acquire the schema
 file resulted in a successful download; resulted in a redirect to
 another location; that there was not enough location information to
@@ -32,15 +32,15 @@ interferred with the schema retrieval.  An example follows:
 &lt;resolutions collection="E20010101_TESTIN"&gt;
 
   &lt;resolution time="2011-05-09T09:16:57-04:00" name="file://daitss.example.com/E20010101_TESTIN/E20090705_AAAAUK-0176.xml" md5="df6912619ff3041a8d6f4a5e9964b6f2"&gt;
-    &lt;schema status="unresolved" namespace="http://schema.ccs-gmbh.com/ALTO"/&gt;
-    &lt;schema status="unresolved" namespace="http://www.w3.org/1999/xlink"/&gt;
+    &lt;schema status="unresolvable" namespace="http://schema.ccs-gmbh.com/ALTO"/&gt;
+    &lt;schema status="unresolvable" namespace="http://www.w3.org/1999/xlink"/&gt;
   &lt;/resolution&gt;
 
   &lt;resolution time="2011-05-09T09:16:47-04:00" name="file://daitss.example.com/E20010101_TESTIN/F20060402_AAAAAB_NORM.xml" md5="e6720c9ea7e7f2a70d8dd20b1af84020"&gt;
     &lt;schema status="success" last_modified="2010-02-22T11:35:24-05:00" location="http://www.loc.gov/standards/mets/mets.xsd" namespace="http://www.loc.gov/METS/" md5="f60c045ff5543c7069b1d8180afb15de"/&gt;
     &lt;schema status="success" last_modified="2007-08-23T15:02:01-04:00" location="http://www.loc.gov/standards/xlink/xlink.xsd" namespace="http://www.w3.org/1999/xlink" md5="6bdc7f9459a502964f889d70a335cece"/&gt;
-    &lt;schema status="unresolved" namespace="http://www.w3.org/2001/XMLSchema"/&gt;
-    &lt;schema status="unresolved" namespace="http://www.w3.org/XML/1998/namespace"/&gt;
+    &lt;schema status="unresolvable" namespace="http://www.w3.org/2001/XMLSchema"/&gt;
+    &lt;schema status="unresolvable" namespace="http://www.w3.org/XML/1998/namespace"/&gt;
   &lt;/resolution&gt;
 
   &lt;resolution time="2011-05-09T09:17:06-04:00" name="file://daitss.example.com/E20010101_TESTIN/UF00028422_00625.xml" md5="0fed45f9e8cee53650efaf37f840f69c"&gt;
