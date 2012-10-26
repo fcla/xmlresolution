@@ -34,7 +34,7 @@ describe ResolverCollection do
   end
 
   def unresolveds
-	  ['status="unresolved" namespace="http://www.w3.org/1999/XSL/Transform"']
+	  ['status="unresolvable" namespace="http://www.w3.org/1999/XSL/Transform"']
   end
 
 
