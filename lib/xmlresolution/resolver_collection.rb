@@ -231,17 +231,35 @@ module XmlResolution
           xml.resolution(:name => res.document_uri, :md5 => res.document_identifier, :time => res.resolution_time.iso8601) {       
             res.schema_dictionary.each do |s|
               next unless s.retrieval_status == :success
-              xml.schema(:status => 'success', :location => s.location, :namespace => s.namespace, :md5 => s.digest, :last_modified => s.last_modified.iso8601)
+	      if s.namespace[0..6] == 'DOCTYPE'
+                xml.dtd(:status => 'success', :location => s.location, :md5 => s.digest, :last_modified => s.last_modified.iso8601)
+	      elsif s.namespace[0..6] == 'xml.sty'
+                xml.stylesheet(:status => 'success', :location => s.location, :md5 => s.digest, :last_modified => s.last_modified.iso8601)
+	      else	      
+                xml.schema(:status => 'success', :location => s.location, :namespace => s.namespace, :md5 => s.digest, :last_modified => s.last_modified.iso8601)
+	      end	      
             end
             res.schema_dictionary.each do |s|
               next unless s.retrieval_status == :failure
-              xml.schema(:status => 'failure', :location => s.location, :namespace => s.namespace, :message => s.error_message)
+	      if s.namespace[0..6] == 'DOCTYPE'
+                xml.dtd(:status => 'failure', :location => s.location,  :message => s.error_message)
+	      elsif s.namespace[0..6] == 'xml.sty'
+                xml.stylesheet(:status => 'failure', :location => s.location,  :message => s.error_message)
+	      else
+                xml.schema(:status => 'failure', :location => s.location, :namespace => s.namespace, :message => s.error_message)
+	      end
             end
             res.schema_dictionary.each do |s|
               next unless s.retrieval_status == :redirect
-              xml.schema(:status => 'redirect', :location => s.location, :namespace => s.namespace, :actual => s.redirected_location)
+	      if s.namespace[0..6] == 'DOCTYPE'
+                xml.dtd(:status => 'redirect', :location => s.location,  :actual => s.redirected_location)
+	      elsif  s.namespace[0..6] == 'xml.sty'
+                xml.stylesheet(:status => 'redirect', :location => s.location,  :actual => s.redirected_location)
+	      else
+                xml.schema(:status => 'redirect', :location => s.location, :namespace => s.namespace, :actual => s.redirected_location)
+	      end
             end
-            res.unresolved_namespaces.each { |ns| xml.schema(:status => 'unresolved', :namespace => ns) }
+            res.unresolved_namespaces.each { |ns| xml.schema(:status => 'unresolvable', :namespace => ns) }
             if not res.errors.empty?
               xml.errors {
                 res.errors.each { |mess| xml.error(mess) }
@@ -285,8 +303,6 @@ module XmlResolution
         s = p[p.length-32..p.length];
 	if $schema_references[s] != nil
 		$schema_references[s] = $schema_references[s] - 1
-	#else
-	#  puts "schema_refrences for schema=#{s} was nil"
         end	  
       end
       delete_schemas  
@@ -301,7 +317,7 @@ module XmlResolution
       io.close
       io.unlink
     end
-
+=begin
     def delete_collection collection_name
 	    collection =  File.join($tempdir,'collections',collection_name)
 	    if File.exists?(collection)
@@ -311,22 +327,48 @@ module XmlResolution
 	end
              end
 
+    end#
+=end
+#always get rid of collection no matter what
+    def delete_collection collection_name
+	    collection =  File.join($tempdir,'collections',collection_name)
+	    if File.exists?(collection)
+                   FileUtils.rm_rf collection 
+             end
     end
 
     def get_schema_reference_count collection
-	    count = 0;
-	    dir = Dir.new(collection)
+	  count = 0;
+	  begin
+	  Dir.open(collection)  do |dir|
+	    line = String.new
+	    schema = String.new
+	    file = nil
 	    dir.each do |f|
+              file = f		    
               next if File.directory?(f)
 	      s = File.new(File.join(collection,f))
 	      lines  = s.lines()
-	      lines.each do |line|
-		    id     = line[0..6]
+	      lines.each do |l|
+		    line = l  
+		    id     = l[0..6]
 		    if id  == "SCHEMA " 
-		      schema = line[7..38]
+		      schema = l[7..38]
 		      count = count + $schema_references[schema] 
 		    end
 	       end
+	    end
+	    end
+	    rescue Exception
+		    Logger.err("get_schema_reference_count Exception #{$!} at: #{$@[0]}")
+		    Logger.err("line=#{line}")
+		    Logger.err("collection=#{collection} count=#{count} schema=#{schema} file=#{file} Exception #{$!}")
+	            Logger.err("schema_reference[#{schema}]=#{$schema_references[schema]}")
+		    count = -1
+	    #ensure
+	#	    puts "ensure"
+	#	    FileUtils.remove_entry_secure dir
+	#	    puts "ensure `dir #{dir} removed"
 	    end
 	    count
     end
@@ -410,7 +452,7 @@ module XmlResolution
         next unless  ResolverUtils.collection_name_ok? File.split(dir)[-1]
 
         if (Time.now - File::stat(dir).mtime) > TOO_LONG_SINCE_LAST_MODIFIED
-          puts "TOO LONG TRIGGERED  GOOD TIME TO DELETE SCHEMAS schema_references="<<$schema_references.inspect
+	  Logger.err("Collection #{dir} has not been modified since #{File::stat(dir).mtime} exceeding TOO_LONG_SINCE_MODIFIED #{TOO_LONG_SINCE_LAST_MODIFIED} seconds")
 	  FileUtils.rm_rf dir
         end
       end
