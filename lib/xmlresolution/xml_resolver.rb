@@ -381,7 +381,8 @@ module XmlResolution
           xml.eventOutcomeInformation { 
             xml.eventOutcome(outcome) 
             if @fatal
-		    puts"fatal case1 namespace=#{@ns}  loc=#{@loc} "
+		    puts "fatal error when parsing document:#{@document_uri} @document_identifier:#{@document_identifier}"
+		    @errors.each{|z| puts(z)}
               xml.eventOutcomeDetail {
                 xml.eventOutcomeDetailExtension {
                   broken_links.each do |ns|
