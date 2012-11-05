@@ -232,7 +232,12 @@ module XmlResolution
             res.schema_dictionary.each do |s|
               next unless s.retrieval_status == :success
 	      if s.namespace[0..6] == 'DOCTYPE'
-                xml.dtd(:status => 'success', :location => s.location, :md5 => s.digest, :last_modified => s.last_modified.iso8601)
+		if s.namespace.index('.PUBLIC.')       
+		  public = s.namespace[s.namespace.index('.PUBLIC.')+8..s.namespace.length]	
+                  xml.dtd(:status => 'success', :location => s.location, :PUBLIC => public, :md5 => s.digest, :last_modified => s.last_modified.iso8601)
+		else  
+                  xml.dtd(:status => 'success', :location => s.location, :md5 => s.digest, :last_modified => s.last_modified.iso8601)
+		end  
 	      elsif s.namespace[0..6] == 'xml.sty'
                 xml.stylesheet(:status => 'success', :location => s.location, :md5 => s.digest, :last_modified => s.last_modified.iso8601)
 	      else	      
@@ -242,7 +247,12 @@ module XmlResolution
             res.schema_dictionary.each do |s|
               next unless s.retrieval_status == :failure
 	      if s.namespace[0..6] == 'DOCTYPE'
-                xml.dtd(:status => 'failure', :location => s.location,  :message => s.error_message)
+		if s.namespace.index('.PUBLIC.')       
+		  public = s.namespace[s.namespace.index('.PUBLIC.')+8..s.namespace.length]	
+                   xml.dtd(:status => 'failure', :location => s.location,  :PUBLIC => public, :message => s.error_message)
+		else
+                   xml.dtd(:status => 'failure', :location => s.location,  :message => s.error_message)
+		end
 	      elsif s.namespace[0..6] == 'xml.sty'
                 xml.stylesheet(:status => 'failure', :location => s.location,  :message => s.error_message)
 	      else
@@ -252,7 +262,12 @@ module XmlResolution
             res.schema_dictionary.each do |s|
               next unless s.retrieval_status == :redirect
 	      if s.namespace[0..6] == 'DOCTYPE'
-                xml.dtd(:status => 'redirect', :location => s.location,  :actual => s.redirected_location)
+		if s.namespace.index('.PUBLIC.')       
+		  public = s.namespace[s.namespace.index('.PUBLIC.')+8..s.namespace.length]	
+                    xml.dtd(:status => 'redirect', :location => s.location,  :PUBLIC => public, :actual => s.redirected_location)
+		else
+                  xml.dtd(:status => 'redirect', :location => s.location,  :actual => s.redirected_location)
+		end
 	      elsif  s.namespace[0..6] == 'xml.sty'
                 xml.stylesheet(:status => 'redirect', :location => s.location,  :actual => s.redirected_location)
 	      else
@@ -317,18 +332,6 @@ module XmlResolution
       io.close
       io.unlink
     end
-=begin
-    def delete_collection collection_name
-	    collection =  File.join($tempdir,'collections',collection_name)
-	    if File.exists?(collection)
-		 count  = get_schema_reference_count collection
-		 if count == 0
-                   FileUtils.rm_rf collection 
-	end
-             end
-
-    end#
-=end
 #always get rid of collection no matter what
     def delete_collection collection_name
 	    collection =  File.join($tempdir,'collections',collection_name)
@@ -337,6 +340,7 @@ module XmlResolution
              end
     end
 
+=begin
     def get_schema_reference_count collection
 	  count = 0;
 	  begin
@@ -365,13 +369,10 @@ module XmlResolution
 		    Logger.err("collection=#{collection} count=#{count} schema=#{schema} file=#{file} Exception #{$!}")
 	            Logger.err("schema_reference[#{schema}]=#{$schema_references[schema]}")
 		    count = -1
-	    #ensure
-	#	    puts "ensure"
-	#	    FileUtils.remove_entry_secure dir
-	#	    puts "ensure `dir #{dir} removed"
 	    end
 	    count
     end
+=end
 
     def delete_schemas
     begin
