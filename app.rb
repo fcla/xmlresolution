@@ -75,28 +75,7 @@ configure do
   Dir.mkdir(schemas_dirname)
   Logger.info "Schemas directory #{schemas_dirname} created"
   do_at_exit($tempdir)
-  # "globals initialized in  SchemaCatalog class- not in app.rb,  $schema_references,$schema_references_permanent,$MD5toURL
 end
-=begin
-def shutdown_stats
-	Logger.info "write_count=#{$write_count}";
-	Logger.info "iostats write_count=#{$iostats.writes}";
-  Logger.info "Shutdown Statistics"
-  Logger.info "Current"
-  Logger.info "Count\tDate\t\t\t\tMD5\t\t\t\t\tURL"
-  $schema_references.keys.each do |k|
-    val = $schema_references[k]
-    Logger.info "#{val}\t#{$MD5toRecord[k].last_modified.iso8601}\t#{k}\t#{$MD5toRecord[k].location}"
-  end   
-		  
-  Logger.info "Cumulative"
-  Logger.info "Count\t\t\t\t\tMD5\t\t\t\t\tURL"
-  $schema_references_permanent.keys.each do |k|
-    val = $schema_references_permanent[k]
-    Logger.info "#{val}\t\t\t\t\t#{k}\t#{$MD5toRecord[k].location}"
- end   
-end
-=end
 
 begin
   load 'lib/app/helpers.rb'

@@ -314,15 +314,6 @@ module XmlResolution
       tarwriter = XmlResolution::TarWriter.new(io, { :uid => 80, :gid => 80, :username => 'daitss', :groupname => 'daitss' })
       manifest_file(rs) { |path| tarwriter.write path, File.join(collection_name, 'manifest.xml') }
       schemas(rs) { |localpath, url|  tarwriter.write localpath, File.join(collection_name, url.gsub(':', '/').gsub(%r{//+}, '/')) }
-      schemas(rs) do |p,u|
-        s = p[p.length-32..p.length];
-	if $schema_references[s] != nil
-		$schema_references[s] = $schema_references[s] - 1
-        end	  
-      end
-      delete_schemas  
-      delete_collection collection_name
-      delete_zero_refed_schemas
 
       tarwriter.close  # closes io as side effect
 
@@ -331,78 +322,6 @@ module XmlResolution
     ensure
       io.close
       io.unlink
-    end
-#always get rid of collection no matter what
-    def delete_collection collection_name
-	    collection =  File.join($tempdir,'collections',collection_name)
-	    if File.exists?(collection)
-                   FileUtils.rm_rf collection 
-             end
-    end
-
-=begin
-    def get_schema_reference_count collection
-	  count = 0;
-	  begin
-	  Dir.open(collection)  do |dir|
-	    line = String.new
-	    schema = String.new
-	    file = nil
-	    dir.each do |f|
-              file = f		    
-              next if File.directory?(f)
-	      s = File.new(File.join(collection,f))
-	      lines  = s.lines()
-	      lines.each do |l|
-		    line = l  
-		    id     = l[0..6]
-		    if id  == "SCHEMA " 
-		      schema = l[7..38]
-		      count = count + $schema_references[schema] 
-		    end
-	       end
-	    end
-	    end
-	    rescue Exception
-		    Logger.err("get_schema_reference_count Exception #{$!} at: #{$@[0]}")
-		    Logger.err("line=#{line}")
-		    Logger.err("collection=#{collection} count=#{count} schema=#{schema} file=#{file} Exception #{$!}")
-	            Logger.err("schema_reference[#{schema}]=#{$schema_references[schema]}")
-		    count = -1
-	    end
-	    count
-    end
-=end
-
-    def delete_schemas
-    begin
-      schemaDir = File.join($tempdir,"schemas")
-      $schema_references.keys.each do |k|
-	 val = $schema_references[k]
-        if  val  == 0
-	    #$schema_references.delete(k)
-	    schema = File.join(schemaDir,k)
-	    if File.exists?(schema) 
-	       FileUtils.rm_rf schema
-	 end     # added
-        end
-     end
-    rescue
-	    puts "delete_schemas rescue $!=#{$!}"
-    end
-    end
-
-    def delete_zero_refed_schemas
-    begin
-      $schema_references.keys.each do |k|
-	val = $schema_references[k]
-        if  val  == 0
-	    $schema_references.delete(k)
-        end
-     end
-    rescue
-	    puts "delete_zero_refed_schemas rescue $!=#{$!}"
-    end
     end
 
     # resolutions
@@ -453,7 +372,7 @@ module XmlResolution
         next unless  ResolverUtils.collection_name_ok? File.split(dir)[-1]
 
         if (Time.now - File::stat(dir).mtime) > TOO_LONG_SINCE_LAST_MODIFIED
-	  Logger.err("Collection #{dir} has not been modified since #{File::stat(dir).mtime} exceeding TOO_LONG_SINCE_MODIFIED #{TOO_LONG_SINCE_LAST_MODIFIED} seconds")
+	  Logger.info("Collection #{dir} deleted, since has not been modified since #{File::stat(dir).mtime} exceeding TOO_LONG_SINCE_MODIFIED #{TOO_LONG_SINCE_LAST_MODIFIED} seconds")
 	  FileUtils.rm_rf dir
         end
       end

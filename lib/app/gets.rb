@@ -63,26 +63,3 @@ end
 get '/status' do
   [ 200, {'Content-Type'  => 'application/xml'}, "<status/>\n" ]
 end
-=begin 
-get '/stats' do
-stats = '<h1><b>DAITSS XMLResolution Statistics</b></h1>'	
-stats = stats << "<br><h3> running since: #{$iostats.startup_time}<h3>"
-stats = stats << '<table border="1" style="background-color:magenta"><th><h3><b>Current</b></h3></th>'
-stats =  stats << "<tr><td><b>Collections</b><td>#{$iostats.collections}</td></tr>"
-stats =  stats << "<tr><td><b>Schemas/DTDs/PIs<td>#{$schema_references.size}</td></tr>"
-stats =  stats << "<tr><td><b>URL Reads</b></td><td>#{$iostats.url_reads}</td><tr>"
-stats =  stats << "<tr><td><b>URL Bytes Read</b></td><td>#{$iostats.url_bytes_read}</td><tr>"
-stats =  stats << "<tr><td><b>Storage Writes</b></td><td>#{$iostats.writes}</td><tr>"
-stats =  stats << "<tr><td><b>Bytes Written</b></td><td>#{$iostats.bytes_written}</td><tr>"
-stats =  stats << "<tr><td><b>Successes</b></td><td>#{$iostats.successes}</td><tr>"
-stats =  stats << "<tr><td><b>Redirects</b></td><td>#{$iostats.redirect_cases}</td><tr>"
-stats =  stats << "<tr><td><b>Unresolveds</b></td><td>#{$iostats.fails}</td><tr>"
-stats =  stats << '<tr><td><b>Ref Count</b></td><td><b>Date</b></td><td><b>MD5</b></td><td><b>Schema/DTD/PI</b></td></tr>'
-$schema_references.keys.each do |k|
-  val = $schema_references[k]
-  stats = stats << '<tr>' << "<td>#{val}</td><td>#{$MD5toRecord[k].last_modified.iso8601}</td><td>#{k}</td><td>#{$MD5toRecord[k].location}</td></tr>"
-end
-stats = stats << '</th></table>'
-end
-end
-=end
