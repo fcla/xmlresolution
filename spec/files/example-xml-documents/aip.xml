@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<?fcla fda="yes"?>
+<?fcla dl="no"?>
+<!--  this has two references to exact copies of daitss.xsd,  this xml will NOT validate, becausse the target namespace is not matching schema instance doc namespace:
+      12: TargetNamespace.1: Expecting namespace 'http://www.fcla.edu/dls/md/daitss2/', but the target namespace of the schema document is 'http://www.fcla.edu/dls/md/daitss/'       but xmlresolution downloads both schemas because they have different locations but the same exact md5 of contents
+      this will not get past submission due to validation error.  but can be submitted directly to xmlresolution -->
+<METS:mets OBJID="TestCase3"
+  xmlns:METS="http://www.loc.gov/METS/"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns:daitss="http://www.fcla.edu/dls/md/daitss/"
+  xmlns:daitss2="http://www.fcla.edu/dls/md/daitss/"
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
+  xsi:schemaLocation="http://www.loc.gov/METS/
+    http://www.loc.gov/standards/mets/mets.xsd 
+    http://www.fcla.edu/dls/md/daitss/
+    http://schema.fcla.edu/xml/daitss_two_a2aa0a4a13503457317d2a94a4e8b038.xsd
+    http://purl.org/dc/elements/1.1/
+    http://dublincore.org/schemas/xmls/simpledc20021212.xsd
+">
+<METS:metsHdr CREATEDATE="2012-08-21T16:52:05Z" ID="TestCase3" LASTMODDATE="2012-08-21T17:13:24Z" RECORDSTATUS="COMPLETE">
+<METS:agent ROLE="CREATOR" TYPE="ORGANIZATION"> 
+<METS:name>FCLA,Florida Center for Library Automation</METS:name>
+</METS:agent>
+<METS:agent OTHERTYPE="SOFTWARE" ROLE="CREATOR" TYPE="OTHER"> 
+<METS:name>SobekCM Metadata Template</METS:name>
+</METS:agent>
+<METS:agent ROLE="CREATOR" TYPE="INDIVIDUAL"> 
+<METS:name>Lydia-7\Lydia</METS:name>
+</METS:agent>
+</METS:metsHdr>
+<METS:dmdSec ID="DMD1">
+<METS:mdWrap MDTYPE="DC"  MIMETYPE="text/xml" LABEL="Simple Dublin Core">
+<METS:xmlData>
+<dc:title>hasOnlyPI.xml</dc:title>
+<dc:type>text</dc:type>
+<dc:rights>All rights reserved by the source institution</dc:rights>
+</METS:xmlData>
+</METS:mdWrap>
+</METS:dmdSec>
+<METS:amdSec>
+<METS:digiprovMD ID="AMD_DAITSS">
+<METS:mdWrap MDTYPE="OTHER" OTHERMDTYPE="DAITSS">
+<METS:xmlData>
+<daitss2:daitss>
+<daitss2:AGREEMENT_INFO ACCOUNT="FDATWO" PROJECT="FDATWO"/>
+</daitss2:daitss>
+</METS:xmlData>
+</METS:mdWrap>
+</METS:digiprovMD>
+</METS:amdSec>
+<METS:fileSec> 
+<METS:fileGrp USE="reference" > 
+<METS:file GROUPID="G1" ID="XML1" MIMETYPE="text/xml" CHECKSUM="89159980e74c51c72aa325c1ff20f2d4" CHECKSUMTYPE="MD5" SIZE="587"> 
+<METS:FLocat LOCTYPE="OTHER" OTHERLOCTYPE="SYSTEM" xlink:href="hasOnlyPi.xml" /> 
+</METS:file> 
+</METS:fileGrp> 
+</METS:fileSec> 
+<METS:structMap ID="STRUCT2" TYPE="other"> 
+<METS:div DMDID="DMD1" LABEL="hasOnlyPI.xml" ORDER="0" TYPE="main"> 
+<METS:div ID="DDIV1" ORDER="1" TYPE="Main"> 
+<METS:div ID="FILES1" ORDER="1" TYPE="Page"> 
+<METS:fptr FILEID="XML1" /> 
+</METS:div> 
+</METS:div> 
+</METS:div>
+</METS:structMap>
+</METS:mets>

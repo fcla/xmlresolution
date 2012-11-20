@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE rss SYSTEM "http://schema.fcla.edu/xml/frick_1fec8a9a5ba1ea5922ba81ff590b4422.dtd">
+<rss version="0.91">
+<channel>
+<title>Webster University</title>
+<description>Home Page of Webster University</description>
+<link>http://www.webster.edu</link>
+<item>
+<title>Webster Univ. Geneva</title>
+<description>Home page of Webster University Geneva</description>
+<link>http://www.webster.ch</link>
+</item>
+<item>
+<title>http://www.course.com/</title>
+<description>You can find Thomson text-books materials (exercise data) on this web site</description>
+<link>http://www.course.com/</link>
+</item>
+</channel>
+</rss>

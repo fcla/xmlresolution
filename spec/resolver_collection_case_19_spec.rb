@@ -193,6 +193,13 @@ describe ResolverCollection do
     unresolveds.each{|z| @@manifest.index(z).should_not be_nil} 
   end
 
+  # manifest should have these:
+  #
+  it "should have these failures in the manifest  one for a dtd  another for a stylesheet"  do
+  @@manifest.index('<dtd status="failure" message="404 &quot;Not Found&quot;" location="http://schema.fcla.edu/xml/broken-rss-0.91.dtd"/>').should_not == nil
+  @@manifest.index('<stylesheet status="failure" message="404 &quot;Not Found&quot;" location="http://schema.fcla.edu/xml/broken-stylesheet-student_html.xsl"/>').should_not == nil
+  end
+
 end # ResolverCollection
 
 
