@@ -172,10 +172,9 @@ module XmlResolution
 
       response, actual_location = fetch location
 
-      #record.digest           = Digest::MD5.hexdigest(response.body)
-      record.digest           = Digest::MD5.hexdigest(location)  # github issue 14
+      record.digest           = Digest::MD5.hexdigest(response.body)  # github issue #14
       record.last_modified    = response['Last-Modified'] ? Time.parse(response['Last-Modified']) : Time.now
-      record.localpath        = File.join(@data_root, record.digest)
+      record.localpath        = File.join(@data_root, Digest::MD5.hexdigest(record.digest+actual_location))
       record.location         = actual_location
       record.retrieval_status = :success
 
@@ -236,9 +235,7 @@ module XmlResolution
 
     def file_recorded? filename, mtime, digest
       return false unless File.exists?(filename)
-      #ResolverUtils.read_lock(filename) { |fd| (File.mtime(filename) == mtime) and (Digest::MD5.hexdigest(fd.read) == digest) } this is the original
-      #ResolverUtils.read_lock(filename) { |fd| (File.mtime(filename) == mtime) and (Digest::MD5.hexdigest(filename) == digest) }
-      ResolverUtils.read_lock(filename) { |fd| (File.mtime(filename) == mtime) }  #  record the file when the datetimestamp changed
+      ResolverUtils.read_lock(filename) { |fd| (File.mtime(filename) == mtime) and (Digest::MD5.hexdigest(fd.read) == digest) } 
     end
 
   end # of class SchemaCatalog

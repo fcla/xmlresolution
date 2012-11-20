@@ -76,8 +76,8 @@ describe XmlResolver do  # and XmlResolverReloaded
     text = File.read(daitss_instance_doc)
     @@resolver.document_text.should == text
     @@resolver.document_size.should == text.length
-    #@@resolver.document_identifier.should == Digest::MD5.hexdigest(text)
-    @@resolver.document_identifier.should == Digest::MD5.hexdigest(daitss_instance_doc)  # github issue 14
+    @@resolver.document_identifier.should == Digest::MD5.hexdigest(text)   #github issue #14
+    ##############@@resolver.document_identifier.should == Digest::MD5.hexdigest(daitss_instance_doc)  # github issue 14
     # @@resolver.resolution_time.should be_close(Time.now, 30)
     @@resolver.resolution_time.should be_within(30).of(Time.now)
   end

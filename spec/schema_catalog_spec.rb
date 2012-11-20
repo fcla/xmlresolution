@@ -59,8 +59,7 @@ describe SchemaCatalog do
     info = recs[0]
     info.retrieval_status.should == :success
     File.exists?(info.localpath).should == true
-    #Digest::MD5.hexdigest(File.read(info.localpath)).should == info.digest
-    Digest::MD5.hexdigest(info.location).should == info.digest   #  github issue  14
+    Digest::MD5.hexdigest(File.read(info.localpath)).should == info.digest   # github issue #14
     
   end
 
@@ -72,7 +71,8 @@ describe SchemaCatalog do
     recs.each do |info|
       info.retrieval_status.should == :success
       File.exists?(info.localpath).should == true
-      Digest::MD5.hexdigest(info.location).should == info.digest
+      #Digest::MD5.hexdigest(info.location).should == info.digest
+      Digest::MD5.hexdigest(File.read(info.localpath)).should == info.digest  #github issue #14
     end
   end
 

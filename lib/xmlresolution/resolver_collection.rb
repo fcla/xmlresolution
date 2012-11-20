@@ -42,7 +42,7 @@ module XmlResolution
     # Last-modified time after which we'll delete collections as being stale.
 
     TOO_LONG_SINCE_LAST_MODIFIED = 24 * 60 * 60  # One Day
-    #TOO_LONG_SINCE_LAST_MODIFIED =  60 * 1   # One Minute
+    #TOO_LONG_SINCE_LAST_MODIFIED =  60 * 5   # 5ne Minute
 
     # The client-supplied id for grouping a collection of XML documents.
 
@@ -372,7 +372,7 @@ module XmlResolution
         next unless  ResolverUtils.collection_name_ok? File.split(dir)[-1]
 
         if (Time.now - File::stat(dir).mtime) > TOO_LONG_SINCE_LAST_MODIFIED
-	  Logger.info("Collection #{dir} deleted, since has not been modified since #{File::stat(dir).mtime} exceeding TOO_LONG_SINCE_MODIFIED #{TOO_LONG_SINCE_LAST_MODIFIED} seconds")
+	  Logger.info("Collection #{dir} deleted")
 	  FileUtils.rm_rf dir
         end
       end

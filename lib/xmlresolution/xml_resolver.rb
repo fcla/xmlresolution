@@ -164,8 +164,8 @@ module XmlResolution
     def initialize document_text, document_uri, data_root, proxy = nil
       
       @document_text        = document_text
-      #@document_identifier  = Digest::MD5.hexdigest(document_text)
-      @document_identifier  = Digest::MD5.hexdigest(document_uri)    # github issue 14
+      @document_identifier  = Digest::MD5.hexdigest(document_text)
+      #@document_identifier  = Digest::MD5.hexdigest(document_uri)    # github issue 14
       @document_uri         = document_uri
       @proxy                = proxy
       @document_size        = document_text.length
@@ -723,7 +723,7 @@ module XmlResolution
           s.location         = data.shift
           s.namespace        = data.shift
           s.retrieval_status = :success
-          s.localpath        = File.join(@schemas_storage_directory, s.digest)
+          s.localpath        = File.join(@schemas_storage_directory, Digest::MD5.hexdigest(s.digest+s.location)) # github issue #14
 
           @schema_dictionary.push s
 
