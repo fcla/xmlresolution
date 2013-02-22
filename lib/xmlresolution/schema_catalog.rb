@@ -25,9 +25,6 @@ module XmlResolution
   # redirected_location::  if retrieval_status is :redirect, this will be the initial Location URL; the location slot contains the address of the retrieved schema text.
 
   class SchemaCatalog
-    $tempdir = Dir.mktmpdir
-=begin
-=end
 
     # Be sure to keep the following more or less in sync with the Struct::SchemaReloaded used in the XmlResolverReloaded class;
     # it is the data structure that we maintain in the SchemaCatalog.

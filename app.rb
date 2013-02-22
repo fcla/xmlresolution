@@ -6,6 +6,8 @@ require 'fileutils'
 include XmlResolution
 include Datyl            # gets Logger interface
 
+@@tempdir = Dir.mktmpdir
+
 def get_config
 
   raise ConfigurationError, "No DAITSS_CONFIG environment variable has been set, so there's no configuration file to read"             unless ENV['DAITSS_CONFIG']
@@ -49,8 +51,8 @@ configure do
   #set :data_path,   config.data_root        # The collections and schema data live here.
 
   # create a unique temporary directory to hold the output files.
-  #$tempdir = Dir.mktmpdir  code move to schema_catalog.rb 
-  set :data_path, $tempdir                  # The collections and schema data live here.
+  #@@tempdir = Dir.mktmpdir  code move to schema_catalog.rb 
+  set :data_path, @@tempdir                  # The collections and schema data live here.
     
   Logger.setup('XmlResolution', ENV['VIRTUAL_HOSTNAME'])
 
@@ -64,17 +66,17 @@ configure do
   use Rack::CommonLogger, Logger.new(:info, 'Rack:')  # Bend CommonLogger to our will...
 
   Logger.info "Starting #{XmlResolution.version.rev}"
-  Logger.info "Initializing with temp data directory #{$tempdir}; caching proxy is #{config.resolver_proxy || 'off' }"
+  Logger.info "Initializing with temp data directory #{@@tempdir}; caching proxy is #{config.resolver_proxy || 'off' }"
   defconfig = Datyl::Config.new(ENV['DAITSS_CONFIG'], 'defaults')
-  #Logger.info "Using temp directory #{$tempdir}"
+  #Logger.info "Using temp directory #{@@tempdir}"
 
-  collections_dirname =  File.join($tempdir,"collections")
+  collections_dirname =  File.join(@@tempdir,"collections")
   Dir.mkdir(collections_dirname)
   Logger.info "Collections directory #{collections_dirname} created"
-  schemas_dirname =  File.join($tempdir,"schemas")
+  schemas_dirname =  File.join(@@tempdir,"schemas")
   Dir.mkdir(schemas_dirname)
   Logger.info "Schemas directory #{schemas_dirname} created"
-  do_at_exit($tempdir)
+  do_at_exit(@@tempdir)
 end
 
 begin
