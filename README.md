@@ -14,9 +14,9 @@ you employ a caching proxy such as squid when used in a production
 environment.
 
 
-Current Production code
+Current Production Code
 -----------------------
-git commit sha1 - 4d6b12f824c5b0489c818b26ecbdc78a3121d82c
+* https://github.com/daitss/xmlresolution/tree/4d6b12f824c5b0489c818b26ecbdc78a3121d82c
 
 Environment
 -----------
