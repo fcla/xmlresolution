@@ -5,10 +5,11 @@
 # produced by the form input having type="file" name="xmlfile".
 # Additionally, we require that the content disposition must supply a
 # filename.
-
 post '/ieids/:collection_id/' do |collection_id|
 
   begin
+#    require 'debugger'
+#    debugger
     raise Http400, "Missing form data name='xmlfile'"    unless params['xmlfile']
     raise Http400, "Missing form data filename='...'"    unless filename = params['xmlfile'][:filename]
     raise Http500, "Data unavailable (missing tempfile)" unless tempfile = params['xmlfile'][:tempfile]

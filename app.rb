@@ -36,7 +36,7 @@ end
 configure do
   config = get_config
 
-  $KCODE = 'UTF8'         # Required for XML processing libraries.
+  #$KCODE = 'UTF8'         # Required for XML processing libraries.  #ruby 1.9.3
 
   disable :logging        # Stop CommonLogger from logging to STDERR, please.
 

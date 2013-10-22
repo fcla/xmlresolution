@@ -222,7 +222,7 @@ module XmlResolution
     def manifest collection_resolutions = nil
       collection_resolutions ||= resolutions()  
 
-      $KCODE == 'UTF8' or raise XmlResolution::ConfigurationError, "Ruby $KCODE == #{$KCODE}, but it must be UTF8"
+      #$KCODE == 'UTF8' or raise XmlResolution::ConfigurationError, "Ruby $KCODE == #{$KCODE}, but it must be UTF8"
       
       xml = Builder::XmlMarkup.new(:indent => 2)
       xml.instruct!(:xml, :encoding => 'UTF-8')
@@ -314,9 +314,7 @@ module XmlResolution
       tarwriter = XmlResolution::TarWriter.new(io, { :uid => 80, :gid => 80, :username => 'daitss', :groupname => 'daitss' })
       manifest_file(rs) { |path| tarwriter.write path, File.join(collection_name, 'manifest.xml') }
       schemas(rs) { |localpath, url|  tarwriter.write localpath, File.join(collection_name, url.gsub(':', '/').gsub(%r{//+}, '/')) }
-
       tarwriter.close  # closes io as side effect
-
       io.open.rewind
       yield io
     ensure

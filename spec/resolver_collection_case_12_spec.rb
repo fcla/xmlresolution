@@ -1,9 +1,11 @@
+# encoding: UTF-8
+warn_level = $VERBOSE
+$VERBOSE = nil 
 require 'xmlresolution/resolver_collection'
 require 'xmlresolution/xml_resolver'
 require 'socket'
 require 'tempfile'
 
-$KCODE = 'UTF8'
 @@locations = Array.new
 @@manifest = Object.new
 
