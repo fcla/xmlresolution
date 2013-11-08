@@ -21,17 +21,15 @@ end
 
 def do_at_exit(str1)
 
-	  at_exit do
-		  FileUtils.rm_rf(str1);
-		  Logger.info "Temporary directory #{str1} deleted" 
-		  #if get_config.shutdown_stats 
-		  #   shutdown_stats
-		  #end
-		  Logger.info "Ending #{XmlResolution.version.rev}"
-         end
+  at_exit do
+    FileUtils.rm_rf(str1);
+    Datyl::Logger.info "Temporary directory #{str1} deleted" 
+    #if get_config.shutdown_stats 
+    #   shutdown_stats
+    #end
+    Datyl::Logger.info "Ending #{XmlResolution.version.rev}"
+  end
 end
-
-
 
 configure do
   config = get_config
@@ -54,28 +52,28 @@ configure do
   #@@tempdir = Dir.mktmpdir  code move to schema_catalog.rb 
   set :data_path, @@tempdir                  # The collections and schema data live here.
     
-  Logger.setup('XmlResolution', ENV['VIRTUAL_HOSTNAME'])
+  Datyl::Logger.setup('XmlResolution', ENV['VIRTUAL_HOSTNAME'])
 
   if not (config.log_filename or config.log_syslog_facility)
-    Logger.stderr
+    Datyl::Logger.stderr
   end
 
-  Logger.facility = config.log_syslog_facility  if config.log_syslog_facility
-  Logger.filename = config.log_filename         if config.log_filename
+  Datyl::Logger.facility = config.log_syslog_facility  if config.log_syslog_facility
+  Datyl::Logger.filename = config.log_filename         if config.log_filename
 
-  use Rack::CommonLogger, Logger.new(:info, 'Rack:')  # Bend CommonLogger to our will...
+  use Rack::CommonLogger, Datyl::Logger.new(:info, 'Rack:')  # Bend CommonLogger to our will...
 
-  Logger.info "Starting #{XmlResolution.version.rev}"
-  Logger.info "Initializing with temp data directory #{@@tempdir}; caching proxy is #{config.resolver_proxy || 'off' }"
+  Datyl::Logger.info "Starting #{XmlResolution.version.rev}"
+  Datyl::Logger.info "Initializing with temp data directory #{@@tempdir}; caching proxy is #{config.resolver_proxy || 'off' }"
   defconfig = Datyl::Config.new(ENV['DAITSS_CONFIG'], 'defaults')
-  #Logger.info "Using temp directory #{@@tempdir}"
+  #Datyl::Logger.info "Using temp directory #{@@tempdir}"
 
   collections_dirname =  File.join(@@tempdir,"collections")
   Dir.mkdir(collections_dirname)
-  Logger.info "Collections directory #{collections_dirname} created"
+  Datyl::Logger.info "Collections directory #{collections_dirname} created"
   schemas_dirname =  File.join(@@tempdir,"schemas")
   Dir.mkdir(schemas_dirname)
-  Logger.info "Schemas directory #{schemas_dirname} created"
+  Datyl::Logger.info "Schemas directory #{schemas_dirname} created"
   do_at_exit(@@tempdir)
 end
 
@@ -86,5 +84,5 @@ begin
   load 'lib/app/posts.rb'
   load 'lib/app/puts.rb'
 rescue ScriptError => e
-  Logger.err "Initialization Error: #{e.message}"
+  Datyl::Logger.err "Initialization Error: #{e.message}"
 end
