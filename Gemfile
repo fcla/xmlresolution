@@ -2,9 +2,9 @@
 
 source "http://rubygems.org"
 
+gem 'nokogiri', "~> 1.5.10"
 gem 'debugger'
 gem 'libxml-ruby', :require => 'libxml'
-gem 'nokogiri'
 gem 'sinatra'
 gem 'rack'
 gem 'log4r'
