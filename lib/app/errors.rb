@@ -9,12 +9,12 @@ error do
 
   # The XmlResolution::HttpError exception classes carry along their own status texts and HTTP status codes.
   if e.is_a? XmlResolution::HttpError
-	  Logger.err "e.is_a=true status_code=#{e.status_code} client_message=#{e.client_message}"
+	  Datyl::Logger.err "e.is_a=true status_code=#{e.status_code} client_message=#{e.client_message}"
     halt e.status_code, { 'Content-Type' => 'text/plain' }, e.client_message      # ruby 1.9.3
   else
-	  Logger.err "e..is_a?=false"
-    Logger.err "Internal Service Error - #{e.message}", @env
-    e.backtrace.each { |line| Logger.err line, @env }
+	  Datyl::Logger.err "e..is_a?=false"
+    Datyl::Logger.err "Internal Service Error - #{e.message}", @env
+    e.backtrace.each { |line| Datyl::Logger.err line, @env }
      halt 500, { 'Content-Type' => 'text/plain' }, "Internal Service Error.\n"   # ruby 1.9.3
   end
 end
@@ -29,7 +29,7 @@ not_found  do
             else
               "404 Not Found - #{request.url} doesn't exist.\n"
             end
-  Logger.warn message, @env
+  Datyl::Logger.warn message, @env
   content_type 'text/plain'
   message
 end

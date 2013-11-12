@@ -370,7 +370,7 @@ module XmlResolution
         next unless  ResolverUtils.collection_name_ok? File.split(dir)[-1]
 
         if (Time.now - File::stat(dir).mtime) > TOO_LONG_SINCE_LAST_MODIFIED
-	  Logger.info("Collection #{dir} deleted")
+	  Datyl::Logger.info("Collection #{dir} deleted")
 	  FileUtils.rm_rf dir
         end
       end
