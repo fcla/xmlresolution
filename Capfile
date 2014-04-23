@@ -15,7 +15,7 @@ set :bundle_flags,      "--deployment"
 
 set :repository,        "git@github.com:daitss/xmlresolution.git"
 set :scm,               "git"
-set :branch,            "ruby1.9.3"
+set :branch,            "master"
 
 set :use_sudo,          false
 set :user,              "daitss"

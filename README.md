@@ -29,9 +29,8 @@ In your web server you should set up some environment variables:
 
 Requirements
 ------------
-Known to work with with ruby 1.8.7. The following packages (beyond the
-standards)
-
+  * ruby 1.9.3 - use master branch
+  * ruby 1.8.7 - use ruby1.8.7 branch
   * sinatra & rack
   * nokogiri, libxml-ruby & builder
   * rake, rspec, cucumber & ci/reporter for testing.
