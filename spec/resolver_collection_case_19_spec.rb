@@ -1,3 +1,6 @@
+# encoding: UTF-8
+warn_level = $VERBOSE
+$VERBOSE = nil 
 require 'xmlresolution/resolver_collection'
 require 'xmlresolution/xml_resolver'
 require 'socket'
@@ -196,8 +199,9 @@ describe ResolverCollection do
   # manifest should have these:
   #
   it "should have these failures in the manifest  one for a dtd  another for a stylesheet"  do
-  @@manifest.index('<dtd status="failure" message="404 &quot;Not Found&quot;" location="http://schema.fcla.edu/xml/broken-rss-0.91.dtd"/>').should_not == nil
-  @@manifest.index('<stylesheet status="failure" message="404 &quot;Not Found&quot;" location="http://schema.fcla.edu/xml/broken-stylesheet-student_html.xsl"/>').should_not == nil
+    
+  @@manifest.index('<dtd status="failure" location="http://schema.fcla.edu/xml/broken-rss-0.91.dtd" message="404').should_not == nil
+  @@manifest.index('<stylesheet status="failure" location="http://schema.fcla.edu/xml/broken-stylesheet-student_html.xsl" message="404').should_not == nil
   end
 
 end # ResolverCollection

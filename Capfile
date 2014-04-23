@@ -12,11 +12,10 @@ require 'bundler/capistrano'
 set :keep_releases, 5   # default is 5
 
 set :bundle_flags,      "--deployment"
-set :bundle_without,    []
 
-set :repository,        "http://github.com/daitss/xmlresolution.git"
+set :repository,        "git@github.com:daitss/xmlresolution.git"
 set :scm,               "git"
-set :branch,            "master"
+set :branch,            "ruby1.9.3"
 
 set :use_sudo,          false
 set :user,              "daitss"
@@ -38,15 +37,18 @@ _domain, _filesystem = variables[:target].split(':', 2)
 set :deploy_to,  _filesystem
 set :domain,     _domain
 
+set :default_environment, { 
+  'PATH' => "/opt/ruby-1.9.3-p545/bin:$PATH",
+  'RUBY_VERSION' => 'ruby 1.9.3-p545'
+}
+
 if (variables[:who] and variables[:who] =~ %r{.*:.*})
   _user, _group = variables[:who].split(':', 2)
   set :user,  _user
   set :group, _group
 end
 
-
 role :app, domain
-
 
 after "deploy:update", "deploy:layout"
 
@@ -64,7 +66,5 @@ namespace :deploy do
     #run "find #{shared_path} #{release_path} -type d | xargs chmod 2775"
     #run "find #{shared_path} #{release_path}  | xargs chgrp #{group}"
   end
-
-
 end
 

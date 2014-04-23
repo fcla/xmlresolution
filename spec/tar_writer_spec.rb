@@ -4,16 +4,16 @@ require 'tempfile'
 require 'fileutils'
 
 describe XmlResolution::TarWriter do
-  @@dir = nil
-  @@tarfile = nil
+ # self.class_variable_set(:@@dir, nil)
+#  self.class_variable_set(:@@tarfile,nil)
 
   before do
-    @@dir = some_directory
-    @@tarfile = Tempfile.new('tf')
+    XmlResolution::TarWriter.class_variable_set(:@@dir, some_directory)
+    XmlResolution::TarWriter.class_variable_set(:@@tarfile,Tempfile.new('tf'))
   end
 
   after do
-    FileUtils::rm_rf @@dir    
+    FileUtils::rm_rf XmlResolution::TarWriter.class_variable_get(:@@dir)    
     FileUtils::rm_f "/tmp/passwd"
   end
 
@@ -31,7 +31,7 @@ describe XmlResolution::TarWriter do
   # 
 
   def list_tar 
-    `tar tvf #{@@tarfile.path}`.split("\n")
+    `tar tvf #{XmlResolution::TarWriter.class_variable_get(:@@tarfile).path}`.split("\n")
   end
 
   def some_directory
@@ -48,7 +48,8 @@ describe XmlResolution::TarWriter do
 
   def some_filepath
     path = nil
-    Tempfile.open('tf', @@dir) do |fl| 
+    directory = XmlResolution::TarWriter.class_variable_get(:@@dir)
+    Tempfile.open('tf', XmlResolution::TarWriter.class_variable_get(:@@dir)[0]) do |fl| 
       fl.puts some_data
       path = fl.path
     end
@@ -56,12 +57,12 @@ describe XmlResolution::TarWriter do
   end
 
   it "should create without error a tarwriter object with specific user and group names" do
-    XmlResolution::TarWriter.new(@@tarfile, { :gid => 80, :uid => 80, :username => 'daitss', :groupname => 'daitss' }).class.to_s == 'XmlResolution::TarWriter'
+    XmlResolution::TarWriter.new(XmlResolution::TarWriter.class_variable_get(:@@tarfile), { :gid => 80, :uid => 80, :username => 'daitss', :groupname => 'daitss' }).class.to_s == 'XmlResolution::TarWriter'
   end
 
   it "should store files consecutively in a tarfile" do
 
-    tf = XmlResolution::TarWriter.new(@@tarfile, { :gid => 80, :uid => 80, :username => 'daitss', :groupname => 'daitss' })
+    tf = XmlResolution::TarWriter.new(XmlResolution::TarWriter.class_variable_get(:@@tarfile), { :gid => 80, :uid => 80, :username => 'daitss', :groupname => 'daitss' })
 
     tf.write(some_filepath)
     tf.write(some_filepath)
@@ -75,7 +76,7 @@ describe XmlResolution::TarWriter do
 
   it "should write files into a tarfile by their original pathnames, when only the original path is specified" do
 
-    tf = XmlResolution::TarWriter.new(@@tarfile, { :gid => 80, :uid => 80, :username => 'daitss', :groupname => 'daitss' })
+    tf = XmlResolution::TarWriter.new(XmlResolution::TarWriter.class_variable_get(:@@tarfile), { :gid => 80, :uid => 80, :username => 'daitss', :groupname => 'daitss' })
 
     filepath = some_filepath
     tf.write(filepath)
@@ -90,7 +91,7 @@ describe XmlResolution::TarWriter do
 
   it "should write files into a tarfile using our specified path in a tarfile, when we specify the original path and the internal pathname" do
 
-    tf = XmlResolution::TarWriter.new(@@tarfile, { :gid => 80, :uid => 80, :username => 'daitss', :groupname => 'daitss' })
+    tf = XmlResolution::TarWriter.new(XmlResolution::TarWriter.class_variable_get(:@@tarfile), { :gid => 80, :uid => 80, :username => 'daitss', :groupname => 'daitss' })
 
     filepath = some_filepath
     tf.write(filepath, 'myfile')
@@ -105,7 +106,7 @@ describe XmlResolution::TarWriter do
 
   it "should save files with the correct user and group names in a tarfile" do
 
-    tf = XmlResolution::TarWriter.new(@@tarfile, { :gid => 80, :uid => 80, :username => 'daitss-user', :groupname => 'daitss-group' })
+    tf = XmlResolution::TarWriter.new(XmlResolution::TarWriter.class_variable_get(:@@tarfile), { :gid => 80, :uid => 80, :username => 'daitss-user', :groupname => 'daitss-group' })
 
     filepath = some_filepath
     tf.write(filepath)
@@ -118,11 +119,11 @@ describe XmlResolution::TarWriter do
 
   it "should provide a tar file that gnutar can correctly extract, retaining all of the filesystem metadata." do
 
-    tf = XmlResolution::TarWriter.new(@@tarfile, { :gid => 80, :uid => 80, :username => 'daitss-user', :groupname => 'daitss-group' })
+    tf = XmlResolution::TarWriter.new(XmlResolution::TarWriter.class_variable_get(:@@tarfile), { :gid => 80, :uid => 80, :username => 'daitss-user', :groupname => 'daitss-group' })
     tf.write("/etc/passwd", "/tmp/passwd")
     tf.close
 
-    `tar xPf #{@@tarfile.path}`
+    `tar xPf #{XmlResolution::TarWriter.class_variable_get(:@@tarfile).path}`
 
     orig  = File.stat("/etc/passwd")
     copy  = File.stat("/tmp/passwd")

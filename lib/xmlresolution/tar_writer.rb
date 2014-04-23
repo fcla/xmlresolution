@@ -76,9 +76,7 @@ module XmlResolution
     # blanks.
 
     def header_checksum buff
-      sum =  0
-      (0   .. 147).each { |i| sum += buff[i] }
-      (156 .. 511).each { |i| sum += buff[i] }
+      sum = buff[0 .. 147].sum + buff[156 .. 511].sum
       sum + 32 * 8
     end
 
@@ -155,10 +153,8 @@ module XmlResolution
       buff[124..135] = to_octal(fstat.size, 11) + ' '
 
       # now that all of the header is setup, we can compute the checksum:
-
       str = '0' + to_octal(header_checksum(buff))
       buff[148..(148 + str.length - 1)] = str
-
       return buff
     end
 
@@ -174,7 +170,6 @@ module XmlResolution
       length = nil
 
       tar_path = file_path.gsub(/^\/+/, '') unless tar_path
-
       fd.write make_header(file_path, tar_path)
       open(file_path, 'r') do |file|
         while buff = file.read(512)
@@ -182,7 +177,6 @@ module XmlResolution
           length = buff.length
         end
       end
-
       fd.write 0.chr * (512 - length)   # pad with nul characters to 512 bytes, if necessary.
     end
 

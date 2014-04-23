@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'digest/md5'
 require 'fileutils'
 require 'nokogiri'
@@ -8,7 +9,7 @@ require 'tmpdir'
 require 'xmlresolution/xml_resolver'
 require 'xmlresolution'                   # required for version.
 
-$KCODE = 'UTF8'
+ 
 
 include XmlResolution
 
@@ -83,7 +84,8 @@ describe XmlResolver do  # and XmlResolverReloaded
   end
 
   it "should not have only UFLIB's unresolved namespace for our sample DAITSS descriptor XML file." do
-    @@resolver.unresolved_namespaces.should == ['http://digital.uflib.ufl.edu/metadata/ufdc2/']
+   # @@resolver.unresolved_namespaces.should == ['http://digital.uflib.ufl.edu/metadata/ufdc2/']
+    @@resolver.unresolved_namespaces.should == []
   end
 
   it "should have a few unresolved namespaces for our example normalized file descriptor." do
@@ -117,23 +119,26 @@ describe XmlResolver do  # and XmlResolverReloaded
     # need to have the following locations downloaded from our resolution (keep this list sorted); this
     # used the DAITSS validation tool to get what a standard XML validator would retrieve.
 
-    required_successes = ["http://digital.uflib.ufl.edu/metadata/ufdc2/ufdc2.xsd",
-	                  "http://www.fcla.edu/dls/md/daitss/daitss.xsd",
+    #required_successes = 
+    #   ["http://digital.uflib.ufl.edu/metadata/ufdc2/ufdc2.xsd",  ### as of 2013/06/11 this lone not true
+	   required_successes =  [   
+	      "http://www.fcla.edu/dls/md/daitss/daitss.xsd",
 			  "http://www.loc.gov/standards/mets/mets.xsd",
 			  "http://www.loc.gov/standards/mods/v3/mods-3-3.xsd",
 			  "http://www.loc.gov/standards/mods/xml.xsd",
 			  "http://www.loc.gov/standards/xlink/xlink.xsd",
 			  "http://www.w3.org/2001/XMLSchema.xsd",
 			  "http://www.w3.org/2001/xml.xsd"
-                         ]
+       ]
 
     # these next are likely to change over time:
 
     required_redirects =  [
                            "http://www.loc.gov/mods/v3/mods-3-3.xsd",
-                           "http://www.loc.gov/mods/xml.xsd",
-                           "http://www.uflib.ufl.edu/digital/metadata/ufdc2/ufdc2.xsd"
+                           "http://www.loc.gov/mods/xml.xsd"
                           ]
+    #                       "http://www.uflib.ufl.edu/digital/metadata/ufdc2/ufdc2.xsd"
+    #                      ]
 
     success_results  = []
     failure_results  = []
@@ -156,10 +161,10 @@ describe XmlResolver do  # and XmlResolverReloaded
     end
 
 
-    success_results.sort.should  == required_successes
-    redirect_results.sort.should == required_redirects
+    success_results.sort.should  == required_successes.sort
+    redirect_results.sort.should == required_redirects.sort
 
-    failure_results.should == []
+    failure_results.should == ["http://www.uflib.ufl.edu/digital/metadata/ufdc2/ufdc2.xsd"]
     unknown_results.should == []
   end
 

@@ -1,9 +1,11 @@
+# encoding: UTF-8
+warn_level = $VERBOSE
+$VERBOSE = nil 
 require 'xmlresolution/resolver_collection'
 require 'xmlresolution/xml_resolver'
 require 'socket'
 require 'tempfile'
 
-$KCODE = 'UTF8'
 @@locations = Array.new
 @@manifest = Object.new
 @@xmlcases_resolver = Object.new
@@ -34,7 +36,8 @@ describe ResolverCollection do
   end
 
   def unresolveds
-	  ['<error>StartTag: invalid element name</error>']
+	 # ['<error>StartTag: invalid element name</error>']
+	 ['StartTag: invalid element name']
   end
 
   def hostname 

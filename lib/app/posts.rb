@@ -5,10 +5,11 @@
 # produced by the form input having type="file" name="xmlfile".
 # Additionally, we require that the content disposition must supply a
 # filename.
-
 post '/ieids/:collection_id/' do |collection_id|
 
   begin
+#    require 'debugger'
+#    debugger
     raise Http400, "Missing form data name='xmlfile'"    unless params['xmlfile']
     raise Http400, "Missing form data filename='...'"    unless filename = params['xmlfile'][:filename]
     raise Http500, "Data unavailable (missing tempfile)" unless tempfile = params['xmlfile'][:tempfile]
@@ -21,7 +22,7 @@ post '/ieids/:collection_id/' do |collection_id|
 
     file_url = "file://#{client}/#{collection_id}/#{filename.gsub(%r(^/+), '')}"
 
-    Logger.info "Handling uploaded document #{file_url}.", @env
+    Datyl::Logger.info "Handling uploaded document #{file_url}.", @env
 
     res = XmlResolver.new(tempfile.open.read, file_url, settings.data_path, settings.proxy)
 
@@ -29,17 +30,17 @@ post '/ieids/:collection_id/' do |collection_id|
 
     res.schema_dictionary.map do |record|  
       if record.retrieval_status == :failure
-        Logger.err  "Failed retrieving #{record.location} for document #{file_url}, namespace #{record.namespace}, error #{record.error_message}.", @env
+        Datyl::Logger.err  "Failed retrieving #{record.location} for document #{file_url}, namespace #{record.namespace}, error #{record.error_message}.", @env
       end
       if record.retrieval_status == :success 
-        Logger.info "Retrieved #{record.location} for document #{file_url}, namespace #{record.namespace}.", @env
+        Datyl::Logger.info "Retrieved #{record.location} for document #{file_url}, namespace #{record.namespace}.", @env
       end
       if record.retrieval_status == :redirect
-        Logger.info "Schema #{record.location} for document #{file_url}, was redirected to #{record.redirected_location}.", @env
+        Datyl::Logger.info "Schema #{record.location} for document #{file_url}, was redirected to #{record.redirected_location}.", @env
       end
     end
 
-    res.unresolved_namespaces.each { |ns|  Logger.warn "Unresolved namespace #{ns} for document #{file_url}.", @env }
+    res.unresolved_namespaces.each { |ns|  Datyl::Logger.warn "Unresolved namespace #{ns} for document #{file_url}.", @env }
     # if squid is down all the error_code will be 'Connection refused - connect(2)' unless squid came up in during
     # the resolutions - very low probability.  If one of the error_codes is 'Connection refused - connect(2)' we will
     # take this to mean  squid is down.

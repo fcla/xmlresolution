@@ -1,3 +1,6 @@
+# encoding: UTF-8
+warn_level = $VERBOSE
+$VERBOSE = nil 
 require 'xmlresolution/resolver_collection'
 require 'xmlresolution/xml_resolver'
 require 'socket'
@@ -9,7 +12,6 @@ require 'tempfile'
 # http://schema.fcla.edu/xml/daitss_two_a2aa0a4a13503457317d2a94a4e8b038.xsd    refered in aip.xml
 #
 
-$KCODE = 'UTF8'
 
 include XmlResolution
 describe ResolverCollection do
@@ -125,11 +127,13 @@ describe ResolverCollection do
 
     manifest = collection.manifest
 
-    manifest.index('<schema status="success" namespace="http://www.fcla.edu/dls/md/daitss/" location="http://schema.fcla.edu/xml/daitss_one_a2aa0a4a13503457317d2a94a4e8b038.xsd" md5="a2aa0a4a13503457317d2a94a4e8b038').should_not == nil
+    manifest.index('<schema status="success" namespace="http://www.fcla.edu/dls/md/daitss/" location="http://schema.fcla.edu/xml/daitss_one_a2aa0a4a13503457317d2a94a4e8b038.xsd" md5="a2aa0a4a13503457317d2a94a4e8b038') || 
+    manifest.index('<schema status="success" location="http://schema.fcla.edu/xml/daitss_one_a2aa0a4a13503457317d2a94a4e8b038.xsd" namespace="http://www.fcla.edu/dls/md/daitss/" md5="a2aa0a4a13503457317d2a94a4e8b038')
+    .should_not == nil
 
 
-    manifest.index('<schema status="success" namespace="http://www.fcla.edu/dls/md/daitss/" location="http://schema.fcla.edu/xml/daitss_two_a2aa0a4a13503457317d2a94a4e8b038.xsd" md5="a2aa0a4a13503457317d2a94a4e8b038').should_not == nil
-###    manifest.index('<schema status="success" location="http://schema.fcla.edu/xml/daitss_two_a2aa0a4a13503457317d2a94a4e8b038.xsd" namespace="http://www.fcla.edu/dls/md/daitss/" md5="a2aa0a4a13503457317d2a94a4e8b038"').should_not == nil
+    manifest.index('<schema status="success" namespace="http://www.fcla.edu/dls/md/daitss/" location="http://schema.fcla.edu/xml/daitss_two_a2aa0a4a13503457317d2a94a4e8b038.xsd" md5="a2aa0a4a13503457317d2a94a4e8b038') ||
+    manifest.index('<schema status="success" location="http://schema.fcla.edu/xml/daitss_two_a2aa0a4a13503457317d2a94a4e8b038.xsd" namespace="http://www.fcla.edu/dls/md/daitss/" md5="a2aa0a4a13503457317d2a94a4e8b038"').should_not == nil
 
     locations.each { |loc|  /#{loc}/.should =~ manifest }
 

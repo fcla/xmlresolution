@@ -1,3 +1,6 @@
+# encoding: UTF-8
+warn_level = $VERBOSE
+$VERBOSE = nil 
 require 'xmlresolution/resolver_collection'
 require 'xmlresolution/xml_resolver'
 require 'socket'
@@ -9,7 +12,6 @@ require 'tempfile'
 #  the manifest has the correct md5 for the two dtd's
 #
 
-$KCODE = 'UTF8'
 
 include XmlResolution
 describe ResolverCollection do

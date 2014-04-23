@@ -283,7 +283,7 @@ module XmlResolution
 
     def premis_report
 
-      $KCODE == 'UTF8' or raise ConfigurationError, "Ruby $KCODE == #{$KCODE}, but it must be UTF8"
+      #$KCODE == 'UTF8' or raise ConfigurationError, "Ruby $KCODE == #{$KCODE}, but it must be UTF8"
       
       successes = failures = 0
       
