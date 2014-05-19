@@ -13,7 +13,7 @@ set :keep_releases, 5   # default is 5
 
 set :bundle_flags,      "--deployment"
 
-set :repository,        "git@github.com/daitss/xmlresolution.git"
+set :repository,        "git://github.com/daitss/xmlresolution.git"
 set :scm,               "git"
 set :branch,            "master"
 
