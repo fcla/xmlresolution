@@ -1,5 +1,12 @@
 XML Resolution Service
 ======================
+
+Current Status
+--------------
+This service has been replaced by the resolver service at https://github.com/daitss/resolver. It's now deprecated.
+
+OverView
+--------
 Consider a collection of XML documents.  You would like to gather up
 all of the schemas necessary to understand those documents for
 preservation purposes.  This web service helps you do that, in three
@@ -12,11 +19,6 @@ RESTful steps:
 The original XML documents are not returned.  It is recommended that
 you employ a caching proxy such as squid when used in a production
 environment.
-
-
-Current Production Code
------------------------
-* https://github.com/daitss/xmlresolution/tree/4d6b12f824c5b0489c818b26ecbdc78a3121d82c
 
 Environment
 -----------
